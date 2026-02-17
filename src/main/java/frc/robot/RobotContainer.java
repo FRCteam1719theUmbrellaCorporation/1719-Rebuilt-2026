@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.subsystems.LimelightHandler;
 import java.io.File;
 import swervelib.SwerveInputStream;
 
@@ -37,8 +38,9 @@ public class RobotContainer
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
-  private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve/neo"));
+  // private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+  //                                                                               "swerve/neo"));
+  private final LimelightHandler LLHandler = new LimelightHandler();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -46,13 +48,13 @@ public class RobotContainer
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
-  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY() * -1,
-                                                                () -> driverXbox.getLeftX() * -1)
-                                                            .withControllerRotationAxis(driverXbox::getRightX)
-                                                            .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.8)
-                                                            .allianceRelativeControl(true);
+  // SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+  //                                                               () -> driverXbox.getLeftY() * -1,
+  //                                                               () -> driverXbox.getLeftX() * -1)
+  //                                                           .withControllerRotationAxis(driverXbox::getRightX)
+  //                                                           .deadband(OperatorConstants.DEADBAND)
+  //                                                           .scaleTranslation(0.8)
+  //                                                           .allianceRelativeControl(true);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -81,19 +83,19 @@ public class RobotContainer
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
 
-   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
-                                                                                             driverXbox::getRightY)
-                                                           .headingWhile(true);
+  //  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
+  //                                                                                            driverXbox::getRightY)
+  //                                                          .headingWhile(true);
 
   private void configureBindings()
   {
-    Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-        () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-        () -> MathUtil.applyDeadband(driverXbox.getLeftX(), .1),
-        () -> driverXbox.getRightX(),
-        () -> driverXbox.getRightY());
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
+    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), .1),
+    //     () -> driverXbox.getRightX(),
+    //     () -> driverXbox.getRightY());
+    // Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -103,7 +105,7 @@ public class RobotContainer
         
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
 
-
+      driverXbox.a().onTrue(LLHandler.logLimelightExists(2));
   }
 
   /**
@@ -117,8 +119,8 @@ public class RobotContainer
     return autoChooser.getSelected();
   }
 
-  public void setMotorBrake(boolean brake)
-  {
-    drivebase.setMotorBrake(brake);
-  }
+  // public void setMotorBrake(boolean brake)
+  // {
+  //   drivebase.setMotorBrake(brake);
+  // }
 }

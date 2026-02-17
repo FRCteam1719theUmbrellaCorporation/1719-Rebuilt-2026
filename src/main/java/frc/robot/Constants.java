@@ -49,7 +49,7 @@ public final class Constants
     public static final double TURN_CONSTANT    = 6;
   }
 
-	public class LimelightConstants {
+  public static final class LimelightConstants {
 		public static final String limelightFrontName = "limelight-front";
 		// public static final String limelightBackName = "limelightback";
 	}
