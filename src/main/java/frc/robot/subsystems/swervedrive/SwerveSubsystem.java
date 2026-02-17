@@ -6,7 +6,7 @@ package frc.robot.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.Meter;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -174,6 +174,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void simulationPeriodic()
   {
   }
+
 
   /**
    * Setup AutoBuilder for PathPlanner.

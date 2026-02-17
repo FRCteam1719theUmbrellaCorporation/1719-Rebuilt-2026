@@ -7,7 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "New Path"
+            "pathName": "Straight"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "center"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Down"
           }
         }
       ]

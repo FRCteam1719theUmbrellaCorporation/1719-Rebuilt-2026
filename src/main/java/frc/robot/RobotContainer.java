@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -25,6 +26,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
 import swervelib.SwerveInputStream;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -41,7 +46,8 @@ public class RobotContainer
                                                                                 "swerve/neo"));
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
-  private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private final SendableChooser<Command> autoChooser;
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -57,6 +63,8 @@ public class RobotContainer
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+  Command Center = drivebase.centerModulesCommand().withTimeout(0.5);
+
   public RobotContainer()
   {
     // Configure the trigger bindings
@@ -64,13 +72,16 @@ public class RobotContainer
     DriverStation.silenceJoystickConnectionWarning(true);
 
     //Set the default auto (do nothing) 
-    autoChooser.setDefaultOption("Do Nothing", Commands.none());
+    //autoChooser.setDefaultOption("Do Nothing", Commands.none());
+    autoChooser = AutoBuilder.buildAutoChooser();
 
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     // autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
     
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    NamedCommands.registerCommand("center", Center);
   }
 
   /**
@@ -94,6 +105,8 @@ public class RobotContainer
         () -> driverXbox.getRightY());
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+
+    driverXbox.a().onTrue(Center);
     
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
@@ -102,10 +115,7 @@ public class RobotContainer
     //     () -> driverXbox.getRightY());
         
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
-
-
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
