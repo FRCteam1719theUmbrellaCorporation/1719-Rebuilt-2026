@@ -1,95 +1,52 @@
 package frc.robot.subsystems;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Optional;
 
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import limelight.Limelight;
-import limelight.networktables.LimelightResults;
-import limelight.networktables.target.AprilTagFiducial;
 import frc.robot.Constants.LimelightConstants;
-import frc.robot.Constants.LimelightConstants.LimelightSide;
+import frc.robot.LimelightHelpers.RawFiducial;
+import frc.robot.LimelightHelpers;
+
+import javax.swing.JTable;
 
 public class LimelightHandler extends SubsystemBase {
-	public Limelight limelightFront;
-	// public Limelight limelightBack;
+	public RawFiducial[] fiducials;
 
-	public Optional<LimelightResults> limelightFrontResults;
-	// public Optional<LimelightResults> limelightBackResults;
-
-	public AprilTagFiducial[] frontAprilTags;
-	// public AprilTagFiducial[] backAprilTags;
-	
 	public LimelightHandler() {
-		this.limelightFront = new Limelight(LimelightConstants.limelightFrontName);
-		// this.limelightBack = new Limelight(LimelightConstants.limelightBackName);
 	}
 
-	@Override
-	public void periodic() {
-		// Get results
-		this.limelightFrontResults = this.limelightFront.getLatestResults();
-		// this.limelightBackResults = this.limelightBack.getLatestResults();
-		
-		// Get tags
-		this.limelightFrontResults.ifPresent((LimelightResults res) -> {
-			this.frontAprilTags = res.targets_Fiducials;
-		});
-		// this.limelightBackResults.ifPresent((LimelightResults res) -> {
-		// 	this.backAprilTags = res.targets_Fiducials;
-		// });
+	public RawFiducial[] getFiducials( ) {
+		return LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
 	}
 
-	/**
-	 * @param id ID of the april tag we're looking for
-	 * @param limelight Which limelight to scan: 0 for any, 1 for front, -1 for back
-	 * @return Optional april tag if its on screen
-	 */
-	public Optional<AprilTagFiducial> getAprilTag( int id, LimelightSide limelight ) {
-		// if (limelight == LimelightSide.BACK || limelight == LimelightSide.BOTH) {
-		// 	Optional<LimelightResults> results = this
-		// 	.limelightBack
-		// 	.getLatestResults();
-		// 	if (results.isPresent()) {
-		// 		for (AprilTagFiducial tag : results.get().targets_Fiducials) {
-		// 			if (tag.fiducialID == id) {
-		// 				return Optional.of(tag);
-		// 			}
-		// 		}
-		// 	}
-		// }
-
-		if (limelight == LimelightSide.FRONT || limelight == LimelightSide.BOTH) {
-			Optional<LimelightResults> results = this
-				.limelightFront
-				.getLatestResults();
-			if (results.isPresent()) {
-				System.out.println("is present");
-				for (AprilTagFiducial tag : results.get().targets_Fiducials) {
-					System.out.println("Checking april tag " + tag.fiducialID);
-					if (tag.fiducialID == id) {
-						return Optional.of(tag);
-					}
-				}
+	public Optional<RawFiducial> getFiducialByID( int id ) {
+		for ( RawFiducial raw : getFiducials() ) {
+			if ( raw.id == id ) {
+				return Optional.of(raw);
 			}
 		}
 
 		return Optional.empty();
 	}
 
-	public InstantCommand logLimelightExists( int id ) {
-		System.out.println(LimelightHelpers.getTV(LimelightConstants.limelightFrontName));
+	@Override
+	public void periodic() {
+	}
+
+	public InstantCommand printFiducials( ) {
 		return new InstantCommand(() -> {
-			String msg = "April tag with ID `" + id;
-			Optional<AprilTagFiducial> tag = this.getAprilTag(id, LimelightSide.BOTH);
-			if (tag.isPresent()) {
-				msg += "` was found.";
-			} else {
-				msg += "` was not found.";
+			for ( RawFiducial raw : getFiducials() ) {
+				System.out.println("ID: " + raw.id + "\tDistance: " + raw.distToCamera + "\tPosition: (" + raw.txnc + ", " + raw.tync + ")");
 			}
-			System.out.println(msg);
+			System.out.println("---------------------");
 		});
 	}
+
+	// public InstantCommand checkLimelight( ) {
+	// 	return new InstantCommand(() -> {
+	// 		System.out.println("Limelight connected: " + LimelightHelpers.getTV(LimelightConstants.LIMELIGHT_NAME));
+	// 	});
+	// }
 }
