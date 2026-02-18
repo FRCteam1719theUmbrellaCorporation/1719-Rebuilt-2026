@@ -80,6 +80,7 @@ public class LimelightHandler extends SubsystemBase {
 	}
 
 	public InstantCommand logLimelightExists( int id ) {
+		System.out.println(LimelightHelpers.getTV(LimelightConstants.limelightFrontName));
 		return new InstantCommand(() -> {
 			String msg = "April tag with ID `" + id;
 			Optional<AprilTagFiducial> tag = this.getAprilTag(id, LimelightSide.BOTH);
