@@ -50,7 +50,13 @@ public final class Constants
   }
 
   public static final class LimelightConstants {
-		public static final String limelightFrontName = "limelight-front";
+		public static final String limelightFrontName = "limelight-back";
 		// public static final String limelightBackName = "limelightback";
+
+    public static enum LimelightSide {
+      FRONT,
+      BACK,
+      BOTH,
+    }
 	}
 }
