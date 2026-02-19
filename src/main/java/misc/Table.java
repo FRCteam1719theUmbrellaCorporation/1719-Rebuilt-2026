@@ -4,6 +4,22 @@ import java.lang.Math;
 import java.util.ArrayList;
 
 public final class Table {
+	private static class BorderEdges {
+		public int id;
+		public BorderEdges( int id ) {
+			this.id = id;
+		}
+
+		/* --- Checking methods --- */
+		public boolean has_top( )			{ return (this.id & Borders.TOP.id) != 0; }
+		public boolean has_top_sides( )		{ return (this.id & Borders.TOP_SIDES.id) != 0; }
+		public boolean has_bottom( )		{ return (this.id & Borders.BOTTOM.id) != 0; }
+		public boolean has_bottom_sides( )	{ return (this.id & Borders.BOTTOM_SIDES.id) != 0; }
+		public boolean has_middle( )		{ return (this.id & Borders.MIDDLE.id) != 0; }
+		public boolean has_top_inner( )		{ return (this.id & Borders.TOP_INNER.id) != 0; }
+		public boolean has_bottom_inner( )	{ return (this.id & Borders.BOTTOM_INNER.id) != 0; }
+	}
+
 	/* === Enums === */
 	public static enum Justify {
 		LEFT,
@@ -33,8 +49,8 @@ public final class Table {
 		HEAD			( Borders.TOP.id | Borders.TOP_SIDES.id | Borders.MIDDLE.id | Borders.TOP_INNER.id ),
 		// Middle line and a line at the bottom
 		MIDDLE_STOPPER	( Borders.MIDDLE.id | Borders.BOTTOM.id ),
-		// Header highlighted and a line at the bottom
-		HEADER_STOPPER	( Borders.HEAD.id | Borders.BOTTOM.id ),
+		// Head highlighted and a line at the bottom
+		HEAD_STOPPER	( Borders.HEAD.id | Borders.BOTTOM.id ),
 		// Only border around the body
 		BODY			( Borders.BOTTOM.id | Borders.BOTTOM_SIDES.id | Borders.MIDDLE.id | Borders.BOTTOM_INNER.id ),
 		// All horizontal lines
@@ -42,35 +58,28 @@ public final class Table {
 		// All lines except the ends
 		NO_ENDS			( Borders.ALL.id & Borders.NO_BOTTOM.id & Borders.NO_TOP.id );
 
-		/* --- Checking methods --- */
-		public boolean has_top( )			{ return (this.id & Borders.TOP.id) != 0; }
-		public boolean has_top_sides( )		{ return (this.id & Borders.TOP_SIDES.id) != 0; }
-		public boolean has_bottom( )		{ return (this.id & Borders.BOTTOM.id) != 0; }
-		public boolean has_bottom_sides( )	{ return (this.id & Borders.BOTTOM_SIDES.id) != 0; }
-		public boolean has_middle( )		{ return (this.id & Borders.MIDDLE.id) != 0; }
-		public boolean has_top_inner( )		{ return (this.id & Borders.TOP_INNER.id) != 0; }
-		public boolean has_bottom_inner( )	{ return (this.id & Borders.BOTTOM_INNER.id) != 0; }
-
-		private int id;
+		public int id;
+		private BorderEdges be;
 		Borders( int id ) {
 			this.id = id;
+			this.be = new BorderEdges(id);
 		}
 	}
 
 	// Each member of this enum represents an index to the table's current `_style`
 	public static enum Chars {
-		EMPTY,	// Space
-		H,		// Horizontal line
-		V,		// Vertical line
-		TL,		// Top-left corner
-		TR,		// Top-right corner
-		BL,		// Bottom-left corner
-		BR,		// Bottom-right corner
-		L,		// T-shape with flat side facing left
-		R,		// T-shape with flat side facing right
-		T,		// T-shape with flat side facing the top
-		B,		// T-shape with flat side facing the bottom
-		CENTER,	// Plus
+		EMPTY,		// Space
+		HORIZONTAL,	// Horizontal line
+		VERTICAL,	// Vertical line
+		TOP_LEFT,	// Top-left corner
+		TOP_RIGHT,	// Top-right corner
+		BACK_LEFT,	// Bottom-left corner
+		BACK_RIGHT,	// Bottom-right corner
+		LEFT,		// T-shape with flat side facing left
+		RIGHT,		// T-shape with flat side facing right
+		TOP,		// T-shape with flat side facing the top
+		BOTTOM,		// T-shape with flat side facing the bottom
+		CENTER,		// Plus
 	}
 
 	// Different border styles
@@ -125,9 +134,9 @@ public final class Table {
 	
 	/* === Private Properties === */
 	/* --- Stylization options for outputted table --- */
-	private Justify _justifyHead = Justify.LEFT;
-	private Justify _justifyBody = Justify.CENTER;
-	private Borders _borders = Borders.MIDDLE_STOPPER;
+	private Justify _justifyHead = Justify.CENTER;
+	private Justify _justifyBody = Justify.LEFT;
+	private BorderEdges _borders = Borders.MIDDLE_STOPPER.be;
 	private Style _style = Style.ASCII;
 	private int _padding = 1;
 
@@ -136,22 +145,31 @@ public final class Table {
 		this._justifyHead = justify;
 		return this;
 	}
+	
 	public Table justifyBody( Justify justify ) {
 		this._justifyBody = justify;
 		return this;
 	}
+
 	public Table justify( Justify justify ) {
 		this._justifyHead = this._justifyBody = justify;
 		return this;
 	}
+
 	public Table borders( Borders borders ) {
-		this._borders = borders;
+		this._borders = borders.be;
 		return this;
 	}
+	public Table borders( int borders ) {
+		this._borders = new Table.BorderEdges(borders);
+		return this;
+	}
+
 	public Table style( Style style ) {
 		this._style = style;
 		return this;
 	}
+
 	public Table padding( int padding ) {
 		this._padding = padding;
 		return this;
@@ -196,56 +214,56 @@ public final class Table {
 	public String toString( ) {
 		String str = "";
 
-		/* --- Header --- */
+		/* --- Head --- */
 		/* ~~~ Top row ~~~ */
 		if (this._borders.has_top()) {
-			str += this._borders.has_top_sides() ? this.getChar(Chars.TL) : this.getChar(Chars.EMPTY);
+			str += this._borders.has_top_sides() ? this.getChar(Chars.TOP_LEFT) : this.getChar(Chars.EMPTY);
 			for ( int i = 0 ; i < this.fields.length ; i++ ) {
-				str += this.getChar(Chars.H).repeat(this.getColumnWidth(i));
+				str += this.getChar(Chars.HORIZONTAL).repeat(this.getColumnWidth(i));
 
 				if (i > this.fields.length - 2) continue;
 
-				if (this._borders.has_top_inner())			{ str += this.getChar(Chars.T); }
-				else if (this._borders.has_bottom_inner())	{ str += this.getChar(Chars.H); }
+				if (this._borders.has_top_inner())			{ str += this.getChar(Chars.TOP); }
+				else										{ str += this.getChar(Chars.HORIZONTAL); }
 			}
-			str += this._borders.has_top_sides() ? this.getChar(Chars.TR) : this.getChar(Chars.EMPTY);
+			str += this._borders.has_top_sides() ? this.getChar(Chars.TOP_RIGHT) : this.getChar(Chars.EMPTY);
 			str += '\n';
 		}
 
 		/* ~~~ Fields ~~~ */
-		str += this._borders.has_top_sides() ? this.getChar(Chars.V) : this.getChar(Chars.EMPTY);
+		str += this._borders.has_top_sides() ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 		for ( int i = 0 ; i < this.fields.length ; i++ ) {
 			String paddedFieldName = pad(this.fields[i], (this.getColumnWidth(i) - 2*this._padding), ' ', this._justifyHead);
 			str += this.getPadString() + paddedFieldName + this.getPadString();
 
 			if (i > this.fields.length - 2) continue;
 
-			str += (this._borders.has_top_inner()) ? this.getChar(Chars.V) : this.getChar(Chars.EMPTY);
+			str += (this._borders.has_top_inner()) ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 		}
-		str += this._borders.has_top_sides() ? this.getChar(Chars.V) : this.getChar(Chars.EMPTY);
+		str += this._borders.has_top_sides() ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 		str += '\n';
 
 		/* ~~~ Field/data split line ~~~ */
 		if (this._borders.has_middle()) {
-			if (this._borders.has_top_sides() && this._borders.has_bottom_sides())	{ str += this.getChar(Chars.L); }
-			else if (this._borders.has_top_sides())									{ str += this.getChar(Chars.BL); }
-			else if (this._borders.has_bottom_sides())								{ str += this.getChar(Chars.TL); }
+			if (this._borders.has_top_sides() && this._borders.has_bottom_sides())	{ str += this.getChar(Chars.LEFT); }
+			else if (this._borders.has_top_sides())									{ str += this.getChar(Chars.BACK_LEFT); }
+			else if (this._borders.has_bottom_sides())								{ str += this.getChar(Chars.TOP_LEFT); }
 			else																	{ str += this.getChar(Chars.EMPTY); }
 
 			for ( int i = 0 ; i < this.fields.length ; i++ ) {
-				str += this.getChar(Chars.H).repeat(this.getColumnWidth(i));
+				str += this.getChar(Chars.HORIZONTAL).repeat(this.getColumnWidth(i));
 
 				if (i > this.fields.length - 2) continue;
 
 				if (this._borders.has_top_inner() && this._borders.has_bottom_inner())	{ str += this.getChar(Chars.CENTER); }
-				else if (this._borders.has_top_inner())									{ str += this.getChar(Chars.B); }
-				else if (this._borders.has_bottom_inner())								{ str += this.getChar(Chars.T); }
-				else																	{ str += this.getChar(Chars.H); }
+				else if (this._borders.has_top_inner())									{ str += this.getChar(Chars.BOTTOM); }
+				else if (this._borders.has_bottom_inner())								{ str += this.getChar(Chars.TOP); }
+				else																	{ str += this.getChar(Chars.HORIZONTAL); }
 			}
 			
-			if (this._borders.has_top_sides() && this._borders.has_bottom_sides())	{ str += this.getChar(Chars.R); }
-			else if (this._borders.has_top_sides())									{ str += this.getChar(Chars.BR); }
-			else if (this._borders.has_bottom_sides())								{ str += this.getChar(Chars.TR); }
+			if (this._borders.has_top_sides() && this._borders.has_bottom_sides())	{ str += this.getChar(Chars.RIGHT); }
+			else if (this._borders.has_top_sides())									{ str += this.getChar(Chars.BACK_RIGHT); }
+			else if (this._borders.has_bottom_sides())								{ str += this.getChar(Chars.TOP_RIGHT); }
 			else																	{ str += this.getChar(Chars.EMPTY); }
 			str += '\n';
 		}
@@ -254,31 +272,31 @@ public final class Table {
 		/* --- Body --- */
 		/* ~~~ Rows ~~~ */
 		for ( ArrayList<String> row : this.data ) {
-			str += this._borders.has_bottom_sides() ? this.getChar(Chars.V) : this.getChar(Chars.EMPTY);
+			str += this._borders.has_bottom_sides() ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 			for ( int i = 0 ; i < this.fields.length ; i++ ) {
 				String paddedFieldName = pad(row.get(i), (this.getColumnWidth(i) - 2*this._padding), ' ', this._justifyBody);
 				str += this.getPadString() + paddedFieldName + this.getPadString();
 
 				if (i > this.fields.length - 2) continue;
 
-				str += (this._borders.has_bottom_inner()) ? this.getChar(Chars.V) : this.getChar(Chars.EMPTY);
+				str += (this._borders.has_bottom_inner()) ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 			}
-			str += this._borders.has_bottom_sides() ? this.getChar(Chars.V) : this.getChar(Chars.EMPTY);
+			str += this._borders.has_bottom_sides() ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 			str += '\n';
 		}
 
 		/* ~~~ Bottom row ~~~ */
 		if (this._borders.has_bottom()) {
-			str += this._borders.has_bottom_sides() ? this.getChar(Chars.BL) : this.getChar(Chars.EMPTY);
+			str += this._borders.has_bottom_sides() ? this.getChar(Chars.BACK_LEFT) : this.getChar(Chars.EMPTY);
 			for ( int i = 0 ; i < this.fields.length ; i++ ) {
-				str += this.getChar(Chars.H).repeat(this.getColumnWidth(i));
+				str += this.getChar(Chars.HORIZONTAL).repeat(this.getColumnWidth(i));
 
 				if (i > this.fields.length - 2) continue;
 
-				if (this._borders.has_bottom_inner())	{ str += this.getChar(Chars.B); }
-				else if (this._borders.has_top_inner())	{ str += this.getChar(Chars.H); }
+				if (this._borders.has_bottom_inner())	{ str += this.getChar(Chars.BOTTOM); }
+				else									{ str += this.getChar(Chars.HORIZONTAL); }
 			}
-			str += this._borders.has_bottom_sides() ? this.getChar(Chars.BR) : this.getChar(Chars.EMPTY);
+			str += this._borders.has_bottom_sides() ? this.getChar(Chars.BACK_RIGHT) : this.getChar(Chars.EMPTY);
 			str += '\n';
 		}
 
