@@ -7,9 +7,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.LimelightHelpers.RawFiducial;
+import misc.Table;
 import frc.robot.LimelightHelpers;
-
-import javax.swing.JTable;
 
 public class LimelightHandler extends SubsystemBase {
 	public RawFiducial[] fiducials;
@@ -37,10 +36,13 @@ public class LimelightHandler extends SubsystemBase {
 
 	public InstantCommand printFiducials( ) {
 		return new InstantCommand(() -> {
+			Table T = new Table("ID", "Distance", "TXNC", "TYNC", "Area", "Ambiguity")
+				.borders(Table.Borders.HEAD.id | Table.Borders.BOTTOM_INNER.id)
+				.style(Table.Style.SOLID);
 			for ( RawFiducial raw : getFiducials() ) {
-				System.out.println("ID: " + raw.id + "\tDistance: " + raw.distToCamera + "\tPosition: (" + raw.txnc + ", " + raw.tync + ")");
+				T.addRow(raw.id, raw.distToCamera, raw.txnc, raw.tync, raw.ta, raw.ambiguity);
 			}
-			System.out.println("---------------------");
+			T.print();
 		});
 	}
 
