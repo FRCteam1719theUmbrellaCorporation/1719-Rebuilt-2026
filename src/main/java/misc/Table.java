@@ -201,9 +201,9 @@ public final class Table {
 
 	/* === Public Methods === */
 	// Adds a row of data to the table, returns the table for chaining
-	public Table addRow( Object[] row ) {
+	public Table addRow( Object... items ) {
 		ArrayList<String> newRow = new ArrayList<>();
-		for ( Object item : row ) {
+		for ( Object item : items ) {
 			newRow.add(item.toString());
 		}
 		this.data.add(newRow);
