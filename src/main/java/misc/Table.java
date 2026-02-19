@@ -66,22 +66,6 @@ public final class Table {
 		}
 	}
 
-	// Each member of this enum represents an index to the table's current `_style`
-	public static enum Chars {
-		EMPTY,		// Space
-		HORIZONTAL,	// Horizontal line
-		VERTICAL,	// Vertical line
-		TOP_LEFT,	// Top-left corner
-		TOP_RIGHT,	// Top-right corner
-		BACK_LEFT,	// Bottom-left corner
-		BACK_RIGHT,	// Bottom-right corner
-		LEFT,		// T-shape with flat side facing left
-		RIGHT,		// T-shape with flat side facing right
-		TOP,		// T-shape with flat side facing the top
-		BOTTOM,		// T-shape with flat side facing the bottom
-		CENTER,		// Plus
-	}
-
 	// Different border styles
 	public static enum Style {
 		ASCII		(new char[]{ ' ', '-', '|', '+', '+', '+', '+', '+', '+', '+', '+', '+' }),
@@ -94,6 +78,22 @@ public final class Table {
 		Style( char[] chars ) {
 			this.chars = chars;
 		}
+	}
+
+	// Each member of this enum represents an index to the table's current `_style`
+	private static enum Chars {
+		EMPTY,		// Space
+		HORIZONTAL,	// Horizontal line
+		VERTICAL,	// Vertical line
+		TOP_LEFT,	// Top-left corner
+		TOP_RIGHT,	// Top-right corner
+		BACK_LEFT,	// Bottom-left corner
+		BACK_RIGHT,	// Bottom-right corner
+		LEFT,		// T-shape with flat side facing left
+		RIGHT,		// T-shape with flat side facing right
+		TOP,		// T-shape with flat side facing the top
+		BOTTOM,		// T-shape with flat side facing the bottom
+		CENTER,		// Plus
 	}
 
 	/* === Public Static Functions === */
@@ -304,5 +304,10 @@ public final class Table {
 
 
 		return str;
+	}
+
+	// Prints the table to stdout
+	public void print( ) {
+		System.out.println(this.toString());
 	}
 }
