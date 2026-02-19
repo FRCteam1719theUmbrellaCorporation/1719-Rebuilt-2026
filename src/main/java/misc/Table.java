@@ -122,13 +122,15 @@ public final class Table {
 	}
 
 	// Constructor
-	public Table( String[] fields ) {
-		this.fields = fields;
+	public Table( String... fields ) {
+		for ( String field : fields ) {
+			this.fields.add(field);
+		}
 	}
 
 	/* === Public Properties === */
 	// List of fields for the table
-	public String[] fields;
+	public ArrayList<String> fields = new ArrayList<>();
 	// List of rows of data in string form
 	public ArrayList<ArrayList<String>> data = new ArrayList<>();
 	
@@ -189,7 +191,7 @@ public final class Table {
 
 	// Gets the minimum width to fit all rows of data for a given column
 	private int getColumnWidth( int colIndex ) {
-		int minWidth = this.fields[colIndex].length();
+		int minWidth = this.fields.get(colIndex).length();
 		for ( ArrayList<String> row : this.data ) {
 			minWidth = Math.max(minWidth, row.get(colIndex).length());
 		}
@@ -218,10 +220,10 @@ public final class Table {
 		/* ~~~ Top row ~~~ */
 		if (this._borders.has_top()) {
 			str += this._borders.has_top_sides() ? this.getChar(Chars.TOP_LEFT) : this.getChar(Chars.EMPTY);
-			for ( int i = 0 ; i < this.fields.length ; i++ ) {
+			for ( int i = 0 ; i < this.fields.size() ; i++ ) {
 				str += this.getChar(Chars.HORIZONTAL).repeat(this.getColumnWidth(i));
 
-				if (i > this.fields.length - 2) continue;
+				if (i > this.fields.size() - 2) continue;
 
 				if (this._borders.has_top_inner())			{ str += this.getChar(Chars.TOP); }
 				else										{ str += this.getChar(Chars.HORIZONTAL); }
@@ -232,11 +234,11 @@ public final class Table {
 
 		/* ~~~ Fields ~~~ */
 		str += this._borders.has_top_sides() ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
-		for ( int i = 0 ; i < this.fields.length ; i++ ) {
-			String paddedFieldName = pad(this.fields[i], (this.getColumnWidth(i) - 2*this._padding), ' ', this._justifyHead);
+		for ( int i = 0 ; i < this.fields.size() ; i++ ) {
+			String paddedFieldName = pad(this.fields.get(i), (this.getColumnWidth(i) - 2*this._padding), ' ', this._justifyHead);
 			str += this.getPadString() + paddedFieldName + this.getPadString();
 
-			if (i > this.fields.length - 2) continue;
+			if (i > this.fields.size() - 2) continue;
 
 			str += (this._borders.has_top_inner()) ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 		}
@@ -250,10 +252,10 @@ public final class Table {
 			else if (this._borders.has_bottom_sides())								{ str += this.getChar(Chars.TOP_LEFT); }
 			else																	{ str += this.getChar(Chars.EMPTY); }
 
-			for ( int i = 0 ; i < this.fields.length ; i++ ) {
+			for ( int i = 0 ; i < this.fields.size() ; i++ ) {
 				str += this.getChar(Chars.HORIZONTAL).repeat(this.getColumnWidth(i));
 
-				if (i > this.fields.length - 2) continue;
+				if (i > this.fields.size() - 2) continue;
 
 				if (this._borders.has_top_inner() && this._borders.has_bottom_inner())	{ str += this.getChar(Chars.CENTER); }
 				else if (this._borders.has_top_inner())									{ str += this.getChar(Chars.BOTTOM); }
@@ -273,11 +275,11 @@ public final class Table {
 		/* ~~~ Rows ~~~ */
 		for ( ArrayList<String> row : this.data ) {
 			str += this._borders.has_bottom_sides() ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
-			for ( int i = 0 ; i < this.fields.length ; i++ ) {
+			for ( int i = 0 ; i < this.fields.size() ; i++ ) {
 				String paddedFieldName = pad(row.get(i), (this.getColumnWidth(i) - 2*this._padding), ' ', this._justifyBody);
 				str += this.getPadString() + paddedFieldName + this.getPadString();
 
-				if (i > this.fields.length - 2) continue;
+				if (i > this.fields.size() - 2) continue;
 
 				str += (this._borders.has_bottom_inner()) ? this.getChar(Chars.VERTICAL) : this.getChar(Chars.EMPTY);
 			}
@@ -288,10 +290,10 @@ public final class Table {
 		/* ~~~ Bottom row ~~~ */
 		if (this._borders.has_bottom()) {
 			str += this._borders.has_bottom_sides() ? this.getChar(Chars.BACK_LEFT) : this.getChar(Chars.EMPTY);
-			for ( int i = 0 ; i < this.fields.length ; i++ ) {
+			for ( int i = 0 ; i < this.fields.size() ; i++ ) {
 				str += this.getChar(Chars.HORIZONTAL).repeat(this.getColumnWidth(i));
 
-				if (i > this.fields.length - 2) continue;
+				if (i > this.fields.size() - 2) continue;
 
 				if (this._borders.has_bottom_inner())	{ str += this.getChar(Chars.BOTTOM); }
 				else									{ str += this.getChar(Chars.HORIZONTAL); }
