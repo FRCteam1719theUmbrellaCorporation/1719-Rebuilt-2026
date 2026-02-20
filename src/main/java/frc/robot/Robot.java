@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.concurrent.ScheduledExecutorService;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -132,6 +134,8 @@ public class Robot extends TimedRobot
     {
       CommandScheduler.getInstance().cancelAll();
     }
+    m_robotContainer.Center_wheels.schedule();
+    m_robotContainer.drivebase.zeroGyro();
   }
 
   /**
