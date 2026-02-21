@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -43,25 +44,32 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 public class RobotContainer
 {
 
+  protected double i_scalar(double coordToReturn, double otherCoord) {
+    final double r = Math.sqrt(Math.pow(coordToReturn, 2) 
+                             + Math.pow(otherCoord, 2));
+    final double scale_factor = Math.pow(
+        MathUtil.clamp(r,0,1),
+        Constants.OperatorConstants.JOYSTICK_SENSITIVITY_FACTOR);
+    return (coordToReturn*scale_factor)/(r+Constants.OperatorConstants.EPISLON);
+  }
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/Dutchman"));
-
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final SendableChooser<Command> autoChooser;
-
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY() * -1,
-                                                                () -> driverXbox.getLeftX() * -1)
-                                                            .withControllerRotationAxis(driverXbox::getRightX)
+                                                                () -> i_scalar(driverXbox.getLeftY(), driverXbox.getLeftX()) * -1,
+                                                                () -> i_scalar(driverXbox.getLeftX(), driverXbox.getLeftY()) * -1)
+                                                            .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3))
                                                             .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.8)
+                                                            .scaleTranslation(0.9)
                                                             .allianceRelativeControl(true);
 
   /**
@@ -114,6 +122,15 @@ public class RobotContainer
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();
     }));
+
+    driverXbox.rightTrigger().onTrue(new InstantCommand(()->{
+        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor);
+        System.out.println("ran ts");
+    })).onFalse(new InstantCommand(()->{
+      System.out.println("ran ts");
+      drivebase.setMaxSpeed(1);
+    }
+    ));
     
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
