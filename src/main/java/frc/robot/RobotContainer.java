@@ -67,7 +67,7 @@ public class RobotContainer
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> i_scalar(driverXbox.getLeftY(), driverXbox.getLeftX()) * -1,
                                                                 () -> i_scalar(driverXbox.getLeftX(), driverXbox.getLeftY()) * -1)
-                                                            .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3))
+                                                            .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.9)
                                                             .allianceRelativeControl(true);
@@ -123,14 +123,15 @@ public class RobotContainer
       drivebase.zeroGyro();
     }));
 
-    driverXbox.rightTrigger().onTrue(new InstantCommand(()->{
-        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor);
-        System.out.println("ran ts");
-    })).onFalse(new InstantCommand(()->{
-      System.out.println("ran ts");
-      drivebase.setMaxSpeed(1);
-    }
-    ));
+    // driverXbox.rightTrigger().onTrue(new InstantCommand(()->{
+    //     drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor);
+    //     System.out.println("ran ts");
+    // })).onFalse(new InstantCommand(()->{
+    //   System.out.println("ran ts");
+    //   drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor*10);
+    //   drivebase.setMaxSpeed(1);
+    // }
+    // ));
     
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
