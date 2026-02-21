@@ -15,13 +15,13 @@
     "canbus": "Drivetrain"
   },
   "inverted": {
-    "drive": false,
+    "drive": true,
     "angle": false
   },
   "absoluteEncoderInverted": false,
-  "absoluteEncoderOffset": 25.25,
+  "absoluteEncoderOffset": 201.533,
   "location": {
-    "front": -6.5,
-    "left": 6.5
+    "front": -6.75,
+    "left": 6.75
   }
 }
