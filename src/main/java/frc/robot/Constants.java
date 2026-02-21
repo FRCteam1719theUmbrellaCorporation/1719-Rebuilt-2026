@@ -51,5 +51,13 @@ public final class Constants
 
   public static final class LimelightConstants {
 		public static final String LIMELIGHT_NAME = "limelight-back";
+    public static final Double MAX_TAG_DIST = 10.0;
+    public static final TeamColor TEAM = TeamColor.RED;
+    public static final boolean USE_MEGATAG2 = true;
+
+    public static enum TeamColor {
+      RED,
+      BLUE,
+    }
 	}
 }
