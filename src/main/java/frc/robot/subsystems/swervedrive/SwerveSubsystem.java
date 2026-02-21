@@ -148,7 +148,7 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public void setMaxSpeed(double multiplier) {
-    swerveDrive.setMaximumAttainableSpeeds(Constants.MAX_SPEED * multiplier, Constants.MAX_SPEED * multiplier);
+    swerveDrive.setMaximumAttainableSpeeds(Constants.MAX_SPEED * multiplier, Math.PI * 2 * multiplier);
   }
 
 //  /**

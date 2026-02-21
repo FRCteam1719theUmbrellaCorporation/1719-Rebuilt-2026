@@ -126,25 +126,14 @@ public class RobotContainer
       drivebase.zeroGyro();
     }));
 
-    // driverXbox.rightTrigger().onTrue(new InstantCommand(()->{
-    //     drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor);
-    //     System.out.println("ran ts");
-    // })).onFalse(new InstantCommand(()->{
-    //   System.out.println("ran ts");
-    //   drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor*10);
-    //   drivebase.setMaxSpeed(1);
-    // }
-    // ));
-    
-    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), OperatorConstants.RIGHT_X_DEADBAND),
-    //     () -> driverXbox.getRightX(),
-    //     () -> driverXbox.getRightY());
-        
-    // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
+    // someone make this really pretty at some point please!
+    driverXbox.rightTrigger()
+      .onTrue(new InstantCommand(()->
+        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
+      ).onFalse(new InstantCommand(()->
+        drivebase.setMaxSpeed(1))
+    );
 
-      // driverXbox.a().onTrue(new InstantCommand(() -> {System.out.println("AHHHHH");}));
       driverXbox.y().onTrue(LLHandler.printAngles());
   }
   /**
