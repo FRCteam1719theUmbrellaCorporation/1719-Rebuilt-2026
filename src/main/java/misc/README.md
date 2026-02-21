@@ -4,6 +4,21 @@ This package contains classes and helper utilities that are *not* related to rob
 This file should be used to document all classes, their public facing functions,
 and their usage.
 
+## Angle.java
+
+This class is for easily converting between units of rotation. To make a new
+instance, call `Angle.{UNIT}({VALUE})`. To get a value from it, get
+`{INSTANCE}.{UNIT}`. To add or subtract use the methods `add(other)` and
+`sub(other)`. It supports the units:
+
+* Rotations (*0 - 1*)
+* Radians (*0 - 2π*)
+* Degrees (*0 - 360*)
+* Grads (*0 - 100*)
+
+> [!NOTE]
+> The `add` and `sub` methods return a *new* instance of `Angle`.
+
 ## Table.java
 
 This class creates a table of data with named fields for printing data in a

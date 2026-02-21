@@ -80,7 +80,7 @@ public class Robot extends TimedRobot
   @Override
   public void disabledInit()
   {
-    m_robotContainer.setMotorBrake(true);
+    // m_robotContainer.setMotorBrake(true);
     disabledTimer.reset();
     disabledTimer.start();
   }
@@ -90,7 +90,7 @@ public class Robot extends TimedRobot
   {
     if (disabledTimer.hasElapsed(Constants.DrivebaseConstants.WHEEL_LOCK_TIME))
     {
-      m_robotContainer.setMotorBrake(false);
+      // m_robotContainer.setMotorBrake(false);
       disabledTimer.stop();
       disabledTimer.reset();
     }
@@ -102,7 +102,7 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
-    m_robotContainer.setMotorBrake(true);
+    // m_robotContainer.setMotorBrake(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
