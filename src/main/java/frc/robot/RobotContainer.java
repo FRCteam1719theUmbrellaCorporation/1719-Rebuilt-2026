@@ -107,7 +107,7 @@ public class RobotContainer
     // drivebase.setDefaultCommand(driveFieldOrientedDirectAngle);
 
       // driverXbox.a().onTrue(new InstantCommand(() -> {System.out.println("AHHHHH");}));
-      driverXbox.a().onTrue(LLHandler.printFiducials());
+      driverXbox.a().onTrue(LLHandler.printAngles());
   }
 
   /**

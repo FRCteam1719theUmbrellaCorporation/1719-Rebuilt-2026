@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import java.lang.StackWalker.Option;
 import java.util.Optional;
 
+import javax.swing.border.Border;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Unit;
@@ -15,6 +17,7 @@ import frc.robot.LimelightHelpers.RawFiducial;
 import misc.Table;
 import misc.Table.Borders;
 import misc.Table.Style;
+import misc.Angle;
 import frc.robot.LimelightHelpers;
 
 public class LimelightHandler extends SubsystemBase {
@@ -37,18 +40,6 @@ public class LimelightHandler extends SubsystemBase {
 		return Optional.empty();
 	}
 
-	public InstantCommand printFiducials( ) {
-		return new InstantCommand(() -> {
-			Table T = new Table("ID", "Distance", "TXNC", "TYNC", "Area", "Ambiguity")
-				.borders(Table.Borders.HEAD.id | Table.Borders.BOTTOM_INNER.id)
-				.style(Table.Style.SOLID);
-			for ( RawFiducial raw : getFiducials() ) {
-				T.addRow(raw.id, raw.distToCamera, raw.txnc, raw.tync, raw.ta, raw.ambiguity);
-			}
-			T.print();
-		});
-	}
-
 	public Optional<Double> getDistFromTag( int tagID ) {
 		Optional<RawFiducial> tag = this.getFiducialByID(tagID);
 		if (tag.isPresent()) {
@@ -67,41 +58,33 @@ public class LimelightHandler extends SubsystemBase {
 		}
 	}
 
-	private PoseEstimate getBotPoseEstimate( String limelightName ) {
+	private PoseEstimate getBotPoseEstimate( ) {
 		if (LimelightConstants.USE_MEGATAG2) {
-			if (LimelightConstants.TEAM == TeamColor.BLUE) {
-				return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName);
-			} else {
-				return LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
-			}
+			return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.LIMELIGHT_NAME);
 		} else {
-			if (LimelightConstants.TEAM == TeamColor.BLUE) {
-				return LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
-			} else {
-				return LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
-			}
+			return LimelightHelpers.getBotPoseEstimate_wpiBlue(LimelightConstants.LIMELIGHT_NAME);
 		}
 	}
 
-	private Pose2d getBotPose() {
-		PoseEstimate estimate = this.getBotPoseEstimate(LimelightConstants.LIMELIGHT_NAME);
+	private Pose2d getBotPose( ) {
+		PoseEstimate estimate = this.getBotPoseEstimate();
 		return estimate.pose;
 	}
 
-	private double getBotHeading() {
-		return getBotPose()
+	private Angle getBotHeading( ) {
+		return Angle.rotations(
+			getBotPose()
 			.getRotation()
-			.getRotations();
+			.getRotations()
+		);
 	}
-
-	public double getBotHeadingRotations()	{ return this.getBotHeading() * 1; }
-	public double getBotHeadingDegrees()	{ return this.getBotHeading() * 360; }
-	public double getBotHeadingRadians()	{ return this.getBotHeading() * 2*Math.PI; }
 	
-	public double[] getBotPosition() {
-		return this
-			.getBotPose()
-			.;
+	public double[] getBotPosition( ) {
+		Pose2d pose = this.getBotPose();
+		return new double[]{
+			pose.getX(),
+			pose.getY(),
+		};
 	}
 
 	// public Optional<Double[]> getAngleFromTag( int tagID ) {
@@ -123,6 +106,29 @@ public class LimelightHandler extends SubsystemBase {
 	// 		}
 	// 	});
 	// }
+
+	// public InstantCommand printFiducials( ) {
+	// 	return new InstantCommand(() -> {
+	// 		Table T = new Table("ID", "Distance", "TXNC", "TYNC", "Area", "Ambiguity")
+	// 			.borders(Table.Borders.HEAD.id | Table.Borders.BOTTOM_INNER.id)
+	// 			.style(Table.Style.SOLID);
+	// 		for ( RawFiducial raw : getFiducials() ) {
+	// 			T.addRow(raw.id, raw.distToCamera, raw.txnc, raw.tync, raw.ta, raw.ambiguity);
+	// 		}
+	// 		T.print();
+	// 	});
+	// }
+
+	public InstantCommand printAngles( ) {
+		return new InstantCommand(() -> {
+			Table T = new Table("ID", "Distance", "Angle of Tag", "Bot Heading (degrees)")
+				.borders(Borders.ALL);
+			for (RawFiducial raw : getFiducials()) {
+				T.addRow(raw.id, raw.distToCamera, getAngleFromTag(raw.id), getBotHeading().degrees);
+			}
+			T.print();
+		});
+	}
 
 	@Override
 	public void periodic() {
