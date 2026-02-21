@@ -1,22 +1,15 @@
 package frc.robot.subsystems;
 
-import java.lang.StackWalker.Option;
 import java.util.Optional;
 
-import javax.swing.border.Border;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.LimelightConstants;
-import frc.robot.Constants.LimelightConstants.TeamColor;
 import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
 import misc.Table;
 import misc.Table.Borders;
-import misc.Table.Style;
 import misc.Angle;
 import frc.robot.LimelightHelpers;
 
@@ -86,14 +79,6 @@ public class LimelightHandler extends SubsystemBase {
 			pose.getY(),
 		};
 	}
-
-	// public Optional<Double[]> getAngleFromTag( int tagID ) {
-	// 	Optional<Double> dist = this.getDistFromTag(tagID);
-	// 	if (dist.isEmpty()) { return Optional.empty(); }
-
-	// 	if (dist.get() < LimelightConstants.MAX_TAG_DIST){
-	// 	}
-	// }
 
 	// public InstantComman printPose( ) {
 	// 	return new InstantCommand(() -> {
