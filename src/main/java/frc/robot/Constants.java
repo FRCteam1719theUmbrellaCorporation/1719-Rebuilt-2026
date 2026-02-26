@@ -30,13 +30,6 @@ public final class Constants
   public static final double Motor_Max = 1;
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
-//  public static final class AutonConstants
-//  {
-//
-//    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-//    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
-//  }
-
   public static final class DrivebaseConstants
   {
 
@@ -94,7 +87,6 @@ public final class Constants
     public static final double AIM_AT_TAG_TOLERANCE = 3.d;
 	}
 
-
   public static final class IntakeConstants {
     public static final int ID = 3;
     public static final float INTAKE_SPEED = 0.6f;
@@ -118,4 +110,8 @@ public final class Constants
     // public static final double ShooterScailTimeout = 2.d;
   }
 
+  public static final class FieldConstants {
+    public static final int SHOOTER_APRIL_TAG_RED = 10;
+    public static final int SHOOTER_APRIL_TAG_BLUE = 25;
+  }
 }
