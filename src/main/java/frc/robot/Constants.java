@@ -27,13 +27,6 @@ public final class Constants
   public static final double MAX_SPEED  = MAX_SPEED_MULTIPLIER*Units.feetToMeters(14.5);
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
-//  public static final class AutonConstants
-//  {
-//
-//    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-//    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
-//  }
-
   public static final class DrivebaseConstants
   {
 
@@ -80,4 +73,20 @@ public final class Constants
     public static final double DONT_SEE_TAG_WAIT_TIME = 1;
 	  public static final double POSE_VALIDATION_TIME = 0.3;
 	}
+
+  public static final class IntakeConstants {
+    public static final int ID = 3;
+    //TODO: impl important vars
+  } 
+
+  public static final class OutakeConstants {
+    public static final int FUNNEL_ID = 4;
+    public static final int SHOOTER_LEFT_ID = 5;
+    public static final int SHOOTER_RIGHT_ID = 6;
+  }
+
+  public static final class FieldConstants {
+    public static final int SHOOTER_APRIL_TAG_RED = 10;
+    public static final int SHOOTER_APRIL_TAG_BLUE = 25;
+  }
 }
