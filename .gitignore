@@ -177,3 +177,6 @@ logs/
 
 # Folder that has CTRE Phoenix Sim device config storage
 ctre_sim/
+
+# File that's depended on the user's homedir
+.factorypath
