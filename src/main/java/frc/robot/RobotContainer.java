@@ -15,6 +15,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,9 +24,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
+import frc.robot.subsystems.devices.IntakeSubsystem;
+
 import java.io.File;
 import swervelib.SwerveInputStream;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -56,45 +60,46 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final IntakeSubsystem INTAKE = new IntakeSubsystem();
   // The robot's subsystems and commands are defined here...
-  public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve/Dutchman"));
-  private final LimelightHandler LLHandler = new LimelightHandler();
+  // public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+  //                                                                               "swerve/Dutchman"));
+  // private final LimelightHandler LLHandler = new LimelightHandler();
 
-  // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
-  //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-  private final SendableChooser<Command> autoChooser;
-  /**
-   * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
-   */
-  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> i_scalar(driverXbox.getLeftY(), driverXbox.getLeftX()) * -1,
-                                                                () -> i_scalar(driverXbox.getLeftX(), driverXbox.getLeftY()) * -1)
-                                                            .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
-                                                            .deadband(OperatorConstants.DEADBAND)
-                                                            .scaleTranslation(0.9)
-                                                            .allianceRelativeControl(true);
+  // // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
+  // //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  // private final SendableChooser<Command> autoChooser;
+  // /**
+  //  * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
+  //  */
+  // SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+  //                                                               () -> i_scalar(driverXbox.getLeftY(), driverXbox.getLeftX()) * -1,
+  //                                                               () -> i_scalar(driverXbox.getLeftX(), driverXbox.getLeftY()) * -1)
+  //                                                           .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
+  //                                                           .deadband(OperatorConstants.DEADBAND)
+  //                                                           .scaleTranslation(0.9)
+  //                                                           .allianceRelativeControl(true);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
+  // public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
 
   public RobotContainer()
   {
-    // Configure the trigger bindings
+    // // Configure the trigger bindings
     configureBindings();
-    DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("center", Center_wheels);
-    //Set the default auto (do nothing) 
-    //autoChooser.setDefaultOption("Do Nothing", Commands.none());
-    autoChooser = AutoBuilder.buildAutoChooser();
+    // DriverStation.silenceJoystickConnectionWarning(true);
+    // NamedCommands.registerCommand("center", Center_wheels);
+    // //Set the default auto (do nothing) 
+    // //autoChooser.setDefaultOption("Do Nothing", Commands.none());
+    // autoChooser = AutoBuilder.buildAutoChooser();
 
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     // autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
     
     //Put the autoChooser on the SmartDashboard
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    // SmartDashboard.putData("Auto Chooser", autoChooser);
    
   }
 
@@ -112,40 +117,43 @@ public class RobotContainer
 
   private void configureBindings()
   {
+
+    driverXbox.a().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
+    driverXbox.a().onFalse(new InstantCommand(()->INTAKE.stop()));
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), .1),
     //     () -> driverXbox.getRightX(),
     //     () -> driverXbox.getRightY());
 
-    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+    // Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    driverXbox.a().onTrue(Center_wheels);
-    driverXbox.start().onTrue(new InstantCommand(()-> {
-      drivebase.zeroGyro();
-    }));
+    // driverXbox.a().onTrue(Center_wheels);
+    // driverXbox.start().onTrue(new InstantCommand(()-> {
+    //   drivebase.zeroGyro();
+    // }));
 
-    // someone make this really pretty at some point please!
-    driverXbox.rightTrigger()
-      .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
-      ).onFalse(new InstantCommand(()->
-        drivebase.setMaxSpeed(1))
-    );
+    // // someone make this really pretty at some point please!
+    // driverXbox.rightTrigger()
+    //   .onTrue(new InstantCommand(()->
+    //     drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
+    //   ).onFalse(new InstantCommand(()->
+    //     drivebase.setMaxSpeed(1))
+    // );
 
-      driverXbox.y().onTrue(LLHandler.printAngles());
+    //   driverXbox.y().onTrue(LLHandler.printAngles());
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand()
-  {
-    // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
-    return autoChooser.getSelected();
-  }
+  // public Command getAutonomousCommand()
+  // {
+  //   // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
+  //   return autoChooser.getSelected();
+  // }
 
   // public void setMotorBrake(boolean brake)
   // {
