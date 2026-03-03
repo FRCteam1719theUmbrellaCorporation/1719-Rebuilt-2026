@@ -119,7 +119,10 @@ public class RobotContainer
   {
 
     driverXbox.a().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    driverXbox.a().onFalse(new InstantCommand(()->INTAKE.stop()));
+    driverXbox.b().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    driverXbox.a().b().onFalse(new InstantCommand(()->INTAKE.stop()));
+
+    driverXbox.rightTrigger().whileTrue(new InstantCommand(()->OUTAKE.setSpeed(OutakeConstants.OUTAKE_SPEED)));
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), .1),
