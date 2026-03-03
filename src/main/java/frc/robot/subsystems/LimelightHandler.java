@@ -23,6 +23,15 @@ public class LimelightHandler extends SubsystemBase {
 		return LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
 	}
 
+	public boolean SeesTargetTag(int target) {
+		for ( RawFiducial raw : getFiducials() ) {
+			if (raw.id == target) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 	public Optional<RawFiducial> getFiducialByID( int tagID ) {
 		for ( RawFiducial raw : getFiducials() ) {
 			if ( raw.id == tagID ) {

@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AlignToReefTagRelative;
+import frc.robot.commands.Movetotag;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import java.io.File;
@@ -58,7 +60,7 @@ public class RobotContainer
   final         CommandXboxController driverXbox = new CommandXboxController(0);
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve/Dutchman"));
+                                                                                "swerve/Turbo"));
   private final LimelightHandler LLHandler = new LimelightHandler();
 
   // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
@@ -125,7 +127,19 @@ public class RobotContainer
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();
     }));
-
+      //B will make the robot align directly infront of the april tag a set constant distance(look in constant)
+      driverXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {
+      drivebase.centerModulesCommand();}),
+      new AlignToReefTagRelative(true, drivebase).withTimeout(3)
+      ));
+    //Y should move along the radius(it may not move in a perfect straihgt line) 
+    driverXbox.y().onTrue(
+      new SequentialCommandGroup(
+      new InstantCommand(()-> {
+      drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
+    
     // someone make this really pretty at some point please!
     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
@@ -134,7 +148,6 @@ public class RobotContainer
         drivebase.setMaxSpeed(1))
     );
 
-      driverXbox.y().onTrue(LLHandler.printAngles());
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

@@ -20,10 +20,10 @@ import swervelib.math.Matter;
 public final class Constants
 {
 
-  public static final double ROBOT_MASS = (148 - 20.3) * 0.453592; // 32lbs * kg per pound
+  public static final double ROBOT_MASS = (105) * 0.453592; // 105lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED_MULTIPLIER = 0.4;
+  public static final double MAX_SPEED_MULTIPLIER = 0.25;
   public static final double MAX_SPEED  = MAX_SPEED_MULTIPLIER*Units.feetToMeters(14.5);
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
@@ -54,10 +54,11 @@ public final class Constants
     public static final double EPISLON = 1.e-16;
 
     public static final double SlowDriveFactor = 0.25f; 
+    public static final double NormalDriveFactor = 1f; 
   }
 
   public static final class LimelightConstants {
-		public static final String LIMELIGHT_NAME = "limelight-back";
+		public static final String LIMELIGHT_NAME = "limelight";
     public static final Double MAX_TAG_DIST = 10.0;
     public static final TeamColor TEAM = TeamColor.RED;
     public static final boolean USE_MEGATAG2 = true;
@@ -66,18 +67,23 @@ public final class Constants
       RED,
       BLUE,
     }
-
-    public static final double X_REEF_ALIGNMENT_P = 3.3;
-    public static final double Y_REEF_ALIGNMENT_P = 3.3;
+//these two P values need to be tuned
+    public static final double X_REEF_ALIGNMENT_P = 2; // 3.3;
+    public static final double Y_REEF_ALIGNMENT_P = 2; // 3.3;
     public static final double ROT_REEF_ALIGNMENT_P = 0.058;
 
+    public static final double PositionScalar = 3.0;
     public static final double ROT_SETPOINT_REEF_ALIGNMENT = 0;  // Rotation
     public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 1;
-    public static final double X_SETPOINT_REEF_ALIGNMENT = -0.34;  // Vertical pose
+    //xsetpoint was originally -0.34
+    public static final double X_SETPOINT_REEF_ALIGNMENT = -0.5*PositionScalar;  // Vertical pose
     public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.02;
-    public static final double Y_SETPOINT_REEF_ALIGNMENT = 0.16;  // Horizontal pose
+    //ysetpoint was originally 0.16
+    public static final double Y_SETPOINT_REEF_ALIGNMENT = 0*PositionScalar;  // Horizontal pose
     public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.02;
     public static final double DONT_SEE_TAG_WAIT_TIME = 1;
 	  public static final double POSE_VALIDATION_TIME = 0.3;
+
+    public static final double DesiredRadius = 2.0;
 	}
 }
