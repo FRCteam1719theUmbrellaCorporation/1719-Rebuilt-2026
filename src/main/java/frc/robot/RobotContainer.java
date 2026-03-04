@@ -62,7 +62,7 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
-  final         CommandXboxController operatorXbox = new CommandXboxController(1);
+  // final         CommandXboxController operatorXbox = new CommandXboxController(1);
   final IntakeSubsystem INTAKE = new IntakeSubsystem();
     final OutakeSubsystem OUTAKE = new OutakeSubsystem();
 
