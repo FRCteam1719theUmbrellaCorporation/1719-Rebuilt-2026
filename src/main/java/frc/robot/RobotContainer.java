@@ -125,6 +125,7 @@ public class RobotContainer
 
     driverXbox.a().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
     driverXbox.b().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    driverXbox.a().and(driverXbox.b()).onFalse(new InstantCommand(()->INTAKE.stop()));
     // driverXbox.a().b().onFalse(new InstantCommand(()->INTAKE.stop()));
 
     driverXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
