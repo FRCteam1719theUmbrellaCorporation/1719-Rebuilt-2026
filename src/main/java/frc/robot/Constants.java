@@ -86,4 +86,20 @@ public final class Constants
 
     public static final double DesiredRadius = 2.0;
 	}
+
+
+  public static final class IntakeConstants {
+    public static final int ID = 3;
+    public static final float INTAKE_SPEED = 0.6f;
+    //TODO: impl important vars
+  }
+  
+  public static final class OutakeConstants{
+    public static final int FUNNEL_ID = 4;
+    public static final int SHOOTER_ID = 6;
+    public static final float OUTAKE_SPEED = 0.5f;
+    public static final float FUNNEL_SPEED = 0.4f;
+    public static final float OUTAKE_TIME = 0.5f;
+  }
+
 }
