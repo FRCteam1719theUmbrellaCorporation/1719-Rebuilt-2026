@@ -26,9 +26,11 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.Constants.OutakeConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.IntakeSubsystem;
+import frc.robot.subsystems.devices.OutakeSubsystem;
 
 import java.io.File;
 import swervelib.SwerveInputStream;
@@ -61,6 +63,8 @@ public class RobotContainer
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
   final IntakeSubsystem INTAKE = new IntakeSubsystem();
+    final OutakeSubsystem OUTAKE = new OutakeSubsystem();
+
   // The robot's subsystems and commands are defined here...
   // public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
   //                                                                               "swerve/Dutchman"));
@@ -120,9 +124,11 @@ public class RobotContainer
 
     driverXbox.a().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
     driverXbox.b().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
-    driverXbox.a().b().onFalse(new InstantCommand(()->INTAKE.stop()));
+    // driverXbox.a().b().onFalse(new InstantCommand(()->INTAKE.stop()));
 
-    driverXbox.rightTrigger().whileTrue(new InstantCommand(()->OUTAKE.setSpeed(OutakeConstants.OUTAKE_SPEED)));
+    driverXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.setSpeed(OutakeConstants.OUTAKE_SPEED)));
+    driverXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
     //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), .1),
