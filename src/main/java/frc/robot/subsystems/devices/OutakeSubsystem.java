@@ -13,7 +13,15 @@ import frc.robot.Constants.OutakeConstants;
 import edu.wpi.first.wpilibj.Timer;
 
 public class OutakeSubsystem extends SubsystemBase {
-  /** Creates a new Intake. */
+  /** 
+   * This class handles the outake. this includes the shooter and the funnel on our robot
+   * This subsystem wont be entirely in charge of setting the shooter and what not, however, it is in charge of funnel
+   * Funnel activates after the shooter is warmed up.
+   * 
+   * TODO: There's a command that changes the speed of the shooter based on desires output thats where the limelight micromanages output
+   * BUT VERY TODO :)
+   * 
+  */
 
   private Timer funnelTimer;
   SparkMax OutakeMotor;
@@ -28,10 +36,14 @@ public class OutakeSubsystem extends SubsystemBase {
     this.isShooting = false;
   }
 
-  public void setSpeed(float input) {
+  public void ConstantShoot(float input) {
+    startShooter();
+    OutakeMotor.set(input);
+  }
+
+  public void startShooter() {
     this.isShooting = true;
     funnelTimer.reset();
-    OutakeMotor.set(input);
   }
 
   public void stop() {

@@ -62,6 +62,7 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
+  final         CommandXboxController operatorXbox = new CommandXboxController(1);
   final IntakeSubsystem INTAKE = new IntakeSubsystem();
     final OutakeSubsystem OUTAKE = new OutakeSubsystem();
 
@@ -126,7 +127,7 @@ public class RobotContainer
     driverXbox.b().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
     // driverXbox.a().b().onFalse(new InstantCommand(()->INTAKE.stop()));
 
-    driverXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.setSpeed(OutakeConstants.OUTAKE_SPEED)));
+    driverXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
     driverXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
