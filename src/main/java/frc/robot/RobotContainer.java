@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
+import frc.robot.commands.AlignToReefTagRelative;
+import frc.robot.commands.Movetotag;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.IntakeSubsystem;
@@ -62,9 +64,13 @@ public class RobotContainer
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   final         CommandXboxController driverXbox = new CommandXboxController(0);
-  // final         CommandXboxController operatorXbox = new CommandXboxController(1);
+  final         CommandXboxController operatorXbox = new CommandXboxController(1);
   final IntakeSubsystem INTAKE = new IntakeSubsystem();
-    final OutakeSubsystem OUTAKE = new OutakeSubsystem();
+  final OutakeSubsystem OUTAKE = new OutakeSubsystem();
+  // The robot's subsystems and commands are defined here...
+  public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
+                                                                                "swerve/Turbo"));
+  private final LimelightHandler LLHandler = new LimelightHandler();
 
   // The robot's subsystems and commands are defined here...
   // public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
@@ -140,20 +146,31 @@ public class RobotContainer
     // Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    // driverXbox.a().onTrue(Center_wheels);
-    // driverXbox.start().onTrue(new InstantCommand(()-> {
-    //   drivebase.zeroGyro();
-    // }));
+    driverXbox.a().onTrue(Center_wheels);
+    driverXbox.start().onTrue(new InstantCommand(()-> {
+      drivebase.zeroGyro();
+    }));
+      //B will make the robot align directly infront of the april tag a set constant distance(look in constant)
+      driverXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {
+      drivebase.centerModulesCommand();}),
+      new AlignToReefTagRelative(true, drivebase).withTimeout(3)
+      ));
+    //Y should move along the radius(it may not move in a perfect straihgt line) 
+    driverXbox.y().onTrue(
+      new SequentialCommandGroup(
+      new InstantCommand(()-> {
+      drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
+    
+    // someone make this really pretty at some point please!
+    driverXbox.rightTrigger()
+      .onTrue(new InstantCommand(()->
+        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
+      ).onFalse(new InstantCommand(()->
+        drivebase.setMaxSpeed(1))
+    );
 
-    // // someone make this really pretty at some point please!
-    // driverXbox.rightTrigger()
-    //   .onTrue(new InstantCommand(()->
-    //     drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
-    //   ).onFalse(new InstantCommand(()->
-    //     drivebase.setMaxSpeed(1))
-    // );
-
-    //   driverXbox.y().onTrue(LLHandler.printAngles());
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
