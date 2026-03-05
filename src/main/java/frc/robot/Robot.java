@@ -134,8 +134,8 @@ public class Robot extends TimedRobot
     {
       CommandScheduler.getInstance().cancelAll();
     }
-    // m_robotContainer.Center_wheels.schedule();
-    // m_robotContainer.drivebase.zeroGyro();
+     m_robotContainer.Center_wheels.schedule();
+     m_robotContainer.drivebase.zeroGyro();
   }
 
   /**

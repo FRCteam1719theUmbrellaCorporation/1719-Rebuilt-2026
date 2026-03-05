@@ -78,39 +78,47 @@ public class RobotContainer
   // private final LimelightHandler LLHandler = new LimelightHandler();
 
   // // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
-  // //private final SendableChooser<Command> autoChooser = new SendableChooser<>();
-  // private final SendableChooser<Command> autoChooser;
+  // private final SendableChooser<Command> autoChooser = new SendableChooser<>();
+  private final SendableChooser<Command> autoChooser;
   // /**
   //  * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   //  */
   // SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-  //                                                               () -> i_scalar(driverXbox.getLeftY(), driverXbox.getLeftX()) * -1,
-  //                                                               () -> i_scalar(driverXbox.getLeftX(), driverXbox.getLeftY()) * -1)
+  //                                                               () -> i_scalar(driverXbox.getLeftY(), driverXbox.getLeftX() * -1),
+  //                                                               () -> i_scalar(driverXbox.getLeftX(), driverXbox.getLeftY()) *-1)
   //                                                           .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
   //                                                           .deadband(OperatorConstants.DEADBAND)
   //                                                           .scaleTranslation(0.9)
   //                                                           .allianceRelativeControl(true);
 
+  SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
+                                                                () -> driverXbox.getLeftY(),
+                                                                () -> driverXbox.getLeftX() )
+                                                            .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
+                                                            .deadband(OperatorConstants.DEADBAND)
+                                                            .scaleTranslation(0.9)
+                                                            .allianceRelativeControl(true);
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  // public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
+  public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
 
   public RobotContainer()
   {
     // // Configure the trigger bindings
     configureBindings();
-    // DriverStation.silenceJoystickConnectionWarning(true);
-    // NamedCommands.registerCommand("center", Center_wheels);
+    DriverStation.silenceJoystickConnectionWarning(true);
+     NamedCommands.registerCommand("center", Center_wheels);
     // //Set the default auto (do nothing) 
-    // //autoChooser.setDefaultOption("Do Nothing", Commands.none());
-    // autoChooser = AutoBuilder.buildAutoChooser();
+    // autoChooser.setDefaultOption("Do Nothing", Commands.none());
+    autoChooser = AutoBuilder.buildAutoChooser();
 
     //Add a simple auto option to have the robot drive forward for 1 second then stop
     // autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
     
     //Put the autoChooser on the SmartDashboard
-    // SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
    
   }
 
@@ -122,30 +130,28 @@ public class RobotContainer
    * controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight joysticks}.
    */
 
-  //  SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
-  //                                                                                            driverXbox::getRightY)
-  //                                                          .headingWhile(true);
+   SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
+                                                                                             driverXbox::getRightY)
+                                                           .headingWhile(true);
 
   private void configureBindings()
   {
+    Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
+    drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    driverXbox.a().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    driverXbox.b().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
-    driverXbox.a().and(driverXbox.b()).onFalse(new InstantCommand(()->INTAKE.stop()));
+    //hbg/devices
+    operatorXbox.a().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.a().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+
+    operatorXbox.b().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    
+    // operatorXbox.a().and(operatorXbox.b()).onFalse(new InstantCommand(()->INTAKE.stop()));
     // driverXbox.a().b().onFalse(new InstantCommand(()->INTAKE.stop()));
 
-    driverXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
-    driverXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    // Command driveFieldOrientedDirectAngle = drivebase.driveCommand(
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftY(), OperatorConstants.LEFT_Y_DEADBAND),
-    //     () -> MathUtil.applyDeadband(driverXbox.getLeftX(), .1),
-    //     () -> driverXbox.getRightX(),
-    //     () -> driverXbox.getRightY());
-
-    // Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
-    // drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
-
+    //IMB/jsons button commands
     driverXbox.a().onTrue(Center_wheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();
@@ -156,12 +162,12 @@ public class RobotContainer
       drivebase.centerModulesCommand();}),
       new AlignToReefTagRelative(true, drivebase).withTimeout(3)
       ));
-    //Y should move along the radius(it may not move in a perfect straihgt line) 
-    driverXbox.y().onTrue(
-      new SequentialCommandGroup(
-      new InstantCommand(()-> {
-      drivebase.centerModulesCommand();}),
-      new Movetotag(true, drivebase).withTimeout(3)));
+    // //Y should move along the radius(it may not move in a perfect straihgt line) 
+    // driverXbox.y().onTrue(
+    //   new SequentialCommandGroup(
+    //   new InstantCommand(()-> {
+    //   drivebase.centerModulesCommand();}),
+    //   new Movetotag(true, drivebase).withTimeout(3)));
     
     // someone make this really pretty at some point please!
     driverXbox.rightTrigger()
@@ -170,21 +176,20 @@ public class RobotContainer
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );
-
   }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand()
-  // {
-  //   // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
-  //   return autoChooser.getSelected();
-  // }
+  public Command getAutonomousCommand()
+  {
+    // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
+    return autoChooser.getSelected();
+  }
 
-  // public void setMotorBrake(boolean brake)
-  // {
-  //   drivebase.setMotorBrake(brake);
-  // }
+  public void setMotorBrake(boolean brake)
+  {
+    drivebase.setMotorBrake(brake);
+  }
 }
