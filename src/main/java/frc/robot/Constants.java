@@ -102,9 +102,9 @@ public final class Constants
 
     public static final float MAX_RPM = 5576;
 
-    public static final float Shooter_P = 1;
-    public static final float Shooter_I = 0;
-    public static final float Shooter_D = 0;
+    public static final double Shooter_P = 0.001;
+    public static final double Shooter_I = 0;
+    public static final double Shooter_D = 0;
   }
 
 }
