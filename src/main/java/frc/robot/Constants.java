@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 
@@ -100,6 +99,12 @@ public final class Constants
     public static final float OUTAKE_SPEED = 0.7f;
     public static final float FUNNEL_SPEED = 0.4f;
     public static final float OUTAKE_TIME = 0.5f;
+
+    public static final float MAX_RPM = 5576;
+
+    public static final float Shooter_P = 1;
+    public static final float Shooter_I = 0;
+    public static final float Shooter_D = 0;
   }
 
 }
