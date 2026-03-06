@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
+import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AlignToReefTagRelative;
 import frc.robot.commands.Movetotag;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -139,44 +140,38 @@ public class RobotContainer
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    //hbg/devices
-    operatorXbox.a().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.a().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+    //OPERATOR COMMANDS
+    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
-    operatorXbox.b().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
-    
-    // operatorXbox.a().and(operatorXbox.b()).onFalse(new InstantCommand(()->INTAKE.stop()));
-    // driverXbox.a().b().onFalse(new InstantCommand(()->INTAKE.stop()));
+    operatorXbox.rightBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
 
-    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
-    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    //IMB/jsons button commands
+    operatorXbox.leftBumper().onTrue(new InstantCommand(()->OUTAKE.outake(OutakeConstants.OUTAKE_SPEED)));
+
+    operatorXbox.b().onTrue(new SequentialCommandGroup(
+    new InstantCommand(()-> { drivebase.centerModulesCommand();}),
+    new AlignToReefTagRelative(true, drivebase).withTimeout(3)
+    ));
+
+    operatorXbox.start().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
+    //-------------------------------------------------------------------------------------------------------------------
+    //DRIVER COMMANDS
     driverXbox.a().onTrue(Center_wheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
-      drivebase.zeroGyro();
-    }));
-      //B will make the robot align directly infront of the april tag a set constant distance(look in constant)
-      driverXbox.b().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()-> {
-      drivebase.centerModulesCommand();}),
-      new AlignToReefTagRelative(true, drivebase).withTimeout(3)
-      ));
-    // //Y should move along the radius(it may not move in a perfect straihgt line) 
-    // driverXbox.y().onTrue(
-    //   new SequentialCommandGroup(
-    //   new InstantCommand(()-> {
-    //   drivebase.centerModulesCommand();}),
-    //   new Movetotag(true, drivebase).withTimeout(3)));
+      drivebase.zeroGyro();}));
     
-    // someone make this really pretty at some point please!
+    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
         drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
-    );
-  }
+    );}
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *

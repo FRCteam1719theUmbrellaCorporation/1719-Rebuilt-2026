@@ -51,6 +51,10 @@ public class OutakeSubsystem extends SubsystemBase {
     OutakeMotor.set(0);
     FunnelMotor.set(0);
   }
+  
+  public void outake(float input) {
+    ConstantShoot(-input);
+  }
 
   @Override
   public void periodic() {

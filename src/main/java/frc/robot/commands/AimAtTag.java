@@ -51,10 +51,6 @@ public class AimAtTag extends Command {
     addRequirements(drivebase, LL);
   }
 
-  public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
-
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
