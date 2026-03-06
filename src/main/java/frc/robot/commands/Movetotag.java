@@ -37,7 +37,7 @@ public class Movetotag extends Command {
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
     double initialXPos = postions[2];
     double initialYPos = postions[0];
-    double initalRotPos = Math.atan(initialYPos/initialXPos)*180/Math.PI;
+    double initalRotPos = Math.atan(initialYPos/initialXPos);//*180/Math.PI;
     double initialRadius = Math.pow((initialXPos*initialXPos+initialYPos*initialYPos), 0.5);
     double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
     double[] data = {initialXPos*radiusScaleFactor, initialYPos*radiusScaleFactor, initalRotPos};

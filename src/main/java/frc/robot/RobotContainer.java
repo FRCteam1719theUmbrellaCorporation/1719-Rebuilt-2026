@@ -110,7 +110,7 @@ public class RobotContainer
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-     NamedCommands.registerCommand("center", Center_wheels);
+    NamedCommands.registerCommand("center", Center_wheels);
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -151,14 +151,24 @@ public class RobotContainer
 
     operatorXbox.leftBumper().onTrue(new InstantCommand(()->OUTAKE.outake(OutakeConstants.OUTAKE_SPEED)));
 
-    operatorXbox.b().onTrue(new SequentialCommandGroup(
-    new InstantCommand(()-> { drivebase.centerModulesCommand();}),
-    new AlignToReefTagRelative(true, drivebase).withTimeout(3)
-    ));
+    //Don't use this
+    // operatorXbox.b().onTrue(new SequentialCommandGroup(
+    // new InstantCommand(()-> { drivebase.centerModulesCommand();}),
+    // new AlignToReefTagRelative(true, drivebase).withTimeout(3)
+    // ));
 
-    operatorXbox.start().onTrue(new SequentialCommandGroup(
+    operatorXbox.b().onTrue(new SequentialCommandGroup(
       new InstantCommand(()-> {drivebase.centerModulesCommand();}),
       new Movetotag(true, drivebase).withTimeout(3)));
+    
+    operatorXbox.y().onTrue(
+      new InstantCommand(()->{
+      Movetotag h = new Movetotag(false, drivebase); 
+      for ( int i = 0 ; i < 3 ; i++ ) {
+      System.out.println(h.Computefinalstaticpose()[i]);
+      }
+     }));
+
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
     driverXbox.a().onTrue(Center_wheels);

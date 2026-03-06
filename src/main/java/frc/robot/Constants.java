@@ -68,23 +68,24 @@ public final class Constants
       BLUE,
     }
 //these two P values need to be tuned
-    public static final double X_REEF_ALIGNMENT_P = 2; // 3.3;
-    public static final double Y_REEF_ALIGNMENT_P = 2; // 3.3;
+    public static final double X_REEF_ALIGNMENT_P =  3.3;
+    public static final double Y_REEF_ALIGNMENT_P =  3.3;
     public static final double ROT_REEF_ALIGNMENT_P = 0.058;
+    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 1;
+    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.05;
+    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.05;
+
 
     public static final double PositionScalar = 3.0;
     public static final double ROT_SETPOINT_REEF_ALIGNMENT = 0;  // Rotation
-    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 1;
     //xsetpoint was originally -0.34
     public static final double X_SETPOINT_REEF_ALIGNMENT = -0.5*PositionScalar;  // Vertical pose
-    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.02;
     //ysetpoint was originally 0.16
     public static final double Y_SETPOINT_REEF_ALIGNMENT = 0*PositionScalar;  // Horizontal pose
-    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.02;
     public static final double DONT_SEE_TAG_WAIT_TIME = 1;
 	  public static final double POSE_VALIDATION_TIME = 0.3;
 
-    public static final double DesiredRadius = 1.0;
+    public static final double DesiredRadius = 2.438;
 	}
 
 
@@ -97,7 +98,7 @@ public final class Constants
   public static final class OutakeConstants{
     public static final int FUNNEL_ID = 4;
     public static final int SHOOTER_ID = 6;
-    public static final float OUTAKE_SPEED = 1f;
+    public static final float OUTAKE_SPEED = -0.8f;
     public static final float FUNNEL_SPEED = 0.4f;
     public static final float OUTAKE_TIME = 0.5f;
   }
