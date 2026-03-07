@@ -141,32 +141,33 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+    //ALL FUNCTIONS WERE COMMENTED OUT FOR TESTING PRACTICE ON THE PRACTICE BOT
+    // operatorXbox.rightTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
+    // operatorXbox.rightTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    // operatorXbox.rightBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
 
-    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
-    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    // operatorXbox.leftTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
+    // operatorXbox.leftTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.leftBumper().onTrue(new InstantCommand(()->OUTAKE.outake(OutakeConstants.OUTAKE_SPEED)));
+    // operatorXbox.leftBumper().onTrue(new InstantCommand(()->OUTAKE.outake(OutakeConstants.OUTAKE_SPEED)));
 
-    //Don't use this
+    // //Don't use this
+    // // operatorXbox.b().onTrue(new SequentialCommandGroup(
+    // // new InstantCommand(()-> { drivebase.centerModulesCommand();}),
+    // // new AlignToReefTagRelative(true, drivebase).withTimeout(3)
+    // // ));
+
+    // //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
     // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    // new InstantCommand(()-> { drivebase.centerModulesCommand();}),
-    // new AlignToReefTagRelative(true, drivebase).withTimeout(3)
-    // ));
-
-    //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
-    operatorXbox.b().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-      new Movetotag(true, drivebase).withTimeout(3)));
+    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+    //   new Movetotag(true, drivebase).withTimeout(3)));
     
-    operatorXbox.y().onTrue(
-      new InstantCommand(()->{
-      Movetotag h = new Movetotag(false, drivebase);
-      System.out.println(h.Computefinalstaticpose());
-     }));
+    // operatorXbox.y().onTrue(
+    //   new InstantCommand(()->{
+    //   Movetotag h = new Movetotag(false, drivebase);
+    //   System.out.println(h.Computefinalstaticpose());
+    //  }));
 
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS

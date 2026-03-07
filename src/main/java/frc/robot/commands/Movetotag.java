@@ -35,16 +35,24 @@ public class Movetotag extends Command {
   }
   public double[] Computefinalstaticpose(){
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
-    double initialZPos = postions[2]; // negative means in front of
     double initialXPos = postions[0]; // positive means to right
-    double initalRotPos = (Math.atan2(-initialXPos, -initialZPos)*180/Math.PI);
-    double initialRadius = Math.pow((initialZPos*initialZPos+initialXPos*initialXPos), 0.5);
-    double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
-    double[] data = {initialZPos*radiusScaleFactor, initialXPos*radiusScaleFactor, initalRotPos};
-    for ( int i = 0 ; i < 6 ; i++ ) {
+    double initialZPos = Math.abs(postions[2]); // negative means in front of
+    double R0 = Constants.LimelightConstants.DesiredRadius;
+    double Deltaz = Constants.LimelightConstants.TargetDeltaZ;
+    double Zdist = initialZPos + Deltaz;
+    double phi = (Math.atan2(-initialXPos, Zdist));
+    double newX = R0*Math.sin(phi);
+    double newZ = -(R0*Math.cos(phi) - Deltaz);
+    double phi_deg = phi*180/Math.PI;
+    //double initialRadius = Math.pow((initialZPos*initialZPos+initialXPos*initialXPos), 0.5);
+    //double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
+    //double[] data = {initialZPos*radiusScaleFactor, initialXPos*radiusScaleFactor, initalRotPos};
+    double[] data = {newZ,newX,phi_deg};
+    for ( int i = 0 ; i < 6 ; i+=2 ) {
       System.out.println(postions[i]);}
     for ( int i = 0 ; i < 3 ; i++ ) {
       System.out.println(data[i]);}
+    System.out.println("end");
     return data;
   }
 
