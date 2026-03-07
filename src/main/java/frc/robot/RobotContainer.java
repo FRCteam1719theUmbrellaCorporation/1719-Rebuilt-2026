@@ -141,15 +141,20 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftBumper().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
-    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
-    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.leftBumper().onTrue(new InstantCommand(()->OUTAKE.outake(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
+    operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
+    operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
+    operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     //Don't use this
     // operatorXbox.b().onTrue(new SequentialCommandGroup(

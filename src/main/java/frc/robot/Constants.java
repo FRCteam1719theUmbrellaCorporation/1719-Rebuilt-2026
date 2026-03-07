@@ -23,7 +23,7 @@ public final class Constants
   public static final double ROBOT_MASS = (95) * 0.453592; // 105lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED_MULTIPLIER = 0.25;
+  public static final double MAX_SPEED_MULTIPLIER = 0.5;
   public static final double MAX_SPEED  = MAX_SPEED_MULTIPLIER*Units.feetToMeters(14.5);
 
   public static final double Motor_Min = -1;
@@ -101,9 +101,11 @@ public final class Constants
   public static final class OutakeConstants{
     public static final int FUNNEL_ID = 4;
     public static final int SHOOTER_ID = 6;
-    public static final float OUTAKE_SPEED = -0.8f;
+    public static final float OUTAKE_SPEED = 0.7f;
+    public static final float Super_OUTAKE_SPEED = 1f;
+    public static final float Slow_OUTAKE_SPEED = 0.3f;
     public static final float FUNNEL_SPEED = 0.4f;
-    public static final float OUTAKE_TIME = 0.5f;
+    public static final float OUTAKE_TIME = 0.2f;
 
     // public static final double MinShootDistance = 7;
     // public static final double DistancePowerMult = 0.0392857;
