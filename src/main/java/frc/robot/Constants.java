@@ -107,6 +107,8 @@ public final class Constants
     public static final float FUNNEL_SPEED = 0.4f;
     public static final float OUTAKE_TIME = 0.2f;
 
+    public static final double SHAKE_POWER_X = .2f;
+    public static final double SHAKE_INTERVAL = .2f;
     // public static final double MinShootDistance = 7;
     // public static final double DistancePowerMult = 0.0392857;
     // public static final double DistancePowerOffset = 0.383929;
