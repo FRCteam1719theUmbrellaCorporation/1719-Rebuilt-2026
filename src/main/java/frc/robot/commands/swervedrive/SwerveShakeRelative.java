@@ -22,7 +22,6 @@ public class SwerveShakeRelative extends Command {
   public SwerveShakeRelative(SwerveSubsystem m_SwerveSubsystem) {
     this.m_SwerveSubsystem = m_SwerveSubsystem;
     addRequirements(m_SwerveSubsystem);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
