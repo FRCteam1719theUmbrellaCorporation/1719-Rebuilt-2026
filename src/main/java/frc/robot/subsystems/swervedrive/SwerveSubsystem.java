@@ -6,7 +6,7 @@ package frc.robot.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.Meter;
 
-
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 // import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -87,6 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
    * Enable vision odometry updates while driving.
    */
   private final boolean visionDriveTest     = false;
+  private final Pigeon2 m_gyro;
   // public static boolean slowSpeed = true;
   /**
    * PhotonVision class to keep an accurate odometry.
@@ -130,6 +132,7 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.stopOdometryThread();
     }
     setupPathPlanner();
+    m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
   }
 
   /**
@@ -145,6 +148,7 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,  
                                   new Pose2d(new Translation2d(Meter.of(1), Meter.of(1)),
                                              Rotation2d.fromDegrees(0)));
+    m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
   }
 
   public void setMaxSpeed(double multiplier) {
@@ -164,10 +168,10 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // When vision is enabled we must manually update odometry in SwerveDrive
     swerveDrive.updateOdometry(); // TODO: UNCOMMENT AFTER TESTING. MUST BE UPDATED FOR POSE ESTIMATION
-    // try {
-    //   LimeLightExtra.updatePoseEstimation();
-    // } catch (Exception e) {
-    // }
+    try {
+      updatePoseEstimation();
+    } catch (Exception e) {
+    }
   }
 
   @Override
@@ -758,13 +762,6 @@ public class SwerveSubsystem extends SubsystemBase
     }
   }
 
-
-
-
-
-
-
-
   /**
    * Add a fake vision reading for testing purposes.
    */
@@ -781,6 +778,33 @@ public class SwerveSubsystem extends SubsystemBase
   public SwerveDrive getSwerveDrive()
   {
     return swerveDrive;
+  }
+
+  protected void updatePoseEstimation() {
+    boolean doRejectUpdate = false;
+        //LimelightHelpers.SetRobotOrientation("limelight", SWERVE.getHeading().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
+        if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
+        {
+          doRejectUpdate = true;
+        } else if(mt2.tagCount == 0)
+        {
+          doRejectUpdate = true;
+        } else if (mt2.pose.getX() == 0. && mt2.pose.getY() == 0.) {
+            doRejectUpdate = true;
+        } else if (Robot.inAuto) {
+            doRejectUpdate = true;
+        }
+        if(!doRejectUpdate)
+        {
+            Pose2d newPose = mt2.pose;
+            newPose.rotateBy(swerveDrive.getYaw().minus(newPose.getRotation()));
+            //newPose.
+            // SWERVE.getSwerveDrive().setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            swerveDrive.addVisionMeasurement(
+              mt2.pose,
+              mt2.timestampSeconds);
+        }
   }
 
   // public BooleanSupplier within() {
