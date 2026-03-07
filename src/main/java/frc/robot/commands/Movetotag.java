@@ -22,7 +22,7 @@ public class Movetotag extends Command {
   private boolean isRightScore;
   private Timer dontSeeTagTimer, stopTimer;
   private SwerveSubsystem drivebase;
-  private double tagID = 15;
+  private double tagID = 3;
   public double initialXPos,initialYPos, initalRotPose;
 
   public Movetotag(boolean isRightScore, SwerveSubsystem drivebase) {
@@ -37,8 +37,7 @@ public class Movetotag extends Command {
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
     double initialXPos = postions[2];
     double initialYPos = postions[0];
-    double initalRotPos = Math.mod(
-      360+(Math.atan2(initialYPos, initialXPos)*180/Math.PI),360);
+    double initalRotPos = (360+(Math.atan2(initialYPos, initialXPos)*180/Math.PI))%360;
     double initialRadius = Math.pow((initialXPos*initialXPos+initialYPos*initialYPos), 0.5);
     double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
     double[] data = {initialXPos*radiusScaleFactor, initialYPos*radiusScaleFactor, initalRotPos};
@@ -55,9 +54,10 @@ public class Movetotag extends Command {
   @Override
   public void initialize() {
     double[] data = Computefinalstaticpose();
-    System.out.println(data[0]);
-    System.out.println(data[1]);
-    System.out.println(data[2]);
+    System.out.println(Math.round(data[0]));
+    System.out.println(Math.round(data[1]));
+    System.out.println(Math.round(data[2]));
+    System.out.println("");
     this.stopTimer = new Timer();
     this.stopTimer.start();
     this.dontSeeTagTimer = new Timer();

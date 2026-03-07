@@ -157,9 +157,10 @@ public class RobotContainer
     // new AlignToReefTagRelative(true, drivebase).withTimeout(3)
     // ));
 
-    operatorXbox.b().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-      new Movetotag(true, drivebase).withTimeout(3)));
+    //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
+    // operatorXbox.b().onTrue(new SequentialCommandGroup(
+    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+    //   new Movetotag(true, drivebase).withTimeout(3)));
     
     operatorXbox.y().onTrue(
       new InstantCommand(()->{
