@@ -67,7 +67,7 @@ public class AimAtTag extends Command {
     Optional<Double> outPut = m_LL.getAngleFromTag(m_targetTagID);
     double rot = 0;
 
-    if (m_LL.SeesTargetTag(m_targetTagID) && outPut.isPresent()) {
+    if (m_LL.seesTargetTag(m_targetTagID) && outPut.isPresent()) {
       TagOOBTimer.reset();
       rot = RotController.calculate(outPut.get());
       System.out.println(rot);

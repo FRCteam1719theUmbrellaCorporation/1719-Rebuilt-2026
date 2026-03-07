@@ -53,8 +53,11 @@ public final class Constants
     public static final double JOYSTICK_SENSITIVITY_FACTOR = 3.f;
     public static final double EPISLON = 1.e-16;
 
-    public static final double SlowDriveFactor = 0.25f; 
-    public static final double NormalDriveFactor = 1f; 
+    public static final double SLOW_DRIVE_FACTOR = 0.25f; 
+    public static final double NORMAL_DRIVE_FACTOR = 1f; 
+
+    // -1 for any tag
+    public static final int    VIBRATE_ON_TAG_ID = 3;
   }
 
   public static final class LimelightConstants {
@@ -85,7 +88,7 @@ public final class Constants
     public static final double DONT_SEE_TAG_WAIT_TIME = 1;
 	  public static final double POSE_VALIDATION_TIME = 0.3;
 
-    public static final double DesiredRadius = 2.438;
+    public static final double DESIRED_RADIUS = 2.438;
 	}
 
 

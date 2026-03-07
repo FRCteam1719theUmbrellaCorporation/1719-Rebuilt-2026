@@ -39,7 +39,7 @@ public class Movetotag extends Command {
     double initialYPos = postions[0];
     double initalRotPos = (360+(Math.atan2(initialYPos, initialXPos)*180/Math.PI))%360;
     double initialRadius = Math.pow((initialXPos*initialXPos+initialYPos*initialYPos), 0.5);
-    double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
+    double radiusScaleFactor = Constants.LimelightConstants.DESIRED_RADIUS/initialRadius;
     double[] data = {initialXPos*radiusScaleFactor, initialYPos*radiusScaleFactor, initalRotPos};
     // System.out.println(initialXPos);
     // System.out.println(initialYPos);

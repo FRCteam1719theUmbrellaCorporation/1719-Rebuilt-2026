@@ -179,7 +179,7 @@ public class RobotContainer
     driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
+        drivebase.setMaxSpeed(OperatorConstants.SLOW_DRIVE_FACTOR))
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );}
