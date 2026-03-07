@@ -6,6 +6,7 @@ package frc.robot.commands.swervedrive;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -17,6 +18,7 @@ public class SwerveShakeRelative extends Command {
   private PIDController xController;
   private double setPoint;
   private boolean isForward;
+  private Timer delayTimer;
 
   /** Creates a new SwerveShakeRelative. */
   public SwerveShakeRelative(SwerveSubsystem m_SwerveSubsystem) {
@@ -28,6 +30,8 @@ public class SwerveShakeRelative extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    delayTimer = new Timer();
+    delayTimer.start();
     setPoint = m_SwerveSubsystem.getPose().getX() + OutakeConstants.SHAKE_DISTANCEX;
     isForward = true;
     xController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0, 0);
@@ -39,9 +43,13 @@ public class SwerveShakeRelative extends Command {
   @Override
   public void execute() {
     if (xController.atSetpoint()) {
-      isForward = !isForward;
-      setPoint += OutakeConstants.SHAKE_DISTANCEX * (!isForward ? -1 : 1); 
-      xController.setSetpoint(setPoint);
+      if (delayTimer.hasElapsed(.2)) {
+        isForward = !isForward;
+        setPoint += OutakeConstants.SHAKE_DISTANCEX * (!isForward ? -1 : 1); 
+        xController.setSetpoint(setPoint);
+      }
+    } else {
+      delayTimer.reset();
     }
     double output = xController.calculate(m_SwerveSubsystem.getPose().getX());
     m_SwerveSubsystem.drive(new Translation2d(output, 0), 0, false);
