@@ -27,6 +27,7 @@ public class Robot extends TimedRobot
   private RobotContainer m_robotContainer;
 
   private Timer disabledTimer;
+  public static boolean inAuto;
 
   public Robot()
   {
@@ -51,8 +52,9 @@ public class Robot extends TimedRobot
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
     // immediately when disabled, but then also let it be pushed more 
     disabledTimer = new Timer();
-
-    if (isSimulation()) {
+    LimelightHelpers.SetIMUAssistAlpha(null, 0.01);
+    if (isSimulation())
+    {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
 
@@ -104,8 +106,9 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    inAuto = true;
     // m_robotContainer.setMotorBrake(true);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
@@ -125,6 +128,8 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit()
   {
+    inAuto = false;
+    
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -136,8 +141,8 @@ public class Robot extends TimedRobot
     {
       CommandScheduler.getInstance().cancelAll();
     }
-    m_robotContainer.Center_wheels.schedule();
-    m_robotContainer.drivebase.zeroGyro();
+     m_robotContainer.Center_wheels.schedule();
+     m_robotContainer.drivebase.zeroGyro();
   }
 
   /**
@@ -151,6 +156,7 @@ public class Robot extends TimedRobot
   @Override
   public void testInit()
   {
+    inAuto = false;
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
   }
