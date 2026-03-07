@@ -58,22 +58,13 @@ public final class Constants
   }
 
   public static final class HapticConstants {
-    // -1 for any tag
-    public static final int    VIBRATE_ON_TAG_ID = 3;
-    public static enum Controller {
-      NONE,
-      DRIVER,
-      OPERATOR,
-      BOTH,
-    }
-    public static final Controller CONTROLLERS_TO_VIBRATE = Controller.BOTH;
-
     public static final int HUB_TAG_ID = 3;
     public static final double[] HUB_VIBRATE_DISTANCE = {
       1.524,
       1.8288,
     };
-    public static final double HUB_VIBRATE_STRENGTH = 1.0;
+    public static final double HUB_DIST_VIBRATE_STRENGTH = 1.0;
+	  public static final double HUB_SEE_VIBRATE_STRENGTH = 0.5;
   }
 
   public static final class LimelightConstants {

@@ -204,7 +204,11 @@ public class RobotContainer
   public void periodic() {
     double botRadius = LLHandler.getBotRadius(HapticConstants.HUB_TAG_ID);
     if (HapticConstants.HUB_VIBRATE_DISTANCE[0] <= botRadius && botRadius <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {
-      operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_VIBRATE_STRENGTH);
+      operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
+    }
+
+    if (LLHandler.seesTargetTag(HapticConstants.HUB_TAG_ID)) {
+      operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_SEE_VIBRATE_STRENGTH);
     }
     // if (LLHandler.seesTargetTag(OperatorConstants.VIBRATE_ON_TAG_ID)) {
     //   OperatorConstants.Controller controller = OperatorConstants.CONTROLLERS_TO_VIBRATE;
