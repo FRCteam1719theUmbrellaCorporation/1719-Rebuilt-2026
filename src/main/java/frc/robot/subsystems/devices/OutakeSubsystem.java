@@ -29,6 +29,7 @@ public class OutakeSubsystem extends SubsystemBase {
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
   boolean isShooting;
+  double funnelPower;
 
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
@@ -36,6 +37,7 @@ public class OutakeSubsystem extends SubsystemBase {
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
+    funnelPower = OutakeConstants.FUNNEL_SPEED;
     SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
   }
 
@@ -50,15 +52,6 @@ public class OutakeSubsystem extends SubsystemBase {
   //     : 0; 
   // }
 
-  public void setShooterSpeed(double val) {
-    this.OutakeMotor.set(val);
-  }
-
-  public void ConstantShoot(float input) {
-    startShooter();
-    OutakeMotor.set(input);
-  }
-
   public void startShooter() {
     this.isShooting = true;
     funnelTimer.reset();
@@ -68,6 +61,44 @@ public class OutakeSubsystem extends SubsystemBase {
     this.isShooting = false;
     OutakeMotor.set(0);
     FunnelMotor.set(0);
+  }
+
+  public void setShooterSpeed(double val) {
+    this.OutakeMotor.set(val);
+    setFunnelPower(OutakeConstants.FUNNEL_SPEED);
+  }
+
+  public void ConstantShoot(float input) {
+    startShooter();
+    OutakeMotor.set(input);
+    setFunnelPower(OutakeConstants.FUNNEL_SPEED);
+  }
+
+  public void setFunnelPower(double input) {
+    funnelPower = input;
+  }
+
+  /**
+   * Reverses the outake
+   * Despite the name you still need to use a negative value
+   * 
+   * @param ShooterInput
+   */
+  public void reverseOutake(float ShooterInput) {
+    reverseOutake(ShooterInput, -OutakeConstants.FUNNEL_SPEED);
+  }
+
+  /**
+   * Reverses the outake
+   * Despite the name you still need to use a negative value
+   * 
+   * @param ShooterInput: Shooter power
+   * @param FunnelInput: Funnel power. defaults to OutakeConstants.FUNNEL_SPEED
+   */
+  public void reverseOutake(float ShooterInput, float FunnelInput) {
+    setFunnelPower(FunnelInput);
+    startShooter();
+    setShooterSpeed(ShooterInput);
   }
   
   public void outake(float input) {
@@ -80,7 +111,7 @@ public class OutakeSubsystem extends SubsystemBase {
       //double smdb = SmartDashboard.getNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
       //OutakeMotor.set(smdb);
       if (funnelTimer.hasElapsed(OutakeConstants.OUTAKE_TIME)) {
-        FunnelMotor.set(OutakeConstants.FUNNEL_SPEED);
+        FunnelMotor.set(funnelPower);
       }
     }
   }

@@ -156,6 +156,9 @@ public class RobotContainer
     operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
+    operatorXbox.b().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
+    operatorXbox.b().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
     //Don't use this
     // operatorXbox.b().onTrue(new SequentialCommandGroup(
     // new InstantCommand(()-> { drivebase.centerModulesCommand();}),
