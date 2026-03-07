@@ -8,8 +8,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.OutakeConstants;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
 
 public class OutakeSubsystem extends SubsystemBase {
@@ -34,6 +35,21 @@ public class OutakeSubsystem extends SubsystemBase {
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
+  }
+
+  public double ScailPower(double distance) {
+    // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
+    // PURE SPECULATION! In theory this should map our shooter to distance 
+    return distance >= OutakeConstants.MinShootDistance 
+      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset * -1, 
+                      Constants.Motor_Min, 
+                      Constants.Motor_Max
+                      )
+      : 0; 
+  }
+
+  public void setShooterSpeed(double val) {
+    this.OutakeMotor.set(val);
   }
 
   public void ConstantShoot(float input) {
