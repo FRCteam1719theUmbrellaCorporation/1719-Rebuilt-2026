@@ -55,9 +55,24 @@ public final class Constants
 
     public static final double SLOW_DRIVE_FACTOR = 0.25f; 
     public static final double NORMAL_DRIVE_FACTOR = 1f; 
+  }
 
+  public static final class HapticConstants {
     // -1 for any tag
     public static final int    VIBRATE_ON_TAG_ID = 3;
+    public static enum Controller {
+      NONE,
+      DRIVER,
+      OPERATOR,
+      BOTH,
+    }
+    public static final Controller CONTROLLERS_TO_VIBRATE = Controller.BOTH;
+
+    public static final int HUB_TAG_ID = 3;
+    public static final double[] HUB_VIBRATE_DISTANCE = {
+      0.,
+      0.,
+    };
   }
 
   public static final class LimelightConstants {

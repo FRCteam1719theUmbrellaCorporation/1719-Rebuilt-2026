@@ -5,6 +5,7 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
@@ -23,15 +24,6 @@ public class LimelightHandler extends SubsystemBase {
 		return LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
 	}
 
-	public boolean seesTargetTag(int target) {
-		for ( RawFiducial raw : getFiducials() ) {
-			if (raw.id == target) {
-				return true;
-			}
-		}
-
-		return false;
-	}
 	public Optional<RawFiducial> getFiducialByID( int tagID ) {
 		for ( RawFiducial raw : getFiducials() ) {
 			if ( raw.id == tagID ) {
@@ -40,6 +32,14 @@ public class LimelightHandler extends SubsystemBase {
 		}
 
 		return Optional.empty();
+	}
+
+	public boolean seesTargetTag(int target) {
+		if (target == -1) {
+			return (this.getFiducials().length != 0);
+		} else {
+			return this.getFiducialByID(target).isPresent();
+		}
 	}
 
 	public Optional<Double> getDistFromTag( int tagID ) {
@@ -87,6 +87,25 @@ public class LimelightHandler extends SubsystemBase {
 			pose.getX(),
 			pose.getY(),
 		};
+	}
+
+	public double getBotRadius( int ID ) {
+		LimelightHelpers
+			.SetFiducialIDFiltersOverride(
+				LimelightConstants.LIMELIGHT_NAME,
+				new int[]{ID});
+
+		double[] postions = LimelightHelpers
+			.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
+
+		LimelightHelpers
+			.SetFiducialIDFiltersOverride(
+				LimelightConstants.LIMELIGHT_NAME,
+				new int[]{});
+
+		double x = postions[2];
+		double y = postions[0];
+		return Math.sqrt(x*x + y*y);
 	}
 
 	// public InstantComman printPose( ) {
