@@ -168,10 +168,10 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // When vision is enabled we must manually update odometry in SwerveDrive
     swerveDrive.updateOdometry(); // TODO: UNCOMMENT AFTER TESTING. MUST BE UPDATED FOR POSE ESTIMATION
-    try {
-      updatePoseEstimation();
-    } catch (Exception e) {
-    }
+    // try {
+    //   updatePoseEstimation();
+    // } catch (Exception e) {
+    // }
   }
 
   @Override
@@ -780,32 +780,7 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive;
   }
 
-  protected void updatePoseEstimation() {
-    boolean doRejectUpdate = false;
-        //LimelightHelpers.SetRobotOrientation("limelight", SWERVE.getHeading().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
-        if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
-        {
-          doRejectUpdate = true;
-        } else if(mt2.tagCount == 0)
-        {
-          doRejectUpdate = true;
-        } else if (mt2.pose.getX() == 0. && mt2.pose.getY() == 0.) {
-            doRejectUpdate = true;
-        } else if (Robot.inAuto) {
-            doRejectUpdate = true;
-        }
-        if(!doRejectUpdate)
-        {
-            Pose2d newPose = mt2.pose;
-            newPose.rotateBy(swerveDrive.getYaw().minus(newPose.getRotation()));
-            //newPose.
-            // SWERVE.getSwerveDrive().setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-            swerveDrive.addVisionMeasurement(
-              mt2.pose,
-              mt2.timestampSeconds);
-        }
-  }
+  
 
   // public BooleanSupplier within() {
   //   Double[] tagxyr = calculatedposes.getArrayfromKey(SmartDashboard.getString("location", null), isRedAlliance());
