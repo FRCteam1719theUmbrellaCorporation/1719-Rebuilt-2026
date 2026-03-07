@@ -22,7 +22,7 @@ public class Movetotag extends Command {
   private boolean isRightScore;
   private Timer dontSeeTagTimer, stopTimer;
   private SwerveSubsystem drivebase;
-  private double tagID = 3;
+  private double tagID = 2;
   public double initialXPos,initialYPos, initalRotPose;
 
   public Movetotag(boolean isRightScore, SwerveSubsystem drivebase) {
@@ -41,7 +41,7 @@ public class Movetotag extends Command {
     double Deltaz = Constants.LimelightConstants.TargetDeltaZ;
     double Zdist = initialZPos + Deltaz;
     double phi = (Math.atan2(-initialXPos, Zdist));
-    double newX = R0*Math.sin(phi);
+    double newX = -R0*Math.sin(phi);
     double newZ = -(R0*Math.cos(phi) - Deltaz);
     double phi_deg = phi*180/Math.PI;
     //double initialRadius = Math.pow((initialZPos*initialZPos+initialXPos*initialXPos), 0.5);

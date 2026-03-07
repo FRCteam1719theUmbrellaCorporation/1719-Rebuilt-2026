@@ -159,15 +159,15 @@ public class RobotContainer
     // // ));
 
     // //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-    //   new Movetotag(true, drivebase).withTimeout(3)));
+    operatorXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
     
-    // operatorXbox.y().onTrue(
-    //   new InstantCommand(()->{
-    //   Movetotag h = new Movetotag(false, drivebase);
-    //   System.out.println(h.Computefinalstaticpose());
-    //  }));
+    operatorXbox.y().onTrue(
+      new InstantCommand(()->{
+      Movetotag h = new Movetotag(false, drivebase);
+      System.out.println(h.Computefinalstaticpose());
+     }));
 
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
