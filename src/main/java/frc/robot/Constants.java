@@ -70,9 +70,10 @@ public final class Constants
 
     public static final int HUB_TAG_ID = 3;
     public static final double[] HUB_VIBRATE_DISTANCE = {
-      0.,
-      0.,
+      1.524,
+      1.8288,
     };
+    public static final double HUB_VIBRATE_STRENGTH = 1.0;
   }
 
   public static final class LimelightConstants {
