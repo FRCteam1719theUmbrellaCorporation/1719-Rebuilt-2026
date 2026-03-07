@@ -15,9 +15,7 @@ import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class SwerveShakeRelative extends Command {
   SwerveSubsystem m_SwerveSubsystem;
-  private PIDController xController;
-  private double setPoint;
-  private boolean isForward;
+  private double setSpeed;
   private Timer delayTimer;
 
   /** Creates a new SwerveShakeRelative. */
@@ -32,27 +30,18 @@ public class SwerveShakeRelative extends Command {
   public void initialize() {
     delayTimer = new Timer();
     delayTimer.start();
-    setPoint = m_SwerveSubsystem.getPose().getX() + OutakeConstants.SHAKE_DISTANCEX;
-    isForward = true;
-    xController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0, 0);
-    xController.setTolerance(LimelightConstants.ROT_TOLERANCE_REEF_ALIGNMENT);
-    xController.setSetpoint(setPoint);
+    setSpeed = OutakeConstants.SHAKE_POWER_X;
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (xController.atSetpoint()) {
-      if (delayTimer.hasElapsed(.2)) {
-        isForward = !isForward;
-        setPoint += OutakeConstants.SHAKE_DISTANCEX * (!isForward ? -1 : 1); 
-        xController.setSetpoint(setPoint);
+    if (delayTimer.hasElapsed(setSpeed)) {
+        setSpeed = -setSpeed;
+        delayTimer.reset();
       }
-    } else {
-      delayTimer.reset();
-    }
-    double output = xController.calculate(m_SwerveSubsystem.getPose().getX());
-    m_SwerveSubsystem.drive(new Translation2d(output, 0), 0, false);
+    m_SwerveSubsystem.drive(new Translation2d(setSpeed, 0), 0, false);
   }
 
   // Called once the command ends or is interrupted.

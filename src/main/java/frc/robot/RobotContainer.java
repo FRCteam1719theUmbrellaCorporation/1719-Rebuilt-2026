@@ -30,6 +30,7 @@ import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AlignToReefTagRelative;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.swervedrive.SwerveShakeRelative;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.IntakeSubsystem;
@@ -175,6 +176,7 @@ public class RobotContainer
     driverXbox.a().onTrue(Center_wheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();}));
+    driverXbox.b().whileTrue(new SwerveShakeRelative(drivebase));
     
     driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
     driverXbox.rightTrigger()
