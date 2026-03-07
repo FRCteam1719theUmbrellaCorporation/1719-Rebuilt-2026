@@ -104,6 +104,15 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
+  public Command Intake = new InstantCommand(() -> {
+    INTAKE.setSpeed(Constants.IntakeConstants.INTAKE_SPEED);
+  });
+  public Command IntakeStop = new InstantCommand(() -> {
+    INTAKE.stop();
+  });
+  public Command Outtake = new InstantCommand(() -> {
+    OUTAKE.startShooter();
+  });
 
   public RobotContainer()
   {
@@ -111,6 +120,9 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("center", Center_wheels);
+    // NamedCommands.registerCommand("Start Intake", Intake);
+    NamedCommands.registerCommand("Stop Intake", IntakeStop);
+    NamedCommands.registerCommand("Start Outtake", Outtake);
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
     autoChooser = AutoBuilder.buildAutoChooser();
