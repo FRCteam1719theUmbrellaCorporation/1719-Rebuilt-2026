@@ -37,16 +37,16 @@ public class OutakeSubsystem extends SubsystemBase {
     this.isShooting = false;
   }
 
-  public double ScailPower(double distance) {
-    // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
-    // PURE SPECULATION! In theory this should map our shooter to distance 
-    return distance >= OutakeConstants.MinShootDistance 
-      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset * -1, 
-                      Constants.Motor_Min, 
-                      Constants.Motor_Max
-                      )
-      : 0; 
-  }
+  // public double ScailPower(double distance) {
+  //   // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
+  //   // PURE SPECULATION! In theory this should map our shooter to distance 
+  //   return distance >= OutakeConstants.MinShootDistance 
+  //     ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset * -1, 
+  //                     Constants.Motor_Min, 
+  //                     Constants.Motor_Max
+  //                     )
+  //     : 0; 
+  // }
 
   public void setShooterSpeed(double val) {
     this.OutakeMotor.set(val);

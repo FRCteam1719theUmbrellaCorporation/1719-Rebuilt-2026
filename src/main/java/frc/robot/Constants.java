@@ -105,11 +105,11 @@ public final class Constants
     public static final float FUNNEL_SPEED = 0.4f;
     public static final float OUTAKE_TIME = 0.5f;
 
-    public static final double MinShootDistance = 7;
-    public static final double DistancePowerMult = 0.0392857;
-    public static final double DistancePowerOffset = 0.383929;
+    // public static final double MinShootDistance = 7;
+    // public static final double DistancePowerMult = 0.0392857;
+    // public static final double DistancePowerOffset = 0.383929;
     
-    public static final double ShooterScailTimeout = 2.d;
+    // public static final double ShooterScailTimeout = 2.d;
   }
 
 }
