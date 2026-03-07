@@ -70,7 +70,7 @@ public class RobotContainer
   final OutakeSubsystem OUTAKE = new OutakeSubsystem();
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-                                                                                "swerve/Turbo"));
+                                                                                "swerve/Dutchman"));
   private final LimelightHandler LLHandler = new LimelightHandler();
 
   // The robot's subsystems and commands are defined here...
@@ -158,16 +158,14 @@ public class RobotContainer
     // ));
 
     //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-    //   new Movetotag(true, drivebase).withTimeout(3)));
+    operatorXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
     
     operatorXbox.y().onTrue(
       new InstantCommand(()->{
-      Movetotag h = new Movetotag(false, drivebase); 
-      for ( int i = 0 ; i < 3 ; i++ ) {
-      System.out.println(h.Computefinalstaticpose()[i]);
-      }
+      Movetotag h = new Movetotag(false, drivebase);
+      System.out.println(h.Computefinalstaticpose());
      }));
 
     //-------------------------------------------------------------------------------------------------------------------

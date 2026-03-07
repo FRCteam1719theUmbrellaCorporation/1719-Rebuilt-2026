@@ -68,12 +68,12 @@ public final class Constants
       BLUE,
     }
 //these two P values need to be tuned
-    public static final double X_REEF_ALIGNMENT_P =  3.3;
-    public static final double Y_REEF_ALIGNMENT_P =  3.3;
+    public static final double X_REEF_ALIGNMENT_P =  2;
+    public static final double Y_REEF_ALIGNMENT_P =  2;
     public static final double ROT_REEF_ALIGNMENT_P = 0.058;
-    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 1;
-    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.05;
-    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.05;
+    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 10;
+    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.50;
+    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.50;
 
 
     public static final double PositionScalar = 3.0;

@@ -35,29 +35,25 @@ public class Movetotag extends Command {
   }
   public double[] Computefinalstaticpose(){
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
-    double initialXPos = postions[2];
-    double initialYPos = postions[0];
-    double initalRotPos = (360+(Math.atan2(initialYPos, initialXPos)*180/Math.PI))%360;
-    double initialRadius = Math.pow((initialXPos*initialXPos+initialYPos*initialYPos), 0.5);
+    double initialZPos = postions[2]; // negative means in front of
+    double initialXPos = postions[0]; // positive means to right
+    double initalRotPos = (Math.atan2(-initialXPos, -initialZPos)*180/Math.PI);
+    double initialRadius = Math.pow((initialZPos*initialZPos+initialXPos*initialXPos), 0.5);
     double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
-    double[] data = {initialXPos*radiusScaleFactor, initialYPos*radiusScaleFactor, initalRotPos};
-    // System.out.println(initialXPos);
-    // System.out.println(initialYPos);
-    // System.out.println(initialRadius);
-    // System.out.println(radiusScaleFactor);
-    // System.out.println(initialXPos*radiusScaleFactor);
-    // System.out.println(initialYPos*radiusScaleFactor);
-    // System.out.println(initalRotPos);
+    double[] data = {initialZPos*radiusScaleFactor, initialXPos*radiusScaleFactor, initalRotPos};
+    for ( int i = 0 ; i < 6 ; i++ ) {
+      System.out.println(postions[i]);}
+    for ( int i = 0 ; i < 3 ; i++ ) {
+      System.out.println(data[i]);}
     return data;
   }
 
   @Override
   public void initialize() {
     double[] data = Computefinalstaticpose();
-    System.out.println(Math.round(data[0]));
-    System.out.println(Math.round(data[1]));
-    System.out.println(Math.round(data[2]));
-    System.out.println("");
+    // System.out.println(Math.round(data[0]));
+    // System.out.println(Math.round(data[1]));
+    // System.out.println(Math.round(data[2]));
     this.stopTimer = new Timer();
     this.stopTimer.start();
     this.dontSeeTagTimer = new Timer();
