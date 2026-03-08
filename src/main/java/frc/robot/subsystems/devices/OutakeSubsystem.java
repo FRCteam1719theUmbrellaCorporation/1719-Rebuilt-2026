@@ -97,7 +97,7 @@ public class OutakeSubsystem extends SubsystemBase {
    */
   public void reverseOutake(float ShooterInput, float FunnelInput) {
     setFunnelPower(FunnelInput);
-    startShooter();
+    this.isShooting = true; // funnel should move at the same time to avoid damaging fuel
     setShooterSpeed(ShooterInput);
   }
   
