@@ -1,6 +1,6 @@
 # 1719 Rebult 2026
 
-This is our code for our robot _____ for the FRC 2026 game: Rebuilt
+This is our code for our robot, Turbo, for the FRC 2026 game: Rebuilt
 
 ## The Game:
 
@@ -9,13 +9,13 @@ This game involves collecting and shooting balls, known as fuel, into a hub area
 ## Features:
 
 Intake: sucks fuel into our hopper area
-Outake: has a funnel which directs balls into the shooter where they get launched towards the hub.
+Outtake: has a funnel that directs balls into the shooter where they get launched towards the hub.
 Todo :)
 
 ## CAN IDs
 
-Our Swerve moduals are labeled as such:
-The 10s digit of the id labels the moduel (1x would be front left)
+Our Swerve modules are labeled as such:
+The 10s digit of the id labels the module (1x would be front left)
 while x2 represents our angling motor, x1 is the drive motor, and x0 is the encoder:
 
 | Motor Label   | Motor Location | Device Type |  CAN ID |
@@ -40,7 +40,7 @@ while x2 represents our angling motor, x1 is the drive motor, and x0 is the enco
 
 ## Credits:
 
-This code is based off of YAGSL's example code, which can be found [here](https://github.com/Yet-Another-Software-Suite/YAGSL)
+This code is based on YAGSL's example code, which can be found [here](https://github.com/Yet-Another-Software-Suite/YAGSL)
 Our drive code this year is also a continuation of our previous robot, Nessie.
 Drive to tag command is based around team 1954 ElectroBunny's drive to reef code, which can be found [here](https://github.com/ElectroBunny/BetaBot2025) 
 
