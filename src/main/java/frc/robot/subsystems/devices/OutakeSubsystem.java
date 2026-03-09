@@ -8,9 +8,11 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.OutakeConstants;
-
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OutakeSubsystem extends SubsystemBase {
   /** 
@@ -34,6 +36,22 @@ public class OutakeSubsystem extends SubsystemBase {
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
+    SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
+  }
+
+  // public double ScailPower(double distance) {
+  //   // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
+  //   // PURE SPECULATION! In theory this should map our shooter to distance 
+  //   return distance >= OutakeConstants.MinShootDistance 
+  //     ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset * -1, 
+  //                     Constants.Motor_Min, 
+  //                     Constants.Motor_Max
+  //                     )
+  //     : 0; 
+  // }
+
+  public void setShooterSpeed(double val) {
+    this.OutakeMotor.set(val);
   }
 
   public void ConstantShoot(float input) {
@@ -59,6 +77,8 @@ public class OutakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (this.isShooting) {
+      //double smdb = SmartDashboard.getNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
+      //OutakeMotor.set(smdb);
       if (funnelTimer.hasElapsed(OutakeConstants.OUTAKE_TIME)) {
         FunnelMotor.set(OutakeConstants.FUNNEL_SPEED);
       }

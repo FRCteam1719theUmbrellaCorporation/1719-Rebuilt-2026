@@ -25,6 +25,9 @@ public final class Constants
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
   public static final double MAX_SPEED_MULTIPLIER = 0.4;
   public static final double MAX_SPEED  = MAX_SPEED_MULTIPLIER*Units.feetToMeters(14.5);
+
+  public static final double Motor_Min = -1;
+  public static final double Motor_Max = 1;
   // Maximum speed of the robot in meters per second, used to limit acceleration.
 
 //  public static final class AutonConstants
@@ -99,9 +102,15 @@ public final class Constants
   public static final class OutakeConstants{
     public static final int FUNNEL_ID = 4;
     public static final int SHOOTER_ID = 6;
-    public static final float OUTAKE_SPEED = 0.8f;
+    public static final float OUTAKE_SPEED = 0.7f;
     public static final float FUNNEL_SPEED = 0.4f;
-    public static final float OUTAKE_TIME = 0.5f;
+    public static final float OUTAKE_TIME = 0.2f;
+
+    // public static final double MinShootDistance = 7;
+    // public static final double DistancePowerMult = 0.0392857;
+    // public static final double DistancePowerOffset = 0.383929;
+    
+    // public static final double ShooterScailTimeout = 2.d;
   }
 
 }
