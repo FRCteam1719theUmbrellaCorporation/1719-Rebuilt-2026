@@ -22,7 +22,8 @@ public class Movetotag extends Command {
   private boolean isRightScore;
   private Timer dontSeeTagTimer, stopTimer;
   private SwerveSubsystem drivebase;
-  private double tagID = 12;
+  //private double[] tagID = {2,5,10,18,21,26};
+  private double tagID = 15;
   public double initialXPos,initialYPos, initalRotPose;
 
   public Movetotag(boolean isRightScore, SwerveSubsystem drivebase) {
@@ -59,9 +60,6 @@ public class Movetotag extends Command {
   @Override
   public void initialize() {
     double[] data = Computefinalstaticpose();
-    // System.out.println(Math.round(data[0]));
-    // System.out.println(Math.round(data[1]));
-    // System.out.println(Math.round(data[2]));
     this.stopTimer = new Timer();
     this.stopTimer.start();
     this.dontSeeTagTimer = new Timer();
