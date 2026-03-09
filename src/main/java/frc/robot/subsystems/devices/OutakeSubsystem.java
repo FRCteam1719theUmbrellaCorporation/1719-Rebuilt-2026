@@ -12,6 +12,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.OutakeConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OutakeSubsystem extends SubsystemBase {
   /** 
@@ -35,6 +36,7 @@ public class OutakeSubsystem extends SubsystemBase {
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
+    SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
   }
 
   public double ScailPower(double distance) {
@@ -75,9 +77,12 @@ public class OutakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (this.isShooting) {
+      double smdb = SmartDashboard.getNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
+      OutakeMotor.set(smdb);
       if (funnelTimer.hasElapsed(OutakeConstants.OUTAKE_TIME)) {
         FunnelMotor.set(OutakeConstants.FUNNEL_SPEED);
       }
     }
   }
 }
+
