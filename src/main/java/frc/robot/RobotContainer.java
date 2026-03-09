@@ -28,7 +28,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
-import frc.robot.commands.AlignToReefTagRelative;
 import frc.robot.commands.Movetotag;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
@@ -152,11 +151,11 @@ public class RobotContainer
     operatorXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
-    operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    // operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
+    // operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
-    operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    // operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
+    // operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
    
 
     // //THIS FUNCTION IS OUR MOVE TO TAG COMMAND

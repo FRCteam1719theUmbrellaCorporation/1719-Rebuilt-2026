@@ -45,15 +45,7 @@ public class Movetotag extends Command {
     double newX = -R0*Math.sin(phi);
     double newZ = -(R0*Math.cos(phi) - Deltaz);
     double phi_deg = phi*180/Math.PI;
-    //double initialRadius = Math.pow((initialZPos*initialZPos+initialXPos*initialXPos), 0.5);
-    //double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
-    //double[] data = {initialZPos*radiusScaleFactor, initialXPos*radiusScaleFactor, initalRotPos};
     double[] data = {newZ,newX,phi_deg};
-    for ( int i = 0 ; i < 6 ; i+=2 ) {
-      System.out.println(postions[i]);}
-    for ( int i = 0 ; i < 3 ; i++ ) {
-      System.out.println(data[i]);}
-    System.out.println("end");
     return data;
   }
 
