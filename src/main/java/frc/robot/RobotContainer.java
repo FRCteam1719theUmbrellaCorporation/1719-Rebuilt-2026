@@ -30,6 +30,7 @@ import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AlignToReefTagRelative;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.IntakeSubsystem;
@@ -146,10 +147,13 @@ public class RobotContainer
 
     operatorXbox.rightBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
 
-    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.leftBumper().onTrue(new InstantCommand(()->{
+      OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED);
+      System.out.println(LLHandler.getDistFromTag(15));
+    }));
     operatorXbox.leftTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.leftBumper().onTrue(new InstantCommand(()->OUTAKE.outake(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.leftTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 15));
 
     //Don't use this
     // operatorXbox.b().onTrue(new SequentialCommandGroup(

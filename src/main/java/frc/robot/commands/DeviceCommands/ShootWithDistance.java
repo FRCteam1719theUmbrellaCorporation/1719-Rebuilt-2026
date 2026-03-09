@@ -40,16 +40,20 @@ public class ShootWithDistance extends Command {
   public void execute() {
     Optional<Double> distanceFromTag = m_LL.getDistFromTag(m_TARGET);
     if (distanceFromTag.isPresent()) {
-      m_SHOOTER.setShooterSpeed(m_SHOOTER.ScailPower(distanceFromTag.get()));
+      double power = m_SHOOTER.ScailPower(distanceFromTag.get());
+      m_SHOOTER.setShooterSpeed(power);
       hasntSeenShooter.reset();
-    } else if (hasntSeenShooter.hasElapsed(OutakeConstants.ShooterScailTimeout)) {
-      m_SHOOTER.stop();
-    }
+      //System.out.println(power);
+    } //else if (hasntSeenShooter.hasElapsed(OutakeConstants.ShooterScailTimeout)) {
+      //m_SHOOTER.stop();
+    //}
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_SHOOTER.stop();
+  }
 
   // Returns true when the command should end.
   @Override
