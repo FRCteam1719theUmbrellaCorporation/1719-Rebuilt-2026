@@ -85,7 +85,7 @@ public class OutakeSubsystem extends SubsystemBase {
    * @param ShooterInput
    */
   public void reverseOutake(float ShooterInput) {
-    reverseOutake(ShooterInput, -OutakeConstants.FUNNEL_SPEED);
+    reverseOutake(ShooterInput, OutakeConstants.FUNNEL_SPEED);
   }
 
   /**
