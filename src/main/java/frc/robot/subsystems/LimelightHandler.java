@@ -34,7 +34,10 @@ public class LimelightHandler extends SubsystemBase {
 		return Optional.empty();
 	}
 
-	public boolean SeesTargetTag(int target) {
+	public boolean SeesTargetTag( ) {
+		return this.SeesTargetTag(-1);
+	}
+	public boolean SeesTargetTag( int target ) {
 		if (target == -1) {
 			return (this.getFiducials().length != 0);
 		} else {
