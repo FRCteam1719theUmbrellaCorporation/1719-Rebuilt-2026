@@ -159,7 +159,7 @@ public class RobotContainer
    
 
     // //THIS FUNCTION IS OUR MOVE TO TAG COMMAND
-    operatorXbox.b().onTrue(new SequentialCommandGroup(
+    driverXbox.b().onTrue(new SequentialCommandGroup(
       new InstantCommand(()-> {drivebase.centerModulesCommand();}),
       new Movetotag(true, drivebase).withTimeout(3)));
     //Print command for move to tag
