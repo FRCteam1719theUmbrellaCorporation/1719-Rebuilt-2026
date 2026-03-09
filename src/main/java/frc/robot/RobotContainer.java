@@ -181,7 +181,7 @@ public class RobotContainer
     driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeed(OperatorConstants.SLOW_DRIVE_FACTOR))
+        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );}
@@ -207,7 +207,7 @@ public class RobotContainer
       operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
     }
 
-    if (LLHandler.seesTargetTag(HapticConstants.HUB_TAG_ID)) {
+    if (LLHandler.SeesTargetTag(HapticConstants.HUB_TAG_ID)) {
       operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_SEE_VIBRATE_STRENGTH);
     }
     // if (LLHandler.seesTargetTag(OperatorConstants.VIBRATE_ON_TAG_ID)) {
