@@ -28,7 +28,6 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
-import frc.robot.commands.AlignToReefTagRelative;
 import frc.robot.commands.Movetotag;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -142,37 +141,33 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 15));
+    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
-    operatorXbox.leftBumper().onTrue(new InstantCommand(()->{
-      OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED);
-      System.out.println(LLHandler.getDistFromTag(15));
-    }));
-    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftBumper().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
-    operatorXbox.leftTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 15));
 
-    //Don't use this
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    // new InstantCommand(()-> { drivebase.centerModulesCommand();}),
-    // new AlignToReefTagRelative(true, drivebase).withTimeout(3)
-    // ));
+    // operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
+    // operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-    //   new Movetotag(true, drivebase).withTimeout(3)));
-    
-    operatorXbox.y().onTrue(
-      new InstantCommand(()->{
-      Movetotag h = new Movetotag(false, drivebase); 
-      for ( int i = 0 ; i < 3 ; i++ ) {
-      System.out.println(h.Computefinalstaticpose()[i]);
-      }
-     }));
+    // operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
+    // operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
+   
+
+    // //THIS FUNCTION IS OUR MOVE TO TAG COMMAND
+    operatorXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
+    //Print command for move to tag
+//     operatorXbox.y().onTrue(
+//       new InstantCommand(()->{
+//       Movetotag h = new Movetotag(false, drivebase);
+//       System.out.println(h.Computefinalstaticpose());
+//      }));
 
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
