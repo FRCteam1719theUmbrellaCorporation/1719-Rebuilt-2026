@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
+import frc.robot.commands.AimAtHub;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.Movetotag;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
@@ -156,12 +157,7 @@ public class RobotContainer
 
     // operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     // operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
-   
 
-    // //THIS FUNCTION IS OUR MOVE TO TAG COMMAND
-    driverXbox.b().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-      new Movetotag(true, drivebase).withTimeout(3)));
     //Print command for move to tag
 //     operatorXbox.y().onTrue(
 //       new InstantCommand(()->{
@@ -175,13 +171,24 @@ public class RobotContainer
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();}));
     
-    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.y().whileTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.leftTrigger().whileTrue(new AimAtHub(drivebase, LLHandler, driverXbox, 15));
+
     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
         drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
-    );}
+    );
+
+    // THIS FUNCTION IS OUR MOVE TO TAG COMMAND
+    driverXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
+  
+  }
+
+    
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
