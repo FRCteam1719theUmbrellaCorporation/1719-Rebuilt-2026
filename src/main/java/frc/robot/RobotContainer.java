@@ -145,8 +145,9 @@ public class RobotContainer
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
      // reverse outake / unjam
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
-    operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.stop()));
+     // reverse funnel;
+    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(-OutakeConstants.FUNNEL_SPEED)));
+    operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
     operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
     operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
@@ -166,11 +167,9 @@ public class RobotContainer
     // slow outake
     operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
-    
-    // reverse funnel;
-    operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
-    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
- 
+
+    operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
+    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.stop()));
   
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS

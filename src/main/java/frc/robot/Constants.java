@@ -104,6 +104,9 @@ public final class Constants
     public static final int SHOOTER_ID = 6;
     public static final float OUTAKE_SPEED = 0.7f;
     public static final float FUNNEL_SPEED = 0.4f;
+    public static final float Slow_OUTAKE_SPEED = 0.3f;
+    public static final float Super_OUTAKE_SPEED = 1;
+
     public static final float OUTAKE_TIME = 0.2f;
 
     public static final double MinShootDistance = .9;
