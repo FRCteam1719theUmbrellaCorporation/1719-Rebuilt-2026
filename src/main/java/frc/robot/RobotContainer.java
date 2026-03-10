@@ -103,14 +103,42 @@ public class RobotContainer
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
-  public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
+  // Named Commands //
+  public InstantCommand CenterWheels = new InstantCommand(() -> {
+    drivebase.centerModulesCommand().withTimeout(0.5);
+  });
+  public InstantCommand StopIntake = new InstantCommand(() -> {
+    INTAKE.setSpeed(0);
+  });
+  public InstantCommand Intake = new InstantCommand(() -> {
+    INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
+  });
+  public InstantCommand Shoot = new InstantCommand(() -> {
+    new ShootWithDistance(OUTAKE, LLHandler, 15);
+  });
+  public InstantCommand StopShoot = new InstantCommand(() -> {
+    OUTAKE.stop();
+  });
+  public InstantCommand MoveToHub = new InstantCommand(() -> {
+    //lol not merged
+  });
+
 
   public RobotContainer()
   {
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("center", Center_wheels);
+
+    /// Registering ///
+    NamedCommands.registerCommand("center", CenterWheels);
+    NamedCommands.registerCommand("intake", Intake);
+    NamedCommands.registerCommand("stop-intake", StopIntake);
+    NamedCommands.registerCommand("shoot", Shoot);
+    NamedCommands.registerCommand("stop-shooting", StopShoot);
+    NamedCommands.registerCommand("move-to-hub", MoveToHub);
+
+
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -173,7 +201,7 @@ public class RobotContainer
   
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
-    driverXbox.a().onTrue(Center_wheels);
+    driverXbox.a().onTrue(CenterWheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();}));
                                                                                     
