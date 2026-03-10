@@ -8,7 +8,7 @@ public class GameUtils {
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
     double initialXPos = postions[0]; // positive means to right
     double initialZPos = Math.abs(postions[2]); // negative means in front of
-    final double Zdist = initialZPos + LimelightConstants.TargetDeltaZ; // final to encourage compiler optimization?
+    double Zdist = initialZPos + LimelightConstants.TargetDeltaZ;
     double phi = (Math.atan2(-initialXPos, Zdist));
     double newX = -LimelightConstants.DesiredRadius*Math.sin(phi);
     double newZ = -(LimelightConstants.DesiredRadius*Math.cos(phi) - LimelightConstants.TargetDeltaZ);
@@ -16,7 +16,13 @@ public class GameUtils {
     double[] data = {newZ,newX,phi_deg};
     return data;
   }
+
+  // slimmed down version of Computeangleandmove() that just returns angle
   public static double getHubAngle() {
-    return Computeangleandmove()[2];
+    double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
+    double initialXPos = postions[0]; // positive means to right
+    double Zdist = Math.abs(postions[2])+ LimelightConstants.TargetDeltaZ;
+    double phi = (Math.atan2(-initialXPos, Zdist));
+    return phi*180/Math.PI;
   }
 }
