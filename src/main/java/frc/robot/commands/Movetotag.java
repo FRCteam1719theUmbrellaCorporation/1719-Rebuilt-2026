@@ -22,7 +22,8 @@ public class Movetotag extends Command {
   private boolean isRightScore;
   private Timer dontSeeTagTimer, stopTimer;
   private SwerveSubsystem drivebase;
-  private double tagID = 3;
+  //private double[] tagID = {2,5,10,18,21,26};
+  private double tagID = 15;
   public double initialXPos,initialYPos, initalRotPose;
 
   public Movetotag(boolean isRightScore, SwerveSubsystem drivebase) {
@@ -35,29 +36,22 @@ public class Movetotag extends Command {
   }
   public double[] Computefinalstaticpose(){
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
-    double initialXPos = postions[2];
-    double initialYPos = postions[0];
-    double initalRotPos = (360+(Math.atan2(initialYPos, initialXPos)*180/Math.PI))%360;
-    double initialRadius = Math.pow((initialXPos*initialXPos+initialYPos*initialYPos), 0.5);
-    double radiusScaleFactor = Constants.LimelightConstants.DesiredRadius/initialRadius;
-    double[] data = {initialXPos*radiusScaleFactor, initialYPos*radiusScaleFactor, initalRotPos};
-    // System.out.println(initialXPos);
-    // System.out.println(initialYPos);
-    // System.out.println(initialRadius);
-    // System.out.println(radiusScaleFactor);
-    // System.out.println(initialXPos*radiusScaleFactor);
-    // System.out.println(initialYPos*radiusScaleFactor);
-    // System.out.println(initalRotPos);
+    double initialXPos = postions[0]; // positive means to right
+    double initialZPos = Math.abs(postions[2]); // negative means in front of
+    double R0 = Constants.LimelightConstants.DesiredRadius;
+    double Deltaz = Constants.LimelightConstants.TargetDeltaZ;
+    double Zdist = initialZPos + Deltaz;
+    double phi = (Math.atan2(-initialXPos, Zdist));
+    double newX = -R0*Math.sin(phi);
+    double newZ = -(R0*Math.cos(phi) - Deltaz);
+    double phi_deg = phi*180/Math.PI;
+    double[] data = {newZ,newX,phi_deg};
     return data;
   }
 
   @Override
   public void initialize() {
     double[] data = Computefinalstaticpose();
-    System.out.println(Math.round(data[0]));
-    System.out.println(Math.round(data[1]));
-    System.out.println(Math.round(data[2]));
-    System.out.println("");
     this.stopTimer = new Timer();
     this.stopTimer.start();
     this.dontSeeTagTimer = new Timer();

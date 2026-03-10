@@ -28,8 +28,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
-import frc.robot.commands.AlignToReefTagRelative;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.IntakeSubsystem;
@@ -140,11 +140,15 @@ public class RobotContainer
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    /*
-     * OPERATOR BINDINGS
-     */
+=======
+    //OPERATOR COMMANDS
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 15));
+    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    // Intake
+     // reverse outake / unjam
+    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
+    operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    
     operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
     operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
@@ -152,53 +156,39 @@ public class RobotContainer
     operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
     operatorXbox.leftBumper().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
-    // Shoot ball
-    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
-    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
-
-    // reverse funnel;
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
-    operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
+    // Shoot constant speed
+    operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // Super outake
-    operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
-    operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    operatorXbox.b().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
+    operatorXbox.b().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // slow outake
     operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
-
-    // reverse outake / unjam
-    operatorXbox.b().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
-    operatorXbox.b().onFalse(new InstantCommand(()->OUTAKE.stop()));
-
-    //Don't use this
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    // new InstantCommand(()-> { drivebase.centerModulesCommand();}),
-    // new AlignToReefTagRelative(true, drivebase).withTimeout(3)
-    // ));
-
-    //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-    //   new Movetotag(true, drivebase).withTimeout(3)));
     
-    operatorXbox.y().onTrue(
-      new InstantCommand(()->{
-      Movetotag h = new Movetotag(false, drivebase); 
-      for ( int i = 0 ; i < 3 ; i++ ) {
-      System.out.println(h.Computefinalstaticpose()[i]);
-      }
-     }));
-
+    // reverse funnel;
+    operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
+    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstan
+ 
+  
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
     driverXbox.a().onTrue(Center_wheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();}));
-    
+                                                                                    
+     // MOVE TO TAG COMMAND
+    driverXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
+                                                                                    
+    //aim at tag                                                                                
     driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
-    driverXbox.rightTrigger()
+    
+      //slow down                                                                       
+     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
         drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
       ).onFalse(new InstantCommand(()->

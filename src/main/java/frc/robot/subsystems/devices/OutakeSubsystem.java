@@ -41,16 +41,16 @@ public class OutakeSubsystem extends SubsystemBase {
     SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
   }
 
-  // public double ScailPower(double distance) {
-  //   // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
-  //   // PURE SPECULATION! In theory this should map our shooter to distance 
-  //   return distance >= OutakeConstants.MinShootDistance 
-  //     ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset * -1, 
-  //                     Constants.Motor_Min, 
-  //                     Constants.Motor_Max
-  //                     )
-  //     : 0; 
-  // }
+  public double ScailPower(double distance) {
+    // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
+    // PURE SPECULATION! In theory this should map our shooter to distance 
+    return distance >= OutakeConstants.MinShootDistance 
+      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset, 
+                      0, 
+                      Constants.Motor_Max
+                      )
+      : 0; 
+  }
 
   public void startShooter() {
     this.isShooting = true;
@@ -109,11 +109,12 @@ public class OutakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (this.isShooting) {
-      //double smdb = SmartDashboard.getNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
-      //OutakeMotor.set(smdb);
+      // double smdb = SmartDashboard.getNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
+      // OutakeMotor.set(smdb);
       if (funnelTimer.hasElapsed(OutakeConstants.OUTAKE_TIME)) {
         FunnelMotor.set(funnelPower);
       }
     }
   }
 }
+

@@ -20,10 +20,10 @@ import swervelib.math.Matter;
 public final class Constants
 {
 
-  public static final double ROBOT_MASS = (95) * 0.453592; // 105lbs * kg per pound
+  public static final double ROBOT_MASS = (100) * 0.453592; // 105lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED_MULTIPLIER = 0.5;
+  public static final double MAX_SPEED_MULTIPLIER = 0.4;
   public static final double MAX_SPEED  = MAX_SPEED_MULTIPLIER*Units.feetToMeters(14.5);
 
   public static final double Motor_Min = -1;
@@ -74,9 +74,9 @@ public final class Constants
     public static final double X_REEF_ALIGNMENT_P =  3.3;
     public static final double Y_REEF_ALIGNMENT_P =  3.3;
     public static final double ROT_REEF_ALIGNMENT_P = 0.058;
-    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 1;
-    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.05;
-    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.05;
+    public static final double ROT_TOLERANCE_REEF_ALIGNMENT = 10;
+    public static final double X_TOLERANCE_REEF_ALIGNMENT = 0.50;
+    public static final double Y_TOLERANCE_REEF_ALIGNMENT = 0.50;
 
 
     public static final double PositionScalar = 3.0;
@@ -89,6 +89,7 @@ public final class Constants
 	  public static final double POSE_VALIDATION_TIME = 0.3;
 
     public static final double DesiredRadius = 2.438;
+    public static final double TargetDeltaZ =  0.61; // 2 feet
 	}
 
 
@@ -102,14 +103,12 @@ public final class Constants
     public static final int FUNNEL_ID = 4;
     public static final int SHOOTER_ID = 6;
     public static final float OUTAKE_SPEED = 0.7f;
-    public static final float Super_OUTAKE_SPEED = 1f;
-    public static final float Slow_OUTAKE_SPEED = 0.3f;
     public static final float FUNNEL_SPEED = 0.4f;
     public static final float OUTAKE_TIME = 0.2f;
 
-    // public static final double MinShootDistance = 7;
-    // public static final double DistancePowerMult = 0.0392857;
-    // public static final double DistancePowerOffset = 0.383929;
+    public static final double MinShootDistance = .9;
+    public static final double DistancePowerMult = 0.0850589;
+    public static final double DistancePowerOffset = 0.539119;
     
     // public static final double ShooterScailTimeout = 2.d;
   }
