@@ -93,8 +93,8 @@ public class RobotContainer
   //                                                           .allianceRelativeControl(true);
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY(),
-                                                                () -> driverXbox.getLeftX() )
+                                                                () -> i_scalar(driverXbox.getLeftY(),driverXbox.getLeftX()),
+                                                                () -> i_scalar(driverXbox.getLeftX(),driverXbox.getLeftY()))
                                                             .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.9)
@@ -141,11 +141,10 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 15));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 16));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-     // reverse outake / unjam
-     // reverse funnel;
+    // reverse funnel;
     operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
     operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
