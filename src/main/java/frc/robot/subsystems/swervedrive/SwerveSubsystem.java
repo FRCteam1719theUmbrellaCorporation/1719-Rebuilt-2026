@@ -29,6 +29,7 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -167,7 +168,10 @@ public class SwerveSubsystem extends SubsystemBase
   public void periodic()
   {
     // When vision is enabled we must manually update odometry in SwerveDrive
+    // addFakeVisionReading();
     swerveDrive.updateOdometry(); // TODO: UNCOMMENT AFTER TESTING. MUST BE UPDATED FOR POSE ESTIMATION
+    System.out.println(swerveDrive.getOdometryHeading());
+    System.out.println(swerveDrive.swerveDrivePoseEstimator.getEstimatedPosition());
     try {
       updatePoseEstimation();
     } catch (Exception e) {
@@ -782,29 +786,30 @@ public class SwerveSubsystem extends SubsystemBase
 
   protected void updatePoseEstimation() {
     boolean doRejectUpdate = false;
-        //LimelightHelpers.SetRobotOrientation("limelight", SWERVE.getHeading().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("");
-        if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
-        {
-          doRejectUpdate = true;
-        } else if(mt2.tagCount == 0)
-        {
-          doRejectUpdate = true;
-        } else if (mt2.pose.getX() == 0. && mt2.pose.getY() == 0.) {
-            doRejectUpdate = true;
-        } else if (Robot.inAuto) {
-            doRejectUpdate = true;
-        }
-        if(!doRejectUpdate)
-        {
+        LimelightHelpers.SetRobotOrientation("limelight", getHeading().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        // if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
+        // {
+        //   doRejectUpdate = true;
+        // } else if(mt2.tagCount == 0)
+        // {
+        //   doRejectUpdate = true;
+        // } else if (mt2.pose.getX() == 0. && mt2.pose.getY() == 0.) {
+        //     doRejectUpdate = true;
+        // } else if (Robot.inAuto) {
+        //     doRejectUpdate = true;
+        // }
+        // if(!doRejectUpdate)
+        // {
             Pose2d newPose = mt2.pose;
+            System.out.println("mt2" + mt2.pose);
             newPose.rotateBy(swerveDrive.getYaw().minus(newPose.getRotation()));
             //newPose.
             // SWERVE.getSwerveDrive().setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
             swerveDrive.addVisionMeasurement(
               mt2.pose,
               mt2.timestampSeconds);
-        }
+        // }
   }
 
   
