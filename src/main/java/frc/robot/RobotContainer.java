@@ -140,7 +140,6 @@ public class RobotContainer
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-=======
     //OPERATOR COMMANDS
     operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 15));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
@@ -170,7 +169,7 @@ public class RobotContainer
     
     // reverse funnel;
     operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
-    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstan
+    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
  
   
     //-------------------------------------------------------------------------------------------------------------------
