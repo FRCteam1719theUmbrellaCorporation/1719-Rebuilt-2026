@@ -146,7 +146,7 @@ public class RobotContainer
 
      // reverse outake / unjam
      // reverse funnel;
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(-OutakeConstants.FUNNEL_SPEED)));
+    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
     operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
     operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
@@ -183,7 +183,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
     
       //slow down                                                                       
      driverXbox.rightTrigger()
