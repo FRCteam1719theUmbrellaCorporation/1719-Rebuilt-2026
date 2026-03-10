@@ -15,12 +15,13 @@ import frc.robot.Constants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import misc.GameUtils;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AimAtTag extends Command {
+public class AimAtHub extends Command {
 
   /** 
-   * Creates a new AimAtTag. 
+   * Creates a new AimAtHub. 
    * Aims the robot at the april tag so the user can move and keep track of the desired object
    */
 
@@ -40,7 +41,7 @@ public class AimAtTag extends Command {
     return new Translation2d((X*scale_factor)/(r+Constants.OperatorConstants.EPISLON)* -1,(Y*scale_factor)/(r+Constants.OperatorConstants.EPISLON)* -1);
   }
   
-  public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller, int tagID) {
+  public AimAtHub(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller, int tagID) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drivebase = drivebase;
     m_LL = LL;
@@ -64,12 +65,12 @@ public class AimAtTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Optional<Double> DegOffset = m_LL.getAngleFromTag(m_targetTagID);
+    double DegOffset = GameUtils.getHubAngle();
     double output = 0;
 
-    if (m_LL.SeesTargetTag(m_targetTagID) && DegOffset.isPresent()) {
+    if (m_LL.SeesTargetTag(m_targetTagID)) {
       TagOOBTimer.reset();
-      output = RotController.calculate(DegOffset.get());
+      output = RotController.calculate(DegOffset);
       System.out.println(output);
     }
 
