@@ -86,6 +86,7 @@ public class OutakeSubsystem extends SubsystemBase {
    */
   public void reverseOutake(float ShooterInput) {
     reverseOutake(ShooterInput, OutakeConstants.FUNNEL_SPEED);
+    setFunnelPower(-OutakeConstants.FUNNEL_SPEED);
   }
 
   /**
