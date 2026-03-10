@@ -140,22 +140,35 @@ public class RobotContainer
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
-    //OPERATOR COMMANDS
+    /*
+     * OPERATOR BINDINGS
+     */
+
+    // Intake
     operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
     operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
+    // Reverse intake
     operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
     operatorXbox.leftBumper().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
+    // Shoot ball
     operatorXbox.rightTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
+    // reverse funnel;
+    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
+    operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
+
+    // Super outake
     operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
     operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
+    // slow outake
     operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
+    // reverse outake / unjam
     operatorXbox.b().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.b().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
