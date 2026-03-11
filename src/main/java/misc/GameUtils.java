@@ -10,15 +10,11 @@ import frc.robot.Constants.FieldConstants;
 
 
 public class GameUtils {
-    private static Optional<Alliance> m_Alliance;
-
-    public GameUtils() {
-        m_Alliance = DriverStation.getAlliance(); // only needs to be ran once
-    }
+    private static Optional<Alliance> m_Alliance = Optional.empty();
 
     // def not needed but just incase
-    public static Optional<Alliance> UpdateAlliance() {
-        return DriverStation.getAlliance();
+    public static void UpdateAlliance() {
+        m_Alliance = DriverStation.getAlliance();
     }
 
     /**
