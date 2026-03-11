@@ -90,6 +90,8 @@ public final class Constants
 
     public static final double DesiredRadius = 2.438;
     public static final double TargetDeltaZ =  0.61; // 2 feet
+
+    public static final double AIM_AT_TAG_TOLERANCE = 3.d;
 	}
 
 

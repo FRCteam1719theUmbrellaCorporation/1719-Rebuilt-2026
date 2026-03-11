@@ -58,7 +58,7 @@ public class AimAtTag extends Command {
     TagOOBTimer.start();
 
     RotController.setSetpoint(0);
-    RotController.setTolerance(LimelightConstants.ROT_TOLERANCE_REEF_ALIGNMENT);
+    RotController.setTolerance(LimelightConstants.AIM_AT_TAG_TOLERANCE);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -85,6 +85,7 @@ public class AimAtTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return this.TagOOBTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME);
+    return !m_Controller.leftTrigger().getAsBoolean();
+    // return this.TagOOBTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME);
   }
 }
