@@ -25,7 +25,8 @@ public class GameUtils {
      * as this is supposed to be called when a team is already defined
      */
     public static int GetHubTag_Alliance() throws IllegalStateException {
-        Alliance alliance = m_Alliance.orElseThrow(IllegalStateException::new); 
+        Alliance alliance = m_Alliance.orElse(null); 
+        if (alliance == null) return -1;
         return alliance == Alliance.Red 
             ? FieldConstants.SHOOTER_APRIL_TAG_RED 
             : FieldConstants.SHOOTER_APRIL_TAG_BLUE;

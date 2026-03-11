@@ -17,7 +17,7 @@ import misc.GameUtils;
 public class ShootWithDistance extends Command {
   private final OutakeSubsystem m_SHOOTER;
   private final LimelightHandler m_LL;
-  private final int m_TARGET;
+  private int m_TARGET;
   private Timer hasntSeenShooter;
 
   /** Creates a new ShootWithDistance. */
@@ -30,13 +30,16 @@ public class ShootWithDistance extends Command {
 
   /** Creates a new ShootWithDistance. No TagID assumes alliance hub tag */
   public ShootWithDistance(OutakeSubsystem m_outake, LimelightHandler m_ll) {
-    this(m_outake, m_ll, GameUtils.GetHubTag_Alliance());
+    this(m_outake, m_ll, -1);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     this.m_SHOOTER.startShooter();
+    if (m_TARGET == -1) {
+      m_TARGET = GameUtils.GetHubTag_Alliance();
+    }
     this.hasntSeenShooter = new Timer();
     this.hasntSeenShooter.start();
   }

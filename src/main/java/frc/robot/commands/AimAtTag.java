@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.lang.annotation.Target;
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -54,7 +56,7 @@ public class AimAtTag extends Command {
 
   // Automatically assumes tag based on alliance hub
   public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
-    this(drivebase, LL, Controller, GameUtils.GetHubTag_Alliance());
+    this(drivebase, LL, Controller, -1);
   }
 
   // Called when the command is initially scheduled.
@@ -62,6 +64,10 @@ public class AimAtTag extends Command {
   public void initialize() {
     TagOOBTimer = new Timer();
     TagOOBTimer.start();
+
+    if (m_targetTagID == -1) {
+      m_targetTagID = GameUtils.GetHubTag_Alliance();
+    }
 
     RotController.setSetpoint(0);
     RotController.setTolerance(LimelightConstants.ROT_TOLERANCE_REEF_ALIGNMENT);
