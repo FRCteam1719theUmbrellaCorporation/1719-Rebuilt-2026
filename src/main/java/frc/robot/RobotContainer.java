@@ -115,9 +115,6 @@ public class RobotContainer
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
     autoChooser = AutoBuilder.buildAutoChooser();
 
-    //Add a simple auto option to have the robot drive forward for 1 second then stop
-    // autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
-    
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
     
@@ -141,7 +138,7 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 16));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // reverse funnel;
@@ -182,7 +179,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     
       //slow down                                                                       
      driverXbox.rightTrigger()

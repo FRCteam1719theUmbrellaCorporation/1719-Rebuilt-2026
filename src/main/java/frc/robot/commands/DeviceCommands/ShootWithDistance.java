@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.OutakeSubsystem;
+import misc.GameUtils;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ShootWithDistance extends Command {
@@ -25,6 +26,11 @@ public class ShootWithDistance extends Command {
     this.m_LL = m_ll;
     this.m_TARGET = targetTag; 
     addRequirements(m_outake, m_ll);
+  }
+
+  /** Creates a new ShootWithDistance. No TagID assumes alliance hub tag */
+  public ShootWithDistance(OutakeSubsystem m_outake, LimelightHandler m_ll) {
+    this(m_outake, m_ll, GameUtils.GetHubTag_Alliance());
   }
 
   // Called when the command is initially scheduled.

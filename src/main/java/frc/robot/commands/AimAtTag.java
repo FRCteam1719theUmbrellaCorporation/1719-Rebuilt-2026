@@ -15,6 +15,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import misc.GameUtils;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AimAtTag extends Command {
@@ -31,7 +32,7 @@ public class AimAtTag extends Command {
   Timer TagOOBTimer;
   PIDController RotController;
 
-  protected Translation2d i_scalar(final double X, final double Y) {
+  protected static Translation2d i_scalar(final double X, final double Y) {
     final double r = Math.sqrt(Math.pow(X, 2) 
                              + Math.pow(Y, 2));
     final double scale_factor = Math.pow(
@@ -49,6 +50,11 @@ public class AimAtTag extends Command {
     RotController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0.f, 0.f);
 
     addRequirements(drivebase, LL);
+  }
+
+  // Automatically assumes tag based on alliance hub
+  public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
+    this(drivebase, LL, Controller, GameUtils.GetHubTag_Alliance());
   }
 
   // Called when the command is initially scheduled.
