@@ -185,7 +185,8 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.leftTrigger().whileTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 13));
+    driverXbox.leftBumper().whileTrue(new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 13));
     
       //slow down                                                                       
      driverXbox.rightTrigger()
