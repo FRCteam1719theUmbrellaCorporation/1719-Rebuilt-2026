@@ -11,7 +11,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.OutakeConstants;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OutakeSubsystem extends SubsystemBase {
@@ -30,6 +35,7 @@ public class OutakeSubsystem extends SubsystemBase {
   SparkMax FunnelMotor;
   boolean isShooting;
   double funnelPower;
+  final GenericEntry ShooterAdjustment;
 
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
@@ -39,13 +45,19 @@ public class OutakeSubsystem extends SubsystemBase {
     this.isShooting = false;
     funnelPower = OutakeConstants.FUNNEL_SPEED;
     SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
+
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("Shooter_Data");
+    this.ShooterAdjustment = ShooterTab
+      .add("Outtake Adjustment", 0)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .getEntry();
   }
 
   public double ScailPower(double distance) {
     // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
     // PURE SPECULATION! In theory this should map our shooter to distance 
     return distance >= OutakeConstants.MinShootDistance 
-      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset, 
+      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset + ShooterAdjustment.getDouble(0), 
                       0, 
                       Constants.Motor_Max
                       )
