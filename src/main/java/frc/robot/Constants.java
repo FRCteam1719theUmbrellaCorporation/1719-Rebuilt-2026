@@ -117,7 +117,7 @@ public final class Constants
   }
 
   public static final class ControllerConstants {
-    public static final double TrimSwitchBounds = .2d;
+    public static final double TrimSwitchBounds = .1d;
   }
 
 }

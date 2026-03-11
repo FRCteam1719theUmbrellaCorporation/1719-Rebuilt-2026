@@ -51,19 +51,19 @@ public class OutakeSubsystem extends SubsystemBase {
 
     final ShuffleboardTab ShooterTab = Shuffleboard.getTab("Shooter_Data");
     this.ShooterAdjustment = ShooterTab
-      .add("Outtake Adjustment", 0)
+      .add("Outtake Adjustment", 1)
       .withWidget(BuiltInWidgets.kNumberSlider)
       .withProperties(Map.of(
-        "min", -ControllerConstants.TrimSwitchBounds, 
-        "max", ControllerConstants.TrimSwitchBounds))
+        "min", 1-ControllerConstants.TrimSwitchBounds, 
+        "max", 1+ControllerConstants.TrimSwitchBounds))
       .getEntry();
   }
 
   public double ScailPower(double distance) {
     // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
-    // PURE SPECULATION! In theory this should map our shooter to distance 
+    // Distance is in meters
     return distance >= OutakeConstants.MinShootDistance 
-      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset + ShooterAdjustment.getDouble(0), 
+      ? MathUtil.clamp((distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset) * ShooterAdjustment.getDouble(1), 
                       0, 
                       Constants.Motor_Max
                       )
