@@ -6,7 +6,7 @@ package frc.robot.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.Meter;
 
-
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -42,6 +42,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 // import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -87,6 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
    * Enable vision odometry updates while driving.
    */
   private final boolean visionDriveTest     = false;
+  private final Pigeon2 m_gyro;
   // public static boolean slowSpeed = true;
   /**
    * PhotonVision class to keep an accurate odometry.
@@ -102,7 +104,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED,
@@ -130,6 +132,7 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.stopOdometryThread();
     }
     setupPathPlanner();
+    m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
   }
 
   /**
@@ -145,6 +148,7 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,  
                                   new Pose2d(new Translation2d(Meter.of(1), Meter.of(1)),
                                              Rotation2d.fromDegrees(0)));
+    m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
   }
 
   public void setMaxSpeed(double multiplier) {
@@ -165,7 +169,7 @@ public class SwerveSubsystem extends SubsystemBase
     // When vision is enabled we must manually update odometry in SwerveDrive
     swerveDrive.updateOdometry(); // TODO: UNCOMMENT AFTER TESTING. MUST BE UPDATED FOR POSE ESTIMATION
     // try {
-    //   LimeLightExtra.updatePoseEstimation();
+    //   updatePoseEstimation();
     // } catch (Exception e) {
     // }
   }
@@ -758,13 +762,6 @@ public class SwerveSubsystem extends SubsystemBase
     }
   }
 
-
-
-
-
-
-
-
   /**
    * Add a fake vision reading for testing purposes.
    */
@@ -782,6 +779,8 @@ public class SwerveSubsystem extends SubsystemBase
   {
     return swerveDrive;
   }
+
+  
 
   // public BooleanSupplier within() {
   //   Double[] tagxyr = calculatedposes.getArrayfromKey(SmartDashboard.getString("location", null), isRedAlliance());

@@ -1,118 +1,48 @@
-# Yet Another Generic Swerve Library (YAGSL) Example project
+# 1719 Rebult 2026
 
-YAGSL is intended to be an easy implementation of a generic swerve drive that should work for most
-square swerve drives. The project is documented
-on [here](https://github.com/BroncBotz3481/YAGSL/wiki). The JSON documentation can also be
-found [here](docs/START.md)
+This is our code for our robot, Turbo, for the FRC 2026 game: Rebuilt
 
-This example is intended to be a starting place on how to use YAGSL. By no means is this intended to
-be the base of your robot project. YAGSL provides an easy way to generate a SwerveDrive which can be
-used in both TimedRobot and Command-Based Robot templates.
+## The Game:
 
+This game involves collecting and shooting balls, known as fuel, into a hub area. There is an auto period at the beginning of the game, which decides who is able to shoot into the hub first. While there's a lot less in this game compared to previous years, there's a lot more strategy and potential design variations involved, which make this a unique challenge!
 
-# Overview
+## Features:
 
-### Installation
+Intake: sucks fuel into our hopper area
+Outtake: has a funnel that directs balls into the shooter where they get launched towards the hub.
+Todo :)
 
-Vendor URL:
+## CAN IDs
 
-```
-https://broncbotz3481.github.io/YAGSL-Lib/yagsl/yagsl.json
-```
+Our Swerve modules are labeled as such:
+The 10s digit of the id labels the module (1x would be front left)
+while x2 represents our angling motor, x1 is the drive motor, and x0 is the encoder:
 
-[Javadocs here](https://broncbotz3481.github.io/YAGSL/)  
-[Library here](https://github.com/BroncBotz3481/YAGSL/)  
-[Code here](https://github.com/BroncBotz3481/YAGSL/tree/main/swervelib)  
-[WIKI](https://github.com/BroncBotz3481/YAGSL/wiki)  
-[Config Generation](https://yet-another-software-suite.github.io/YAGSL-Example/)
+| Motor Label   | Motor Location | Device Type |  CAN ID |
+| ------------- | -------------- | ----------- | --------|
+| Front Left Drive Motor      | Left Front Drive     | CTRE Kraken X60 | 11      |
+| Front Left Angle Motor      | Left Front Rotation Motor    | CTRE Kraken X60 | 12      |
+| Front Left Angle Encoder      | Left Front CANCoder    | CANCoder | 10      |
+| Front Right Drive Motor      | Right Front Drive    | CTRE Kraken X60 | 21      |
+| Front Right Angle Motor      | Right Front Rotation Motor       | CTRE Kraken X60 | 22     |
+| Front Right Angle Encoder    | Right Front CANCoder       | CANCoder | 20      |
+| Back Left Drive Motor      | Left Back Drive    | CTRE Kraken X60 | 31      |
+| Back Left Angle Motor     | Left Back Rotation Motor | CTRE Kraken X60 | 32      |
+| Back Left Angle Encoder      | Left Back CANCoder | CANCoder | 30    |
+| Back Right Drive Motor    | Right Back Drive | CTRE Kraken X60 | 36      |
+| Back Right Angle Motor     | Right Back Rotation Motor | CTRE Kraken X60 | 37      |
+| Back Right Angle Encoder     | Right Back CANCoder | CANCoder | 40      |
+| Pigeon 2     | Gyro Port + Add location | Pigeon2 | 2      |
+| Intake Motor     | Front of the robot | Rev Neo + Sparkmax | 3      |
+| Funnel Motor    | Middle of the robot | Rev Neo + Sparkmax | 4     |
+| Shooter Motor 1    | Left side of shooter from front | Rev Neo + Sparkmax | 5     |
+| Shooter Motor 2     | Right side of shooter from front | Rev Neo + Sparkmax | 6      |
 
-# Create an issue if there is any errors you find!
+## Credits:
 
-We will be actively montoring this and fix any issues when we can!
+This code is based on YAGSL's example code, which can be found [here](https://github.com/Yet-Another-Software-Suite/YAGSL)
+Our drive code this year is also a continuation of our previous robot, Nessie.
+Drive to tag command is based around team 1954 ElectroBunny's drive to reef code, which can be found [here](https://github.com/ElectroBunny/BetaBot2025) 
 
-## Development
-
-* Development happens here on `YAGSL-Example`. `YAGSL` and `YAGSL-Lib` are updated on a nightly
-  basis.
-
-# Support our developers!
-<a href='https://ko-fi.com/yagsl' target='_blank'><img height='35' style='border:0px;height:46px;' src='https://az743702.vo.msecnd.net/cdn/kofi3.png?v=0' border='0' alt='Buy Me a Robot at ko-fi.com'></a>
-
-### TL;DR Generate and download your configuration [here](https://broncbotz3481.github.io/YAGSL-Example/) and unzip it so that it follows structure below:
-
-```text
-deploy
-└── swerve
-    ├── controllerproperties.json
-    ├── modules
-    │   ├── backleft.json
-    │   ├── backright.json
-    │   ├── frontleft.json
-    │   ├── frontright.json
-    │   ├── physicalproperties.json
-    │   └── pidfproperties.json
-    └── swervedrive.json
-```
-
-### Then create your SwerveDrive object like this.
-
-```java
-import java.io.File;
-import edu.wpi.first.wpilibj.Filesystem;
-import swervelib.parser.SwerveParser;
-import swervelib.SwerveDrive;
-import edu.wpi.first.math.util.Units;
-
-
-SwerveDrive swerveDrive=new SwerveParser(new File(Filesystem.getDeployDirectory(),"swerve")).createSwerveDrive(Units.feetToMeters(14.5));
-```
-
-# Migrating Old Configuration Files
-
-1. Delete `wheelDiamter`, `gearRatio`, `encoderPulsePerRotation` from `physicalproperties.json`
-2. Add `optimalVoltage` to `physicalproperties.json`
-3. Delete `maxSpeed` and `optimalVoltage` from `swervedrive.json`
-4. **IF** a swerve module doesn't have the same drive motor or steering motor as the rest of the
-   swerve drive you **MUST** specify a `conversionFactor` for BOTH the drive and steering motor in
-   the modules configuration JSON file. IF one of the motors is the same as the rest of the swerve
-   drive and you want to use that `conversionFactor`, set the `conversionFactor` in the module JSON
-   configuration to 0.
-5. You MUST specify the maximum speed when creating a `SwerveDrive`
-   through `new SwerveParser(directory).createSwerveDrive(maximumSpeed);`
-6. IF you do not want to set `conversionFactor` in `swervedrive.json`. You can pass it into the
-   constructor as a parameter like this
-
-```java
-double DriveConversionFactor = SwerveMath.calculateMetersPerRotation(Units.inchesToMeters(WHEEL_DIAMETER), GEAR_RATIO, ENCODER_RESOLUTION);
-double SteeringConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(GEAR_RATIO, ENCODER_RESOLUTION);
-SwerveDrive swerveDrive = new SwerveParser(directory).createSwerveDrive(maximumSpeed, SteeringConversionFactor, DriveConversionFactor);
-```
-
-### Falcon Support would not have been possible without support from Team 1466 Webb Robotics!
-
-# Configuration Tips
-
-### My Robot Spins around uncontrollably during autonomous or when attempting to set the heading!
-
-* Invert the gyro scope.
-* Invert the drive motors for every module. (If front and back become reversed when turning)
-
-### Angle motors are erratic.
-
-* Invert the angle motor.
-
-### My robot is heavy.
-
-* Implement momentum velocity limitations in SwerveMath.
-
-### Ensure the IMU is centered on the robot
-
-# Maintainers
-- @thenetworkgrinch
-- @Technologyman00 
-
-# Special Thanks to Team 7900! Trial N' Terror
-Without the debugging and aid of Team 7900 the project could never be as stable or active as it is. 
-
-# YAGSL is based off Swerve Code from Team 95 in 2023
-Thank you to team 95! (Note: Since then YAGSL has turned into the ship of Theseus)
+Programmers: 
+Will do this later because I wanna make this section fun
