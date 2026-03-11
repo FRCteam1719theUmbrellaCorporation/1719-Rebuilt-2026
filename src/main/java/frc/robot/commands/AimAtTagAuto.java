@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import misc.GameUtils;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class AimAtTagAuto extends Command {
@@ -42,6 +43,10 @@ public class AimAtTagAuto extends Command {
     addRequirements(drivebase, LL);
   }
 
+  public AimAtTagAuto(SwerveSubsystem drivebase, LimelightHandler LL) {
+    this(drivebase, LL, -1);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -49,6 +54,10 @@ public class AimAtTagAuto extends Command {
     TagOOBTimer.start();
     isAtSetpointTimer = new Timer();
     isAtSetpointTimer.start();
+
+    if (m_targetTagID == -1) {
+      m_targetTagID = GameUtils.GetHubTag_Alliance();
+    } 
 
     RotController.setSetpoint(0);
     RotController.setTolerance(LimelightConstants.AIM_AT_TAG_TOLERANCE);

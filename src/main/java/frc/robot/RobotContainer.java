@@ -104,7 +104,7 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
-  public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 15).withTimeout(2);
+  public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler).withTimeout(2);
 
   public RobotContainer()
   {
