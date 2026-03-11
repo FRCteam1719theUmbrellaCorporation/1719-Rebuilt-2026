@@ -104,6 +104,7 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
+  public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 15).withTimeout(2);
 
   public RobotContainer()
   {
@@ -111,6 +112,8 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("center", Center_wheels);
+    NamedCommands.registerCommand("AimAtTag", AimAtTagAuto);
+    
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -183,6 +186,7 @@ public class RobotContainer
                                                                                     
     //aim at tag                                                                                
     driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.leftBumper().whileTrue(new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 15));
     
       //slow down                                                                       
      driverXbox.rightTrigger()

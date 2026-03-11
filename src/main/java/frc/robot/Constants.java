@@ -61,7 +61,7 @@ public final class Constants
   }
 
   public static final class LimelightConstants {
-		public static final String LIMELIGHT_NAME = "";
+		public static final String LIMELIGHT_NAME = null;
     public static final Double MAX_TAG_DIST = 10.0;
     public static final TeamColor TEAM = TeamColor.RED;
     public static final boolean USE_MEGATAG2 = true;
@@ -90,6 +90,8 @@ public final class Constants
 
     public static final double DesiredRadius = 2.438;
     public static final double TargetDeltaZ =  0.61; // 2 feet
+
+    public static final double AIM_AT_TAG_TOLERANCE = 3.d;
 	}
 
 
