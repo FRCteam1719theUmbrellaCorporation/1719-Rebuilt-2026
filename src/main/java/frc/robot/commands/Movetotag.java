@@ -26,6 +26,10 @@ public class Movetotag extends Command {
   private double tagID = 15;
   public double initialXPos,initialYPos, initalRotPose;
 
+  /**
+   * @param isRightScore
+   * @param drivebase
+   */
   public Movetotag(boolean isRightScore, SwerveSubsystem drivebase) {
     xController = new PIDController(LimelightConstants.X_REEF_ALIGNMENT_P, 0.0, 0);  // Vertical movement
     yController = new PIDController(LimelightConstants.Y_REEF_ALIGNMENT_P, 0.0, 0);  // Horitontal movement

@@ -103,6 +103,28 @@ public class RobotContainer
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+  // Named Commands //
+  
+  public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
+ 
+  public Command StopIntake = new InstantCommand(() -> {
+    INTAKE.setSpeed(0);
+  });
+
+  public Command Intake = new InstantCommand(() -> {
+    INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
+  });
+  public Command Shoot = new InstantCommand(() -> {
+    new ShootWithDistance(OUTAKE, LLHandler, 15);
+  });
+  public Command StopShoot = new InstantCommand(() -> {
+    OUTAKE.stop();
+  });
+  public Command MoveToHub = new InstantCommand(() -> {
+    //lol not merged
+  });
+
+
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
   public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 15).withTimeout(2);
 
@@ -111,7 +133,15 @@ public class RobotContainer
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("center", Center_wheels);
+    
+
+    /// Registering ///
+    NamedCommands.registerCommand("center", CenterWheels);
+    NamedCommands.registerCommand("intake", Intake);
+    NamedCommands.registerCommand("stop-intake", StopIntake);
+    NamedCommands.registerCommand("shoot", Shoot);
+    NamedCommands.registerCommand("stop-shooting", StopShoot);
+    NamedCommands.registerCommand("move-to-hub", MoveToHub);
     NamedCommands.registerCommand("AimAtTag", AimAtTagAuto);
     
     // //Set the default auto (do nothing) 
@@ -175,7 +205,7 @@ public class RobotContainer
   
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
-    driverXbox.a().onTrue(Center_wheels);
+    driverXbox.a().onTrue(CenterWheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();}));
                                                                                     
