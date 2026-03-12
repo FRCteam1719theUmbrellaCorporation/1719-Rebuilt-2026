@@ -23,7 +23,7 @@ public final class Constants
   public static final double ROBOT_MASS = (100) * 0.453592; // 105lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED_MULTIPLIER = 0.4;
+  public static final double MAX_SPEED_MULTIPLIER = 0.67;
   public static final double MAX_SPEED  = MAX_SPEED_MULTIPLIER*Units.feetToMeters(14.5);
 
   public static final double Motor_Min = -1;
@@ -61,7 +61,7 @@ public final class Constants
   }
 
   public static final class LimelightConstants {
-		public static final String LIMELIGHT_NAME = "";
+		public static final String LIMELIGHT_NAME = null;
     public static final Double MAX_TAG_DIST = 10.0;
     public static final TeamColor TEAM = TeamColor.RED;
     public static final boolean USE_MEGATAG2 = true;
@@ -90,6 +90,8 @@ public final class Constants
 
     public static final double DesiredRadius = 2.438;
     public static final double TargetDeltaZ =  0.61; // 2 feet
+
+    public static final double AIM_AT_TAG_TOLERANCE = 3.d;
 	}
 
 
@@ -114,6 +116,10 @@ public final class Constants
     public static final double DistancePowerOffset = 0.539119;
     
     // public static final double ShooterScailTimeout = 2.d;
+  }
+
+  public static final class ControllerConstants {
+    public static final double TrimSwitchBounds = .1d;
   }
 
 }

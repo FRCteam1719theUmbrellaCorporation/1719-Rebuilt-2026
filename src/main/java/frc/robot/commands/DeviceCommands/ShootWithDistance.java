@@ -43,7 +43,7 @@ public class ShootWithDistance extends Command {
       double power = m_SHOOTER.ScailPower(distanceFromTag.get());
       m_SHOOTER.setShooterSpeed(power);
       hasntSeenShooter.reset();
-      //System.out.println(power);
+      System.out.println(power);
     } //else if (hasntSeenShooter.hasElapsed(OutakeConstants.ShooterScailTimeout)) {
       //m_SHOOTER.stop();
     //}

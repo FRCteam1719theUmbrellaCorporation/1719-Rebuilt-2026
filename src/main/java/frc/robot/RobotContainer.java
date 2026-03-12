@@ -93,8 +93,8 @@ public class RobotContainer
   //                                                           .allianceRelativeControl(true);
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY(),
-                                                                () -> driverXbox.getLeftX() )
+                                                                () -> i_scalar(driverXbox.getLeftY(),driverXbox.getLeftX()),
+                                                                () -> i_scalar(driverXbox.getLeftX(),driverXbox.getLeftY()))
                                                             .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.9)
@@ -104,6 +104,7 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   // Named Commands //
+  
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
  
   public Command StopIntake = new InstantCommand(() -> {
@@ -124,11 +125,15 @@ public class RobotContainer
   });
 
 
+  public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
+  public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 15).withTimeout(2);
+
   public RobotContainer()
   {
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+    
 
     /// Registering ///
     NamedCommands.registerCommand("center", CenterWheels);
@@ -137,8 +142,8 @@ public class RobotContainer
     NamedCommands.registerCommand("shoot", Shoot);
     NamedCommands.registerCommand("stop-shooting", StopShoot);
     NamedCommands.registerCommand("move-to-hub", MoveToHub);
-
-
+    NamedCommands.registerCommand("AimAtTag", AimAtTagAuto);
+    
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -169,12 +174,11 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 15));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 19));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-     // reverse outake / unjam
-     // reverse funnel;
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(-OutakeConstants.FUNNEL_SPEED)));
+    // reverse funnel;
+    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
     operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
     operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
@@ -211,7 +215,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
     
       //slow down                                                                       
      driverXbox.rightTrigger()
@@ -227,6 +231,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
+    System.out.println("x");
     // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
     return autoChooser.getSelected();
   }

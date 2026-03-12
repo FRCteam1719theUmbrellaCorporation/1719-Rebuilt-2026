@@ -5,13 +5,21 @@
 package frc.robot.subsystems.devices;
 
 import com.revrobotics.spark.SparkMax;
+
+import java.util.Map;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OutakeConstants;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OutakeSubsystem extends SubsystemBase {
@@ -30,6 +38,7 @@ public class OutakeSubsystem extends SubsystemBase {
   SparkMax FunnelMotor;
   boolean isShooting;
   double funnelPower;
+  final GenericEntry ShooterAdjustment;
 
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
@@ -39,11 +48,20 @@ public class OutakeSubsystem extends SubsystemBase {
     this.isShooting = false;
     funnelPower = OutakeConstants.FUNNEL_SPEED;
     SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
+
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("Shooter_Data");
+    this.ShooterAdjustment = ShooterTab
+      .add("Outtake Adjustment", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of(
+        "min", 1-ControllerConstants.TrimSwitchBounds, 
+        "max", 1+ControllerConstants.TrimSwitchBounds))
+      .getEntry();
   }
 
   public double ScailPower(double distance) {
     // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
-    // PURE SPECULATION! In theory this should map our shooter to distance 
+    // Distance is in meters
     return distance >= OutakeConstants.MinShootDistance 
       ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset, 
                       0, 
@@ -64,13 +82,13 @@ public class OutakeSubsystem extends SubsystemBase {
   }
 
   public void setShooterSpeed(double val) {
-    this.OutakeMotor.set(val);
-    setFunnelPower(OutakeConstants.FUNNEL_SPEED);
+    this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
+    // setFunnelPower(OutakeConstants.FUNNEL_SPEED);
   }
 
   public void ConstantShoot(float input) {
     startShooter();
-    OutakeMotor.set(input);
+    setShooterSpeed(input);
     setFunnelPower(OutakeConstants.FUNNEL_SPEED);
   }
 
