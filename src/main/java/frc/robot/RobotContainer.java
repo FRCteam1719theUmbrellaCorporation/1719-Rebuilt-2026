@@ -201,20 +201,18 @@ public class RobotContainer
     drivebase.setMotorBrake(brake);
   }
 
-  public void periodic() {
-    double botRadius = LLHandler.getBotRadius(HapticConstants.HUB_TAG_ID);
-    if (HapticConstants.HUB_VIBRATE_DISTANCE[0] <= botRadius && botRadius <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {
-      operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
-    }
+public void periodic() {
+    boolean seesTag = LLHandler.seesTargetTag(HapticConstants.HUB_TAG_ID);
+    double dist = LLHandler.getBotRadius(HapticConstants.HUB_TAG_ID);
 
-    if (LLHandler.SeesTargetTag(HapticConstants.HUB_TAG_ID)) {
-      operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_SEE_VIBRATE_STRENGTH);
+    if (seesTag && dist >= HapticConstants.HUB_VIBRATE_DISTANCE[0] 
+               && dist <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {
+        operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
+    } else if (seesTag) {
+        operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_SEE_VIBRATE_STRENGTH);
+    } else {
+        operatorXbox.setRumble(RumbleType.kBothRumble, 0.0);
     }
-    // if (LLHandler.seesTargetTag(OperatorConstants.VIBRATE_ON_TAG_ID)) {
-    //   OperatorConstants.Controller controller = OperatorConstants.CONTROLLERS_TO_VIBRATE;
-    //   if (controller == Controller.BOTH || controller ) {
+}
 
-    //   }
-    // }
-  }
 }

@@ -24,26 +24,22 @@ public class LimelightHandler extends SubsystemBase {
 		return LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
 	}
 
-	public Optional<RawFiducial> getFiducialByID( int tagID ) {
-		for ( RawFiducial raw : getFiducials() ) {
-			if ( raw.id == tagID ) {
-				return Optional.of(raw);
-			}
-		}
+public Optional<RawFiducial> getFiducialByID(int tagID) {
+    for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
+        if (f.id == tagID) return Optional.of(f);
+    }
+    return Optional.empty();
+}
 
-		return Optional.empty();
-	}
+public boolean seesTargetTag(int tagId) {
+    return getFiducialByID(tagId).isPresent();
+}
 
-	public boolean SeesTargetTag( ) {
-		return this.SeesTargetTag(-1);
-	}
-	public boolean SeesTargetTag( int target ) {
-		if (target == -1) {
-			return (this.getFiducials().length != 0);
-		} else {
-			return this.getFiducialByID(target).isPresent();
-		}
-	}
+public double getBotRadius(int tagId) {
+    return getFiducialByID(tagId)
+        .map(f -> f.distToRobot)
+        .orElse(-1.0);
+}
 
 	public Optional<Double> getDistFromTag( int tagID ) {
 		Optional<RawFiducial> tag = this.getFiducialByID(tagID);
@@ -92,25 +88,6 @@ public class LimelightHandler extends SubsystemBase {
 		};
 	}
 
-	public double getBotRadius( int ID ) {
-		LimelightHelpers
-			.SetFiducialIDFiltersOverride(
-				LimelightConstants.LIMELIGHT_NAME,
-				new int[]{ID});
-
-		double[] postions = LimelightHelpers
-			.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
-
-		LimelightHelpers
-			.SetFiducialIDFiltersOverride(
-				LimelightConstants.LIMELIGHT_NAME,
-				new int[]{});
-
-		double x = postions[2];
-		double y = postions[0];
-		return Math.sqrt(x*x + y*y);
-	}
-
 	// public InstantComman printPose( ) {
 	// 	return new InstantCommand(() -> {
 	// 		Table T = new Table("ID", "x", "y", "z", "roll", "pitch", "yaw")
@@ -146,7 +123,8 @@ public class LimelightHandler extends SubsystemBase {
 		});
 	}
 
-	@Override
-	public void periodic() {
-	}
+@Override
+public void periodic() {
+    fiducials = LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
+}
 }
