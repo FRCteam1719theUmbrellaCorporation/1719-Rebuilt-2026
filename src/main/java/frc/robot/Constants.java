@@ -135,4 +135,8 @@ public final class Constants
     public static final double TrimSwitchBounds = .1d;
   }
 
+  public static final class FieldConstants {
+    public static final int HUBID_RED = 10;
+    public static final int HUBID_BLUE = 25;
+  }
 }
