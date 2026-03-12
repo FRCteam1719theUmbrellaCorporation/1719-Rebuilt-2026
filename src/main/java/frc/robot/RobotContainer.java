@@ -30,8 +30,8 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
-import frc.robot.commands.AlignToReefTagRelative;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.IntakeSubsystem;
@@ -95,8 +95,8 @@ public class RobotContainer
   //                                                           .allianceRelativeControl(true);
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> driverXbox.getLeftY(),
-                                                                () -> driverXbox.getLeftX() )
+                                                                () -> i_scalar(driverXbox.getLeftY(),driverXbox.getLeftX()),
+                                                                () -> i_scalar(driverXbox.getLeftX(),driverXbox.getLeftY()))
                                                             .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.9)
@@ -105,14 +105,46 @@ public class RobotContainer
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+  // Named Commands //
+  
+  public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
+ 
+  public Command StopIntake = new InstantCommand(() -> {
+    INTAKE.setSpeed(0);
+  });
+
+  public Command Intake = new InstantCommand(() -> {
+    INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
+  });
+  public Command Shoot = new InstantCommand(() -> {
+    new ShootWithDistance(OUTAKE, LLHandler, 15);
+  });
+  public Command StopShoot = new InstantCommand(() -> {
+    OUTAKE.stop();
+  });
+  public Command MoveToHub = new InstantCommand(() -> {
+    //lol not merged
+  });
+
+
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
+  public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 15).withTimeout(2);
 
   public RobotContainer()
   {
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    NamedCommands.registerCommand("center", Center_wheels);
+
+    /// Registering ///
+    NamedCommands.registerCommand("center", CenterWheels);
+    NamedCommands.registerCommand("intake", Intake);
+    NamedCommands.registerCommand("stop-intake", StopIntake);
+    NamedCommands.registerCommand("shoot", Shoot);
+    NamedCommands.registerCommand("stop-shooting", StopShoot);
+    NamedCommands.registerCommand("move-to-hub", MoveToHub);
+    NamedCommands.registerCommand("AimAtTag", AimAtTagAuto);
+    
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -143,48 +175,63 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 19));
+    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.rightBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
-
-    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
-    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
-
-    operatorXbox.leftBumper().onTrue(new InstantCommand(()->OUTAKE.outake(OutakeConstants.OUTAKE_SPEED)));
-
-    //Don't use this
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    // new InstantCommand(()-> { drivebase.centerModulesCommand();}),
-    // new AlignToReefTagRelative(true, drivebase).withTimeout(3)
-    // ));
-
-    //THIS FUNCTION IS OUR MOVE TO TAG COMMAND, UNCOMMENT TO USE(WAS COMMENTED WHEN MERGING TO MAIN)
-    // operatorXbox.b().onTrue(new SequentialCommandGroup(
-    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-    //   new Movetotag(true, drivebase).withTimeout(3)));
+    // reverse funnel;
+    operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
+    operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
-    operatorXbox.y().onTrue(
-      new InstantCommand(()->{
-      Movetotag h = new Movetotag(false, drivebase); 
-      for ( int i = 0 ; i < 3 ; i++ ) {
-      System.out.println(h.Computefinalstaticpose()[i]);
-      }
-     }));
+    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
 
+    // Reverse intake
+    operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
+    operatorXbox.leftBumper().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+
+    // Shoot constant speed
+    operatorXbox.y().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.OUTAKE_SPEED)));
+    operatorXbox.y().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
+    // Super outake
+    operatorXbox.b().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Super_OUTAKE_SPEED)));
+    operatorXbox.b().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
+    // slow outake
+    operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
+    operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
+    operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
+    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.stop()));
+  
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
-    driverXbox.a().onTrue(Center_wheels);
+    driverXbox.a().onTrue(CenterWheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();}));
+                                                                                    
+     // MOVE TO TAG COMMAND
+    driverXbox.b().onTrue(new SequentialCommandGroup(
+      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+      new Movetotag(true, drivebase).withTimeout(3)));
+                                                                                    
+    //aim at tag                                                                                
+    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
     
-    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
-    driverXbox.rightTrigger()
+    //slow down                                                                       
+     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
+        drivebase.setMaxSpeedDashBoard())
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
-    );}
+    );
+
+    // adjusts the slowed speed on the robot
+    driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
+    driverXbox.povRight().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(.05)));
+  }
+
+    
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
@@ -192,6 +239,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
+    System.out.println("x");
     // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
     return autoChooser.getSelected();
   }

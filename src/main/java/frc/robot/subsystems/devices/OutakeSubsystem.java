@@ -5,12 +5,22 @@
 package frc.robot.subsystems.devices;
 
 import com.revrobotics.spark.SparkMax;
+
+import java.util.Map;
+
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OutakeConstants;
-
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class OutakeSubsystem extends SubsystemBase {
   /** 
@@ -27,6 +37,8 @@ public class OutakeSubsystem extends SubsystemBase {
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
   boolean isShooting;
+  double funnelPower;
+  final GenericEntry ShooterAdjustment;
 
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
@@ -34,11 +46,28 @@ public class OutakeSubsystem extends SubsystemBase {
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
+    funnelPower = OutakeConstants.FUNNEL_SPEED;
+    SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
+
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("Shooter_Data");
+    this.ShooterAdjustment = ShooterTab
+      .add("Outtake Adjustment", 1)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of(
+        "min", 1-ControllerConstants.TrimSwitchBounds, 
+        "max", 1+ControllerConstants.TrimSwitchBounds))
+      .getEntry();
   }
 
-  public void ConstantShoot(float input) {
-    startShooter();
-    OutakeMotor.set(input);
+  public double ScailPower(double distance) {
+    // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
+    // Distance is in meters
+    return distance >= OutakeConstants.MinShootDistance 
+      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset, 
+                      0, 
+                      Constants.Motor_Max
+                      )
+      : 0; 
   }
 
   public void startShooter() {
@@ -51,6 +80,45 @@ public class OutakeSubsystem extends SubsystemBase {
     OutakeMotor.set(0);
     FunnelMotor.set(0);
   }
+
+  public void setShooterSpeed(double val) {
+    this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
+    // setFunnelPower(OutakeConstants.FUNNEL_SPEED);
+  }
+
+  public void ConstantShoot(float input) {
+    startShooter();
+    setShooterSpeed(input);
+    setFunnelPower(OutakeConstants.FUNNEL_SPEED);
+  }
+
+  public void setFunnelPower(double input) {
+    funnelPower = input;
+  }
+
+  /**
+   * Reverses the outake
+   * Despite the name you still need to use a negative value
+   * 
+   * @param ShooterInput
+   */
+  public void reverseOutake(float ShooterInput) {
+    reverseOutake(ShooterInput, OutakeConstants.FUNNEL_SPEED);
+    setFunnelPower(-OutakeConstants.FUNNEL_SPEED);
+  }
+
+  /**
+   * Reverses the outake
+   * Despite the name you still need to use a negative value
+   * 
+   * @param ShooterInput: Shooter power
+   * @param FunnelInput: Funnel power. defaults to OutakeConstants.FUNNEL_SPEED
+   */
+  public void reverseOutake(float ShooterInput, float FunnelInput) {
+    setFunnelPower(FunnelInput);
+    this.isShooting = true; // funnel should move at the same time to avoid damaging fuel
+    setShooterSpeed(ShooterInput);
+  }
   
   public void outake(float input) {
     ConstantShoot(-input);
@@ -59,9 +127,12 @@ public class OutakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (this.isShooting) {
+      // double smdb = SmartDashboard.getNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
+      // OutakeMotor.set(smdb);
       if (funnelTimer.hasElapsed(OutakeConstants.OUTAKE_TIME)) {
-        FunnelMotor.set(OutakeConstants.FUNNEL_SPEED);
+        FunnelMotor.set(funnelPower);
       }
     }
   }
 }
+
