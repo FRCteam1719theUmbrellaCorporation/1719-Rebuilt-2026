@@ -105,7 +105,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED,
@@ -788,19 +788,19 @@ public class SwerveSubsystem extends SubsystemBase
     boolean doRejectUpdate = false;
         LimelightHelpers.SetRobotOrientation("limelight", getHeading().getDegrees(), 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-        // if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
-        // {
-        //   doRejectUpdate = true;
-        // } else if(mt2.tagCount == 0)
-        // {
-        //   doRejectUpdate = true;
-        // } else if (mt2.pose.getX() == 0. && mt2.pose.getY() == 0.) {
-        //     doRejectUpdate = true;
-        // } else if (Robot.inAuto) {
-        //     doRejectUpdate = true;
-        // }
-        // if(!doRejectUpdate)
-        // {
+        if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
+        {
+          doRejectUpdate = true;
+        } else if(mt2.tagCount == 0)
+        {
+          doRejectUpdate = true;
+        } else if (mt2.pose.getX() == 0. && mt2.pose.getY() == 0.) {
+            doRejectUpdate = true;
+        } else if (Robot.inAuto) {
+            doRejectUpdate = true;
+        }
+        if(!doRejectUpdate)
+        {
             Pose2d newPose = mt2.pose;
             System.out.println("mt2" + mt2.pose);
             newPose.rotateBy(swerveDrive.getYaw().minus(newPose.getRotation()));
@@ -809,7 +809,7 @@ public class SwerveSubsystem extends SubsystemBase
             swerveDrive.addVisionMeasurement(
               mt2.pose,
               mt2.timestampSeconds);
-        // }
+        }
   }
 
   
