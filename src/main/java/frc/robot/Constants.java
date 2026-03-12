@@ -57,6 +57,9 @@ public final class Constants
     public static final double EPISLON = 1.e-16;
 
     public static final double SlowDriveFactor = 0.4f; 
+    public static final double SlowDriverRadius = 0.2f;
+    public static final double SlowDriverMin = SlowDriveFactor - SlowDriverRadius;
+    public static final double SlowDriverMax = SlowDriveFactor + SlowDriverRadius;
     public static final double NormalDriveFactor = 1f; 
   }
 

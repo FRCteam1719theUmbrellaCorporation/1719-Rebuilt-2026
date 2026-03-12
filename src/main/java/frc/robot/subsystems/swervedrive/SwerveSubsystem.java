@@ -21,6 +21,7 @@ import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.hal.simulation.RoboRioDataJNI;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
@@ -181,6 +182,12 @@ public class SwerveSubsystem extends SubsystemBase
   }
   public void setMaxSpeed(double multiplier) {
     swerveDrive.setMaximumAttainableSpeeds(Constants.MAX_SPEED * multiplier, Math.PI * 2 * multiplier);
+  }
+
+  public void adjustSlowSpeed(double val) {
+    SpeedSlider.setDouble(MathUtil.clamp(SpeedSlider.getDouble(OperatorConstants.SlowDriveFactor) + val, 
+                          OperatorConstants.SlowDriverMin,
+                          OperatorConstants.SlowDriverMax));
   }
 
 //  /**

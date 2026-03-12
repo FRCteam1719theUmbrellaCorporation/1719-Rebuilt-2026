@@ -222,7 +222,14 @@ public class RobotContainer
         drivebase.setMaxSpeedDashBoard())
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
-    );}
+    );
+
+    // adjusts the slowed speed on the robot
+    driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
+    driverXbox.povRight().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(.05)));
+  }
+
+    
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
