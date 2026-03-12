@@ -36,7 +36,7 @@ public class SwerveShakeRelative extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (delayTimer.hasElapsed(setSpeed)) {
+    if (delayTimer.hasElapsed(Math.abs(setSpeed))) {
         setSpeed = -setSpeed;
         delayTimer.reset();
       }
