@@ -5,6 +5,7 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.LimelightHelpers.PoseEstimate;
@@ -54,6 +55,23 @@ public double getBotRadius(int tagId) {
 		Optional<RawFiducial> tag = this.getFiducialByID(tagID);
 		if (tag.isPresent()) {
 			return Optional.of(tag.get().txnc);
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	public Optional<Double> getAngleFromHub() {
+		RawFiducial tag = null;
+		for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
+			if (f.id == FieldConstants.HUBID_RED || f.id == FieldConstants.HUBID_BLUE || f.id == 31) {
+				System.out.println(f.id);
+				tag = f;
+				break;
+			}
+		}
+
+		if (tag != null) {
+			return Optional.of(tag.txnc);
 		} else {
 			return Optional.empty();
 		}

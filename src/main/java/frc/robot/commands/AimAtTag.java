@@ -51,6 +51,11 @@ public class AimAtTag extends Command {
     addRequirements(drivebase, LL);
   }
 
+    public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this(drivebase, LL, Controller, -1);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -64,10 +69,12 @@ public class AimAtTag extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Optional<Double> outPut = m_LL.getAngleFromTag(m_targetTagID);
+    Optional<Double> outPut = m_targetTagID == -1 
+      ? m_LL.getAngleFromHub() 
+      : m_LL.getAngleFromTag(m_targetTagID);
     double rot = 0;
 
-    if (m_LL.seesTargetTag(m_targetTagID) && outPut.isPresent()) {
+    if (outPut.isPresent()) {
       TagOOBTimer.reset();
       rot = RotController.calculate(outPut.get());
       System.out.println(rot);

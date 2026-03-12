@@ -113,4 +113,8 @@ public final class Constants
     public static final float OUTAKE_TIME = 0.5f;
   }
 
+  public static final class FieldConstants {
+    public static final int HUBID_RED = 10;
+    public static final int HUBID_BLUE = 25;
+  }
 }

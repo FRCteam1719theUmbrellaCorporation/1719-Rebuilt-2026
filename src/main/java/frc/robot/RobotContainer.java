@@ -178,7 +178,7 @@ public class RobotContainer
     driverXbox.start().onTrue(new InstantCommand(()-> {
       drivebase.zeroGyro();}));
     
-    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
         drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
