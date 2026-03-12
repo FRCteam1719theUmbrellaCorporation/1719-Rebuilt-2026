@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -246,4 +248,19 @@ public class RobotContainer
   {
     drivebase.setMotorBrake(brake);
   }
+
+public void periodic() {
+    boolean seesTag = LLHandler.seesTargetTag(HapticConstants.HUB_TAG_ID);
+    double dist = LLHandler.getBotRadius(HapticConstants.HUB_TAG_ID);
+
+    if (seesTag && dist >= HapticConstants.HUB_VIBRATE_DISTANCE[0] 
+               && dist <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {
+        operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
+    } else if (seesTag) {
+        operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_SEE_VIBRATE_STRENGTH);
+    } else {
+        operatorXbox.setRumble(RumbleType.kBothRumble, 0.0);
+    }
+}
+
 }

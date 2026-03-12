@@ -63,6 +63,16 @@ public final class Constants
     public static final double NormalDriveFactor = 1f; 
   }
 
+  public static final class HapticConstants {
+    public static final int HUB_TAG_ID = 3;
+    public static final double[] HUB_VIBRATE_DISTANCE = {
+      1.524,
+      1.8288,
+    };
+    public static final double HUB_DIST_VIBRATE_STRENGTH = 1.0;
+	  public static final double HUB_SEE_VIBRATE_STRENGTH = 0.5;
+  }
+
   public static final class LimelightConstants {
 		public static final String LIMELIGHT_NAME = null;
     public static final Double MAX_TAG_DIST = 10.0;
