@@ -69,7 +69,7 @@ public final class Constants
       1.524,
       1.8288,
     };
-    public static final double HUB_DIST_VIBRATE_STRENGTH = 1.0;
+    public static final double HUB_DIST_VIBRATE_STRENGTH = .2;
 	  public static final double HUB_SEE_VIBRATE_STRENGTH = 0.5;
   }
 
