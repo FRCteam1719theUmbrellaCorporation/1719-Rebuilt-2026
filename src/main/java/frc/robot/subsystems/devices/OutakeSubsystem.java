@@ -63,7 +63,7 @@ public class OutakeSubsystem extends SubsystemBase {
     // this is a linear regression based of estimates shooting positions based on feet from goal and power applied to motors.
     // Distance is in meters
     return distance >= OutakeConstants.MinShootDistance 
-      ? MathUtil.clamp((distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset) * ShooterAdjustment.getDouble(1), 
+      ? MathUtil.clamp(distance * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset, 
                       0, 
                       Constants.Motor_Max
                       )
@@ -82,13 +82,13 @@ public class OutakeSubsystem extends SubsystemBase {
   }
 
   public void setShooterSpeed(double val) {
-    this.OutakeMotor.set(val);
-    setFunnelPower(OutakeConstants.FUNNEL_SPEED);
+    this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
+    // setFunnelPower(OutakeConstants.FUNNEL_SPEED);
   }
 
   public void ConstantShoot(float input) {
     startShooter();
-    OutakeMotor.set(input);
+    setShooterSpeed(input);
     setFunnelPower(OutakeConstants.FUNNEL_SPEED);
   }
 
