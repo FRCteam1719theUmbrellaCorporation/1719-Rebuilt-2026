@@ -36,14 +36,39 @@ public boolean seesTargetTag(int tagId) {
     return getFiducialByID(tagId).isPresent();
 }
 
-public double getBotRadius(int tagId) {
-    return getFiducialByID(tagId)
+public boolean seesHubTag() {
+	return getHubTag().isPresent();
+}
+
+public double getBotRadius() {
+    return getHubTag()
         .map(f -> f.distToRobot)
         .orElse(-1.0);
 }
 
+public Optional<RawFiducial> getHubTag() {
+	Optional<RawFiducial> tag = Optional.empty();
+	for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
+		if (f.id == FieldConstants.HUBID_RED || f.id == FieldConstants.HUBID_BLUE) {
+			tag = Optional.of(f);
+			break;
+		}
+	}
+
+	return tag;
+}
+
 	public Optional<Double> getDistFromTag( int tagID ) {
 		Optional<RawFiducial> tag = this.getFiducialByID(tagID);
+		if (tag.isPresent()) {
+			return Optional.of(tag.get().distToRobot);
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	public Optional<Double> getDistFromHub() {
+		Optional<RawFiducial> tag = this.getHubTag();
 		if (tag.isPresent()) {
 			return Optional.of(tag.get().distToRobot);
 		} else {
@@ -61,17 +86,10 @@ public double getBotRadius(int tagId) {
 	}
 
 	public Optional<Double> getAngleFromHub() {
-		RawFiducial tag = null;
-		for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
-			if (f.id == FieldConstants.HUBID_RED || f.id == FieldConstants.HUBID_BLUE || f.id == 31) {
-				System.out.println(f.id);
-				tag = f;
-				break;
-			}
-		}
+		Optional<RawFiducial> tag = getHubTag();
 
-		if (tag != null) {
-			return Optional.of(tag.txnc);
+		if (tag.isPresent()) {
+			return Optional.of(tag.get().txnc);
 		} else {
 			return Optional.empty();
 		}

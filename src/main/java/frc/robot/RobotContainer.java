@@ -128,7 +128,7 @@ public class RobotContainer
 
 
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
-  public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler, 15).withTimeout(2);
+  public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler).withTimeout(2);
 
   public RobotContainer()
   {
@@ -175,7 +175,7 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 19));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // reverse funnel;
@@ -216,7 +216,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox, 15));
+    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     
     //slow down                                                                       
      driverXbox.rightTrigger()
@@ -250,8 +250,8 @@ public class RobotContainer
   }
 
 public void periodic() {
-    boolean seesTag = LLHandler.seesTargetTag(HapticConstants.HUB_TAG_ID);
-    double dist = LLHandler.getBotRadius(HapticConstants.HUB_TAG_ID);
+    boolean seesTag = LLHandler.seesHubTag();
+    double dist = LLHandler.getBotRadius();
 
     if (seesTag && dist >= HapticConstants.HUB_VIBRATE_DISTANCE[0] 
                && dist <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {

@@ -27,6 +27,10 @@ public class ShootWithDistance extends Command {
     addRequirements(m_outake, m_ll);
   }
 
+  public ShootWithDistance(OutakeSubsystem m_outake, LimelightHandler m_ll) {
+    this(m_outake, m_ll, -1);
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -38,7 +42,7 @@ public class ShootWithDistance extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Optional<Double> distanceFromTag = m_LL.getDistFromTag(m_TARGET);
+    Optional<Double> distanceFromTag = m_TARGET == -1 ? m_LL.getDistFromHub() : m_LL.getDistFromTag(m_TARGET);
     if (distanceFromTag.isPresent()) {
       double power = m_SHOOTER.ScailPower(distanceFromTag.get());
       m_SHOOTER.setShooterSpeed(power);
