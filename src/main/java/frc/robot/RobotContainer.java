@@ -104,22 +104,22 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   // Named Commands //
-  public InstantCommand CenterWheels = new InstantCommand(() -> {
-    drivebase.centerModulesCommand().withTimeout(0.5);
-  });
-  public InstantCommand StopIntake = new InstantCommand(() -> {
+  public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
+ 
+  public Command StopIntake = new InstantCommand(() -> {
     INTAKE.setSpeed(0);
   });
-  public InstantCommand Intake = new InstantCommand(() -> {
+
+  public Command Intake = new InstantCommand(() -> {
     INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
   });
-  public InstantCommand Shoot = new InstantCommand(() -> {
+  public Command Shoot = new InstantCommand(() -> {
     new ShootWithDistance(OUTAKE, LLHandler, 15);
   });
-  public InstantCommand StopShoot = new InstantCommand(() -> {
+  public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
   });
-  public InstantCommand MoveToHub = new InstantCommand(() -> {
+  public Command MoveToHub = new InstantCommand(() -> {
     //lol not merged
   });
 

@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Straight"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Down"
+            "pathName": "Center turn around path"
           }
         }
       ]
