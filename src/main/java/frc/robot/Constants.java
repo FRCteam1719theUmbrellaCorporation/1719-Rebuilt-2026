@@ -118,4 +118,8 @@ public final class Constants
     // public static final double ShooterScailTimeout = 2.d;
   }
 
+  public static final class ControllerConstants {
+    public static final double TrimSwitchBounds = .1d;
+  }
+
 }

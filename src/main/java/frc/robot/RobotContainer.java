@@ -144,7 +144,7 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 16));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, 19));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // reverse funnel;
@@ -201,6 +201,7 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
+    System.out.println("x");
     // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
     return autoChooser.getSelected();
   }
