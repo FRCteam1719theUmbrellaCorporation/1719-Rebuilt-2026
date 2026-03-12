@@ -5,6 +5,8 @@ import java.util.Optional;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
@@ -23,24 +25,22 @@ public class LimelightHandler extends SubsystemBase {
 		return LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
 	}
 
-	public boolean SeesTargetTag(int target) {
-		for ( RawFiducial raw : getFiducials() ) {
-			if (raw.id == target) {
-				return true;
-			}
-		}
+public Optional<RawFiducial> getFiducialByID(int tagID) {
+    for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
+        if (f.id == tagID) return Optional.of(f);
+    }
+    return Optional.empty();
+}
 
-		return false;
-	}
-	public Optional<RawFiducial> getFiducialByID( int tagID ) {
-		for ( RawFiducial raw : getFiducials() ) {
-			if ( raw.id == tagID ) {
-				return Optional.of(raw);
-			}
-		}
+public boolean seesTargetTag(int tagId) {
+    return getFiducialByID(tagId).isPresent();
+}
 
-		return Optional.empty();
-	}
+public double getBotRadius(int tagId) {
+    return getFiducialByID(tagId)
+        .map(f -> f.distToRobot)
+        .orElse(-1.0);
+}
 
 	public Optional<Double> getDistFromTag( int tagID ) {
 		Optional<RawFiducial> tag = this.getFiducialByID(tagID);
@@ -55,6 +55,23 @@ public class LimelightHandler extends SubsystemBase {
 		Optional<RawFiducial> tag = this.getFiducialByID(tagID);
 		if (tag.isPresent()) {
 			return Optional.of(tag.get().txnc);
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	public Optional<Double> getAngleFromHub() {
+		RawFiducial tag = null;
+		for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
+			if (f.id == FieldConstants.HUBID_RED || f.id == FieldConstants.HUBID_BLUE || f.id == 31) {
+				System.out.println(f.id);
+				tag = f;
+				break;
+			}
+		}
+
+		if (tag != null) {
+			return Optional.of(tag.txnc);
 		} else {
 			return Optional.empty();
 		}
@@ -124,7 +141,8 @@ public class LimelightHandler extends SubsystemBase {
 		});
 	}
 
-	@Override
-	public void periodic() {
-	}
+@Override
+public void periodic() {
+    fiducials = LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
+}
 }

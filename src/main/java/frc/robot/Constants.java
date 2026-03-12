@@ -56,8 +56,21 @@ public final class Constants
     public static final double JOYSTICK_SENSITIVITY_FACTOR = 3.f;
     public static final double EPISLON = 1.e-16;
 
-    public static final double SlowDriveFactor = 0.25f; 
+    public static final double SlowDriveFactor = 0.4f; 
+    public static final double SlowDriverRadius = 0.2f;
+    public static final double SlowDriverMin = SlowDriveFactor - SlowDriverRadius;
+    public static final double SlowDriverMax = SlowDriveFactor + SlowDriverRadius;
     public static final double NormalDriveFactor = 1f; 
+  }
+
+  public static final class HapticConstants {
+    public static final int HUB_TAG_ID = 3;
+    public static final double[] HUB_VIBRATE_DISTANCE = {
+      1.524,
+      1.8288,
+    };
+    public static final double HUB_DIST_VIBRATE_STRENGTH = 1.0;
+	  public static final double HUB_SEE_VIBRATE_STRENGTH = 0.5;
   }
 
   public static final class LimelightConstants {
@@ -97,7 +110,7 @@ public final class Constants
 
   public static final class IntakeConstants {
     public static final int ID = 3;
-    public static final float INTAKE_SPEED = 0.6f;
+    public static final float INTAKE_SPEED = 0.8f;
     //TODO: impl important vars
   }
   
@@ -113,7 +126,7 @@ public final class Constants
 
     public static final double MinShootDistance = .9;
     public static final double DistancePowerMult = 0.0850589;
-    public static final double DistancePowerOffset = 0.507221;
+    public static final double DistancePowerOffset = 0.383929;
     
     // public static final double ShooterScailTimeout = 2.d;
   }
@@ -122,4 +135,8 @@ public final class Constants
     public static final double TrimSwitchBounds = .1d;
   }
 
+  public static final class FieldConstants {
+    public static final int HUBID_RED = 10;
+    public static final int HUBID_BLUE = 25;
+  }
 }
