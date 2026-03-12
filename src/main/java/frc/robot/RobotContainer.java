@@ -219,7 +219,7 @@ public class RobotContainer
       //slow down                                                                       
      driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeed(OperatorConstants.SlowDriveFactor))
+        drivebase.setMaxSpeedDashBoard())
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );}

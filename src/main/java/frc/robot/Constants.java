@@ -56,7 +56,7 @@ public final class Constants
     public static final double JOYSTICK_SENSITIVITY_FACTOR = 3.f;
     public static final double EPISLON = 1.e-16;
 
-    public static final double SlowDriveFactor = 0.25f; 
+    public static final double SlowDriveFactor = 0.4f; 
     public static final double NormalDriveFactor = 1f; 
   }
 
@@ -97,7 +97,7 @@ public final class Constants
 
   public static final class IntakeConstants {
     public static final int ID = 3;
-    public static final float INTAKE_SPEED = 0.6f;
+    public static final float INTAKE_SPEED = 0.8f;
     //TODO: impl important vars
   }
   
@@ -113,7 +113,7 @@ public final class Constants
 
     public static final double MinShootDistance = .9;
     public static final double DistancePowerMult = 0.0850589;
-    public static final double DistancePowerOffset = 0.507221;
+    public static final double DistancePowerOffset = 0.383929;
     
     // public static final double ShooterScailTimeout = 2.d;
   }
