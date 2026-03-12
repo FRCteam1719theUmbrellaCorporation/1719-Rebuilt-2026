@@ -30,6 +30,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
+import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -38,6 +39,8 @@ import frc.robot.subsystems.devices.IntakeSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
 import java.io.File;
+import java.lang.ModuleLayer.Controller;
+
 import swervelib.SwerveInputStream;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -107,6 +110,8 @@ public class RobotContainer
    */
   // Named Commands //
   
+  public int TAGID = 31;
+
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
  
   public Command StopIntake = new InstantCommand(() -> {
@@ -116,14 +121,23 @@ public class RobotContainer
   public Command Intake = new InstantCommand(() -> {
     INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
   });
-  public Command Shoot = new InstantCommand(() -> {
-    new ShootWithDistance(OUTAKE, LLHandler, 15);
-  });
+  
   public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
   });
-  public Command MoveToHub = new InstantCommand(() -> {
-    //lol not merged
+
+  public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler, TAGID).withTimeout(0.5);
+
+  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler, TAGID).withTimeout(0.5);
+  
+  public Command Shootslow = new InstantCommand(() -> {
+    OUTAKE.startShooter();
+    OUTAKE.ConstantShoot(0.4f);
+  });
+
+  public Command Shootfast = new InstantCommand(() -> {
+    OUTAKE.startShooter();
+    OUTAKE.ConstantShoot(0.9f);
   });
 
 
@@ -140,10 +154,11 @@ public class RobotContainer
     NamedCommands.registerCommand("center", CenterWheels);
     NamedCommands.registerCommand("intake", Intake);
     NamedCommands.registerCommand("stop-intake", StopIntake);
-    NamedCommands.registerCommand("shoot", Shoot);
+    NamedCommands.registerCommand("shoot-relative", ShootRelativeDistance);
     NamedCommands.registerCommand("stop-shooting", StopShoot);
-    NamedCommands.registerCommand("move-to-hub", MoveToHub);
-    NamedCommands.registerCommand("AimAtTag", AimAtTagAuto);
+    NamedCommands.registerCommand("AimAtTag", AimAtTag);
+    NamedCommands.registerCommand("shoot-slow", Shootslow);
+    NamedCommands.registerCommand("shoot-fast", Shootfast);
     
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
