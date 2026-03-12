@@ -1,0 +1,110 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "center"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Left human station hub"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimAtTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot-relative"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop-shooting"
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "intake"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Move to center human left"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop-intake"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Move from center to human left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimAtTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot-relative"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop-shooting"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Comp Autos",
+  "choreoAuto": false
+}

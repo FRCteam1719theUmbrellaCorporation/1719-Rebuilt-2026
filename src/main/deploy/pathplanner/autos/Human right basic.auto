@@ -13,31 +13,37 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left of human station move to tag path"
+            "pathName": "Right human station hub"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "intake"
+            "name": "AimAtTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "shoot-relative"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 3.0
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "stop-intake"
+            "name": "stop-shooting"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Comp Autos",
   "choreoAuto": false
 }
