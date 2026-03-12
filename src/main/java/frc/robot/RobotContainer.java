@@ -133,7 +133,6 @@ public class RobotContainer
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    
 
     /// Registering ///
     NamedCommands.registerCommand("center", CenterWheels);
