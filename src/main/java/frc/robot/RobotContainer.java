@@ -40,6 +40,7 @@ import frc.robot.subsystems.devices.OutakeSubsystem;
 
 import java.io.File;
 import java.lang.ModuleLayer.Controller;
+import java.util.Objects;
 
 import swervelib.SwerveInputStream;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -140,7 +141,8 @@ public class RobotContainer
 
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
   public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler).withTimeout(2);
-
+  public static volatile SequentialCommandGroup driveToHub;
+  
   public RobotContainer()
   {
     // // Configure the trigger bindings
@@ -166,7 +168,7 @@ public class RobotContainer
     
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
-   
+    driveToHub = null;
   }
 
   /**
@@ -223,9 +225,16 @@ public class RobotContainer
       drivebase.zeroGyro();}));
                                                                                     
      // MOVE TO TAG COMMAND
-    driverXbox.b().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-      new Movetotag(true, drivebase, true).withTimeout(3)));
+    driverXbox.b().onTrue(new InstantCommand(() -> {
+      driveToHub = new SequentialCommandGroup(
+            new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+            new Movetotag(true, drivebase, true).withTimeout(3));
+      driveToHub.schedule();
+    }));
+
+    driverXbox.b().onFalse(new InstantCommand(()->{
+      if (Objects.nonNull(driveToHub) || driveToHub.isScheduled()) driveToHub.cancel();
+    }));
                                                                                     
     //aim at tag                                                                                
     driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
