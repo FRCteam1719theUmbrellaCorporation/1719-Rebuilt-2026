@@ -109,9 +109,6 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   // Named Commands //
-  
-  public int TAGID = 31;
-
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
  
   public Command StopIntake = new InstantCommand(() -> {
@@ -126,9 +123,9 @@ public class RobotContainer
     OUTAKE.stop();
   });
 
-  public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler, TAGID).withTimeout(0.5);
+  public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
 
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler, TAGID).withTimeout(0.5);
+  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(0.5);
   
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
@@ -228,7 +225,7 @@ public class RobotContainer
      // MOVE TO TAG COMMAND
     driverXbox.b().onTrue(new SequentialCommandGroup(
       new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-      new Movetotag(true, drivebase).withTimeout(3)));
+      new Movetotag(true, drivebase, true).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
     driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
