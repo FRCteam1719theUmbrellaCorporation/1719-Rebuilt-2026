@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 2.75,
-        "y": 5.5
+        "x": 3.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 2.702297751155864,
-        "y": 5.254593204138084
+        "x": 2.952297751155864,
+        "y": 5.754593204138084
       },
       "nextControl": null,
       "isLocked": false,
@@ -74,10 +74,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -40.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Human left paths",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": -90.0

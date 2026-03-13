@@ -110,8 +110,6 @@ public class RobotContainer
    */
   // Named Commands //
   
-  public int TAGID = 31;
-
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
  
   public Command StopIntake = new InstantCommand(() -> {
@@ -126,9 +124,9 @@ public class RobotContainer
     OUTAKE.stop();
   });
 
-  public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler, TAGID).withTimeout(0.5);
+  public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
 
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler, TAGID).withTimeout(0.5);
+  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(0.5);
   
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
