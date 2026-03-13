@@ -4,11 +4,15 @@ package frc.robot.commands;
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+import java.util.Map;
 import java.util.Optional;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.LimelightHandler;
@@ -24,6 +28,20 @@ public class AimAtTagAuto extends Command {
    * Driver cannot control this version with driving, so this version 
    * is reserved for autos!!
    */
+
+  // Shuffleboard widgets — static so they're only registered once across re-instantiations.
+  private static final GenericEntry s_basketEnabledEntry =
+      Shuffleboard.getTab("Aiming")
+          .add("Basket Offset Enabled", false)
+          .withWidget(BuiltInWidgets.kToggleSwitch)
+          .getEntry();
+
+  private static final GenericEntry s_basketDepthEntry =
+      Shuffleboard.getTab("Aiming")
+          .add("Basket Depth (m)", LimelightConstants.BASKET_DEPTH_OFFSET)
+          .withWidget(BuiltInWidgets.kNumberSlider)
+          .withProperties(Map.of("min", 0.0, "max", 3.0))
+          .getEntry();
 
   SwerveSubsystem m_drivebase;
   LimelightHandler m_LL;
@@ -69,7 +87,24 @@ public class AimAtTagAuto extends Command {
 
     if (outPut.isPresent()) {
       TagOOBTimer.reset();
-      rot = RotController.calculate(outPut.get());
+
+      double txnc = outPut.get();
+      double angleForPID = txnc; // default: aim directly at tag
+
+      if (s_basketEnabledEntry.getBoolean(false)) {
+        double basketDepth = s_basketDepthEntry.getDouble(LimelightConstants.BASKET_DEPTH_OFFSET);
+        Optional<Double> distOpt = m_LL.getDistFromTag(m_targetTagID);
+        if (distOpt.isPresent() && basketDepth != 0.0) {
+          double d = distOpt.get();
+          double txncRad = Math.toRadians(txnc);
+          angleForPID = Math.toDegrees(
+              Math.atan2(d * Math.sin(txncRad),
+                         d * Math.cos(txncRad) + basketDepth)
+          );
+        }
+      }
+
+      rot = RotController.calculate(angleForPID);
     }
 
     if (!RotController.atSetpoint()) {

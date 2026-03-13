@@ -105,6 +105,14 @@ public final class Constants
     public static final double TargetDeltaZ =  0.61; // 2 feet
 
     public static final double AIM_AT_TAG_TOLERANCE = 3.d;
+
+    // Basket depth offset: meters behind the tag where the basket center sits.
+    // 0.0 = aim at tag (current behavior). Override live via Shuffleboard.
+    public static final double BASKET_DEPTH_OFFSET = 0.0;
+
+    // Shuffleboard NT key reference (tab "Aiming", widget "Basket Depth (m)").
+    // Informational; actual reads go through GenericEntry in AimAtTagAuto.
+    public static final String BASKET_DEPTH_NT_KEY = "basketDepthOffset";
 	}
 
 
