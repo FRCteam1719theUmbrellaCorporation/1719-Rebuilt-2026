@@ -8,7 +8,6 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OutakeConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
@@ -48,9 +47,7 @@ public class ShootWithDistance extends Command {
       m_SHOOTER.setShooterSpeed(power);
       hasntSeenShooter.reset();
       System.out.println(power);
-    } //else if (hasntSeenShooter.hasElapsed(OutakeConstants.ShooterScailTimeout)) {
-      //m_SHOOTER.stop();
-    //}
+    } 
   }
 
   // Called once the command ends or is interrupted.

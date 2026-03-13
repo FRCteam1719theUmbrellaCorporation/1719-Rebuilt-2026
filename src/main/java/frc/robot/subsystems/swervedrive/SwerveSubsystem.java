@@ -6,7 +6,7 @@ package frc.robot.subsystems.swervedrive;
 
 import static edu.wpi.first.units.Units.Meter;
 
-import com.ctre.phoenix6.hardware.Pigeon2;
+// import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
@@ -18,9 +18,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.DriveFeedforwards;
 import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.hal.simulation.RoboRioDataJNI;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -34,40 +31,28 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.LimelightHelpers;
-// import frc.robot.LimelightHelpers;
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
-// import frc.robot.subsystems.LimeLightExtra;
 
 //import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
-//import org.photonvision.targeting.PhotonPipelineResult;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -80,29 +65,17 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class SwerveSubsystem extends SubsystemBase
 {
-
-      // private final Pigeon2 m_gyro = new Pigeon2(2);
-
-
   /**
    * Swerve drive object.
    */
   private final SwerveDrive swerveDrive;
-  /**
-   * AprilTag field layout.
-   */
-  private final AprilTagFieldLayout aprilTagFieldLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2024Crescendo);
+
   /**
    * Enable vision odometry updates while driving.
    */
   private final boolean visionDriveTest     = false;
-  private final Pigeon2 m_gyro;
+  // private final Pigeon2 m_gyro;
   private final GenericEntry SpeedSlider;
-  // public static boolean slowSpeed = true;
-  /**
-   * PhotonVision class to keep an accurate odometry.
-   */
-//  private       Vision              vision;
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -144,12 +117,11 @@ public class SwerveSubsystem extends SubsystemBase
 //    swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
     if (visionDriveTest)
     {
-//      setupPhotonVision();
       // Stop the odometry thread if we are using vision that way we can synchronize updates better.
       swerveDrive.stopOdometryThread();
     }
     setupPathPlanner();
-    m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
+    // m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
   }
 
   /**
@@ -165,7 +137,7 @@ public class SwerveSubsystem extends SubsystemBase
                                   Constants.MAX_SPEED,  
                                   new Pose2d(new Translation2d(Meter.of(1), Meter.of(1)),
                                              Rotation2d.fromDegrees(0)));
-    m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
+    // m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
 
     final ShuffleboardTab ShooterTab = Shuffleboard.getTab("DrivingSpeed");
 
@@ -190,14 +162,6 @@ public class SwerveSubsystem extends SubsystemBase
                           OperatorConstants.SlowDriverMax));
   }
 
-//  /**
-//   * Setup the photon vision class.
-//   */
-//  public void setupPhotonVision()
-//  {
-//    vision = new Vision(swerveDrive::getPose, swerveDrive.field);
-//  }
-
   @Override
   public void periodic()
   {
@@ -210,10 +174,7 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   @Override
-  public void simulationPeriodic()
-  {
-  }
-
+  public void simulationPeriodic(){}
 
   /**
    * Setup AutoBuilder for PathPlanner.
@@ -285,30 +246,6 @@ public class SwerveSubsystem extends SubsystemBase
     // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
     PathfindingCommand.warmupCommand().schedule();
   }
-
-//  /**
-//   * Aim the robot at the target returned by PhotonVision.
-//   *
-//   * @return A {@link Command} which will run the alignment.
-//   */
-//  public Command aimAtTarget(Cameras camera)
-//  {
-//
-//    return run(() -> {
-//      Optional<PhotonPipelineResult> resultO = camera.getBestResult();
-//      if (resultO.isPresent())
-//      {
-//        var result = resultO.get();
-//        if (result.hasTargets())
-//        {
-//          drive(getTargetSpeeds(0,
-//                                0,
-//                                Rotation2d.fromDegrees(result.getBestTarget()
-//                                                             .getYaw()))); // Not sure if this will work, more math may be required.
-//        }
-//      }
-//    });
-//  }
 
   /**
    * Get the path follower with events.
@@ -551,18 +488,6 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.driveFieldOriented(velocity.get());
     });
   }
-
-  // /**
-  //  * Drive the robot given a chassis field oriented velocity.
-  //  *
-  //  * @param velocity Velocity according to the field.
-  //  */
-  // public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity)
-  // {
-  //   return run(() -> {
-  //     if (Objects.isNull(RobotContainer.drivetotag) || !RobotContainer.drivetotag.isScheduled() ) swerveDrive.driveFieldOriented(velocity.get());
-  //   });
-  // }
 
   /**
    * Drive according to the chassis robot oriented velocity.
@@ -815,8 +740,6 @@ public class SwerveSubsystem extends SubsystemBase
     return swerveDrive;
   }
 
-  
-
   // public BooleanSupplier within() {
   //   Double[] tagxyr = calculatedposes.getArrayfromKey(SmartDashboard.getString("location", null), isRedAlliance());
   //   Pose2d targetp = new Pose2d(
@@ -832,7 +755,5 @@ public class SwerveSubsystem extends SubsystemBase
   //     Math.pow(targetp.getX()-robop.getX(), 2)+ Math.pow(targetp.getY()-robop.getY(), 2)) < 0.25)
   //     && (Math.abs(targetp.getRotation().getDegrees()-robop.getRotation().getDegrees()) < 5);
   // }
-
-
 
 }

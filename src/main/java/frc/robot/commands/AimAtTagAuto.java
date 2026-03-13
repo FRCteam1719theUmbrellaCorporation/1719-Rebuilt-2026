@@ -43,7 +43,6 @@ public class AimAtTagAuto extends Command {
   }
 
   public AimAtTagAuto(SwerveSubsystem drivebase, LimelightHandler LL) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this(drivebase, LL, -1);
   }
 

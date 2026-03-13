@@ -5,25 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -39,17 +31,11 @@ import frc.robot.subsystems.devices.IntakeSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
 import java.io.File;
-import java.lang.ModuleLayer.Controller;
 
 import swervelib.SwerveInputStream;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -73,6 +59,7 @@ public class RobotContainer
   final         CommandXboxController operatorXbox = new CommandXboxController(1);
   final IntakeSubsystem INTAKE = new IntakeSubsystem();
   final OutakeSubsystem OUTAKE = new OutakeSubsystem();
+
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/Turbo"));
@@ -81,21 +68,10 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   // public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
   //                                                                               "swerve/Dutchman"));
-  // private final LimelightHandler LLHandler = new LimelightHandler();
 
-  // // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
+  // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   // private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final SendableChooser<Command> autoChooser;
-  // /**
-  //  * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
-  //  */
-  // SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-  //                                                               () -> i_scalar(driverXbox.getLeftY(), driverXbox.getLeftX() * -1),
-  //                                                               () -> i_scalar(driverXbox.getLeftX(), driverXbox.getLeftY()) *-1)
-  //                                                           .withControllerRotationAxis(()->Math.pow(driverXbox.getRightX(),3)*-1)
-  //                                                           .deadband(OperatorConstants.DEADBAND)
-  //                                                           .scaleTranslation(0.9)
-  //                                                           .allianceRelativeControl(true);
 
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
                                                                 () -> i_scalar(driverXbox.getLeftY(),driverXbox.getLeftX()),
@@ -108,6 +84,7 @@ public class RobotContainer
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
+
   // Named Commands //
   
   public int TAGID = 31;
@@ -160,16 +137,12 @@ public class RobotContainer
     NamedCommands.registerCommand("shoot-slow", Shootslow);
     NamedCommands.registerCommand("shoot-fast", Shootfast);
     
-    // //Set the default auto (do nothing) 
+    // Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
-    autoChooser = AutoBuilder.buildAutoChooser();
-
-    //Add a simple auto option to have the robot drive forward for 1 second then stop
-    // autoChooser.addOption("Drive Forward", drivebase.driveForward().withTimeout(1));
+    autoChooser = AutoBuilder.buildAutoChooser();;
     
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
-   
   }
 
   /**
