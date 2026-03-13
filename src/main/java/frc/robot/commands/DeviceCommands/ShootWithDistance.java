@@ -17,6 +17,7 @@ public class ShootWithDistance extends Command {
   private final OutakeSubsystem m_SHOOTER;
   private final LimelightHandler m_LL;
   private final int m_TARGET;
+  private double power = .65d;
   private Timer hasntSeenShooter;
 
   /** Creates a new ShootWithDistance. */
@@ -44,11 +45,13 @@ public class ShootWithDistance extends Command {
   public void execute() {
     Optional<Double> distanceFromTag = m_TARGET == -1 ? m_LL.getDistFromHub() : m_LL.getDistFromTag(m_TARGET);
     if (distanceFromTag.isPresent()) {
-      double power = m_SHOOTER.ScailPower(distanceFromTag.get());
-      m_SHOOTER.setShooterSpeed(power);
+      power = m_SHOOTER.ScailPower(distanceFromTag.get());
       hasntSeenShooter.reset();
       System.out.println(power);
-    } //else if (hasntSeenShooter.hasElapsed(OutakeConstants.ShooterScailTimeout)) {
+    } 
+    m_SHOOTER.setShooterSpeed(power);
+      
+    //else if (hasntSeenShooter.hasElapsed(OutakeConstants.ShooterScailTimeout)) {
       //m_SHOOTER.stop();
     //}
   }

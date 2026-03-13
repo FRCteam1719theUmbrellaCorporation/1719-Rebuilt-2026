@@ -126,7 +126,8 @@ public class RobotContainer
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
 
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(0.5);
+  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler
+  ).withTimeout(0.5);
   
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
@@ -228,7 +229,7 @@ public class RobotContainer
     driverXbox.b().onTrue(new InstantCommand(() -> {
       driveToHub = new SequentialCommandGroup(
             new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-            new Movetotag(drivebase, true).withTimeout(3));
+            new Movetotag(drivebase, true, LLHandler).withTimeout(3));
       driveToHub.schedule();
     }));
 

@@ -33,18 +33,14 @@ public class Movetotag extends Command {
    * @param isRightScore
    * @param drivebase
    */
-  public Movetotag(SwerveSubsystem drivebase, boolean isHubMode) {
+  public Movetotag(SwerveSubsystem drivebase, boolean isHubMode, LimelightHandler LLH) {
+    this.LLH = LLH;
     xController = new PIDController(LimelightConstants.X_REEF_ALIGNMENT_P, 0.0, 0);  // Vertical movement
     yController = new PIDController(LimelightConstants.Y_REEF_ALIGNMENT_P, 0.0, 0);  // Horitontal movement
     rotController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0, 0);  // Rotation
     this.drivebase = drivebase;
     this.isHubMode = isHubMode;
-    addRequirements(drivebase);
-  }
-
-  public Movetotag(SwerveSubsystem drivebase, LimelightHandler LL) {
-    this(drivebase, false);
-    LLH = LL;
+    addRequirements(drivebase, LLH);
   }
 
   public double[] Computefinalstaticpose(){
