@@ -136,6 +136,11 @@ public final class Constants
     //this was lowered from 0.085
     public static final double DistancePowerMult = 0.0830589;
     public static final double DistancePowerOffset = 0.507221;
+
+    // Ball speed (m/s) at 100% shooter power. Used with ScailPower(d) to derive time of flight.
+    // Calibrate: fire at known distance d, time with slow-mo video, then:
+    //   BALL_SPEED_AT_FULL_POWER = d / (t * ScailPower(d))
+    public static final double BALL_SPEED_AT_FULL_POWER = 15.0;
     
     // public static final double ShooterScailTimeout = 2.d;
   }

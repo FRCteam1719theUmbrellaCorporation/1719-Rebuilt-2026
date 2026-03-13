@@ -5,31 +5,42 @@
 package frc.robot.commands.DeviceCommands;
 
 import java.util.Optional;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OutakeConstants;
+import frc.robot.MotionCompDashboard;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.OutakeSubsystem;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ShootWithDistance extends Command {
   private final OutakeSubsystem m_SHOOTER;
   private final LimelightHandler m_LL;
+  private final SwerveSubsystem m_drivebase;
   private final int m_TARGET;
   private double power = .65d;
   private Timer hasntSeenShooter;
 
   /** Creates a new ShootWithDistance. */
-  public ShootWithDistance(OutakeSubsystem m_outake, LimelightHandler m_ll, int targetTag) {
+  public ShootWithDistance(OutakeSubsystem m_outake, LimelightHandler m_ll, int targetTag, SwerveSubsystem drivebase) {
     this.m_SHOOTER = m_outake;
     this.m_LL = m_ll;
-    this.m_TARGET = targetTag; 
-    addRequirements(m_outake, m_ll);
+    this.m_TARGET = targetTag;
+    this.m_drivebase = drivebase;
+    addRequirements(m_outake, m_ll); // drivebase not required — read-only velocity access
   }
 
+  /** Hub-mode with motion compensation. */
+  public ShootWithDistance(OutakeSubsystem m_outake, LimelightHandler m_ll, SwerveSubsystem drivebase) {
+    this(m_outake, m_ll, -1, drivebase);
+  }
+
+  /** Hub-mode without motion compensation (motion comp switch will have no effect). */
   public ShootWithDistance(OutakeSubsystem m_outake, LimelightHandler m_ll) {
-    this(m_outake, m_ll, -1);
+    this(m_outake, m_ll, -1, null);
   }
 
   // Called when the command is initially scheduled.
@@ -46,6 +57,18 @@ public class ShootWithDistance extends Command {
     Optional<Double> distanceFromTag = m_TARGET == -1 ? m_LL.getDistFromHub() : m_LL.getDistFromTag(m_TARGET);
     if (distanceFromTag.isPresent()) {
       power = m_SHOOTER.ScailPower(distanceFromTag.get());
+
+      // Motion compensation — no effect when switch is off, robot is stationary, or no drivebase.
+      if (m_drivebase != null && MotionCompDashboard.ENABLED.getBoolean(false)) {
+        double d = distanceFromTag.get();
+        double vBall = power * MotionCompDashboard.BALL_SPEED_AT_FULL_POWER.getDouble(OutakeConstants.BALL_SPEED_AT_FULL_POWER);
+        double t = d / vBall;
+        ChassisSpeeds vel = m_drivebase.getRobotVelocity();
+        double effectiveDist = Math.max(d - vel.vxMetersPerSecond * t, OutakeConstants.MinShootDistance);
+        power = m_SHOOTER.ScailPower(effectiveDist);
+        SmartDashboard.putNumber("MotionComp/EffectiveDist_m", effectiveDist);
+        SmartDashboard.putNumber("MotionComp/FlightTime_s", t);
+      }
       hasntSeenShooter.reset();
       System.out.println(power);
     } 

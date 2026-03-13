@@ -119,7 +119,6 @@ public class RobotContainer
   public Command Intake = new InstantCommand(() -> {
     INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
   });
-  
   public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
   });
@@ -189,7 +188,7 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler));
+    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler, drivebase));
     operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // reverse funnel;

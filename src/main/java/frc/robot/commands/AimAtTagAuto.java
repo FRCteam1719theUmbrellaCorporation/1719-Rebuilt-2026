@@ -7,14 +7,20 @@ package frc.robot.commands;
 import java.util.Map;
 import java.util.Optional;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.Constants.OutakeConstants;
+import frc.robot.MotionCompDashboard;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
@@ -91,9 +97,12 @@ public class AimAtTagAuto extends Command {
       double txnc = outPut.get();
       double angleForPID = txnc; // default: aim directly at tag
 
+      // Fetch distance once — shared by both basket and motion corrections.
+      Optional<Double> distOpt = m_LL.getDistFromTag(m_targetTagID);
+
+      // Basket depth correction (Task 1) — no effect when switch is off.
       if (s_basketEnabledEntry.getBoolean(false)) {
         double basketDepth = s_basketDepthEntry.getDouble(LimelightConstants.BASKET_DEPTH_OFFSET);
-        Optional<Double> distOpt = m_LL.getDistFromTag(m_targetTagID);
         if (distOpt.isPresent() && basketDepth != 0.0) {
           double d = distOpt.get();
           double txncRad = Math.toRadians(txnc);
@@ -102,6 +111,19 @@ public class AimAtTagAuto extends Command {
                          d * Math.cos(txncRad) + basketDepth)
           );
         }
+      }
+
+      // Motion compensation — no effect when switch is off or robot is stationary.
+      if (MotionCompDashboard.ENABLED.getBoolean(false) && distOpt.isPresent()) {
+        double d = distOpt.get();
+        double power = MathUtil.clamp(d * OutakeConstants.DistancePowerMult + OutakeConstants.DistancePowerOffset, 0, Constants.Motor_Max);
+        double vBall = power * MotionCompDashboard.BALL_SPEED_AT_FULL_POWER.getDouble(OutakeConstants.BALL_SPEED_AT_FULL_POWER);
+        double t = d / vBall;
+        ChassisSpeeds vel = m_drivebase.getRobotVelocity();
+        double correction = Math.toDegrees(Math.atan2(vel.vyMetersPerSecond * t, d));
+        angleForPID -= correction;
+        SmartDashboard.putNumber("MotionComp/AimCorrection_deg", correction);
+        SmartDashboard.putNumber("MotionComp/FlightTime_s", t);
       }
 
       rot = RotController.calculate(angleForPID);
