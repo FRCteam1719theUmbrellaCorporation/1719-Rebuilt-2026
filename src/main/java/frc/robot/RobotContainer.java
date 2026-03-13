@@ -228,7 +228,7 @@ public class RobotContainer
     driverXbox.b().onTrue(new InstantCommand(() -> {
       driveToHub = new SequentialCommandGroup(
             new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-            new Movetotag(true, drivebase, true).withTimeout(3));
+            new Movetotag(drivebase, true).withTimeout(3));
       driveToHub.schedule();
     }));
 

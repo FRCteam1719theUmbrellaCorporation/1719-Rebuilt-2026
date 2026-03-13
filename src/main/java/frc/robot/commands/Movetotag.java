@@ -22,7 +22,6 @@ import frc.robot.LimelightHelpers.RawFiducial;
 
 public class Movetotag extends Command {
   public PIDController xController, yController, rotController;
-  private boolean isRightScore;
   private Timer dontSeeTagTimer, stopTimer;
   private SwerveSubsystem drivebase;
   private double tagID = 15;
@@ -34,18 +33,17 @@ public class Movetotag extends Command {
    * @param isRightScore
    * @param drivebase
    */
-  public Movetotag(boolean isRightScore, SwerveSubsystem drivebase, boolean isHubMode) {
+  public Movetotag(SwerveSubsystem drivebase, boolean isHubMode) {
     xController = new PIDController(LimelightConstants.X_REEF_ALIGNMENT_P, 0.0, 0);  // Vertical movement
     yController = new PIDController(LimelightConstants.Y_REEF_ALIGNMENT_P, 0.0, 0);  // Horitontal movement
     rotController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0, 0);  // Rotation
-    this.isRightScore = isRightScore;
     this.drivebase = drivebase;
     this.isHubMode = isHubMode;
     addRequirements(drivebase);
   }
 
-  public Movetotag(boolean isRightScore, SwerveSubsystem drivebase, LimelightHandler LL) {
-    this(isRightScore, drivebase, false);
+  public Movetotag(SwerveSubsystem drivebase, LimelightHandler LL) {
+    this(drivebase, false);
     LLH = LL;
   }
 
@@ -66,7 +64,7 @@ public class Movetotag extends Command {
 
   @Override
   public void initialize() {
-    
+
     if (isHubMode) {
       Optional<RawFiducial> m = this.LLH.getHubTag();
       if (m.isPresent()) {
@@ -89,7 +87,7 @@ public class Movetotag extends Command {
     xController.setSetpoint(data[0]);
     xController.setTolerance(LimelightConstants.X_TOLERANCE_REEF_ALIGNMENT);
 
-    yController.setSetpoint(isRightScore ? data[1] : -data[1]);
+    yController.setSetpoint(data[1]);
     yController.setTolerance(LimelightConstants.Y_TOLERANCE_REEF_ALIGNMENT);
 
     tagID = LimelightHelpers.getFiducialID(LimelightConstants.LIMELIGHT_NAME);
