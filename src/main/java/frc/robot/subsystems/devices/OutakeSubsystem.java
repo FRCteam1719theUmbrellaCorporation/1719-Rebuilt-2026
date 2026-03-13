@@ -82,7 +82,8 @@ public class OutakeSubsystem extends SubsystemBase {
   }
 
   public void setShooterSpeed(double val) {
-    this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
+    this.OutakeMotor.set(val);
+    // this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
     // setFunnelPower(OutakeConstants.FUNNEL_SPEED);
   }
 
