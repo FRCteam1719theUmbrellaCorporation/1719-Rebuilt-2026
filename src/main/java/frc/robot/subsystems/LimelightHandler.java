@@ -48,7 +48,8 @@ public class LimelightHandler extends SubsystemBase {
 	public Optional<RawFiducial> getHubTag() {
 		Optional<RawFiducial> tag = Optional.empty();
 		for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
-			if (f.id == FieldConstants.HUBID_RED || f.id == FieldConstants.HUBID_BLUE) {
+			for (int ht : FieldConstants.HUBTAGS)
+			if (f.id == ht) {
 				tag = Optional.of(f);
 				break;
 			}
@@ -94,14 +95,14 @@ public class LimelightHandler extends SubsystemBase {
 		}
 	}
 
-	public static Optional<Boolean> isBlueAllianceTag(Optional<RawFiducial> tag) {
-		if (tag.isEmpty()) return Optional.empty();
-		return Optional.of(tag.get().id == FieldConstants.HUBID_RED);
-	}
+	// public static Optional<Boolean> isBlueAllianceTag(Optional<RawFiducial> tag) {
+	// 	if (tag.isEmpty()) return Optional.empty();
+	// 	return Optional.of(tag.get().id == FieldConstants.HUBID_RED);
+	// }
 
-	public static Optional<Boolean> isBlueAllianceTag(int tagID) {
-		return Optional.of(tagID == FieldConstants.HUBID_RED);
-	}
+	// public static Optional<Boolean> isBlueAllianceTag(int tagID) {
+	// 	return Optional.of(tagID == FieldConstants.HUBID_RED);
+	// }
 
 	private PoseEstimate getBotPoseEstimate( ) {
 		if (LimelightConstants.USE_MEGATAG2) {

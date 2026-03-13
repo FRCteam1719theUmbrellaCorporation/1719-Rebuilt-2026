@@ -5,6 +5,7 @@ import edu.wpi.first.math.controller.PIDController;
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -12,9 +13,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.LimelightHelpers.RawFiducial;
 
 
 public class Movetotag extends Command {
@@ -24,7 +27,8 @@ public class Movetotag extends Command {
   private SwerveSubsystem drivebase;
   private double tagID = 15;
   private boolean isHubMode;
-  public double initialXPos,initialYPos, initalRotPose;
+  private LimelightHandler LLH = null;
+  public double initialXPos, initialYPos, initalRotPose;
 
   /**
    * @param isRightScore
@@ -40,8 +44,9 @@ public class Movetotag extends Command {
     addRequirements(drivebase);
   }
 
-  public Movetotag(boolean isRightScore, SwerveSubsystem drivebase) {
+  public Movetotag(boolean isRightScore, SwerveSubsystem drivebase, LimelightHandler LL) {
     this(isRightScore, drivebase, false);
+    LLH = LL;
   }
 
   public double[] Computefinalstaticpose(){
@@ -54,31 +59,23 @@ public class Movetotag extends Command {
     double phi = (Math.atan2(-initialXPos, Zdist));
     double newX = -R0*Math.sin(phi);
     double newZ = -(R0*Math.cos(phi) - Deltaz);
-    double phi_deg = phi*180/Math.PI;
+    double phi_deg = Math.toDegrees(phi);
     double[] data = {newZ,newX,phi_deg};
     return data;
   }
 
   @Override
   public void initialize() {
-    Optional<Alliance> m_alliance = DriverStation.getAlliance();
     
-    if (isHubMode && m_alliance.isPresent()) {
-      if (m_alliance.get() == Alliance.Red) {
-        tagID = FieldConstants.HUBID_RED;
-        isRightScore = true;
-      } else if (m_alliance.get() == Alliance.Blue){
-        tagID = FieldConstants.HUBID_BLUE;
-        isRightScore = false;
+    if (isHubMode) {
+      Optional<RawFiducial> m = this.LLH.getHubTag();
+      if (m.isPresent()) {
+        tagID = m.get().id;
+        LimelightHelpers.setPriorityTagID(LimelightConstants.LIMELIGHT_NAME, (int)tagID);
       }
-
-      LimelightHelpers.setPriorityTagID(LimelightConstants.LIMELIGHT_NAME, (int)tagID);
-
     } else {
       tagID = LimelightHelpers.getFiducialID(LimelightConstants.LIMELIGHT_NAME);
     }
-
-    
 
     double[] data = Computefinalstaticpose();
     this.stopTimer = new Timer();
