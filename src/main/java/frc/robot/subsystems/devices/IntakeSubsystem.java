@@ -11,7 +11,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase {
-  /** Creates a new Intake. */
+  /** Creates a new Intake. 
+   * Intake uses 2 motors, one should be set as a follower motor via rev
+  */
 
   SparkMax IntakeMotor;
 
