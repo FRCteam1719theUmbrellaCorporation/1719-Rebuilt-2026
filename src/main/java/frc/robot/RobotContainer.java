@@ -152,6 +152,7 @@ public class RobotContainer
     NamedCommands.registerCommand("center", CenterWheels);
     NamedCommands.registerCommand("intake", Intake);
     NamedCommands.registerCommand("stop-intake", StopIntake);
+    NamedCommands.registerCommand("stop_intake", StopIntake); //somewhere there is a call of stop_intake instead of stop-intake, this is a patchwork fix
     NamedCommands.registerCommand("shoot-relative", ShootRelativeDistance);
     NamedCommands.registerCommand("stop-shooting", StopShoot);
     NamedCommands.registerCommand("AimAtTag", AimAtTag);
