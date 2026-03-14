@@ -6,7 +6,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
@@ -25,38 +24,40 @@ public class LimelightHandler extends SubsystemBase {
 		return LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
 	}
 
-public Optional<RawFiducial> getFiducialByID(int tagID) {
-    for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
-        if (f.id == tagID) return Optional.of(f);
-    }
-    return Optional.empty();
-}
-
-public boolean seesTargetTag(int tagId) {
-    return getFiducialByID(tagId).isPresent();
-}
-
-public boolean seesHubTag() {
-	return getHubTag().isPresent();
-}
-
-public double getBotRadius() {
-    return getHubTag()
-        .map(f -> f.distToRobot)
-        .orElse(-1.0);
-}
-
-public Optional<RawFiducial> getHubTag() {
-	Optional<RawFiducial> tag = Optional.empty();
-	for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
-		if (f.id == FieldConstants.HUBID_RED || f.id == FieldConstants.HUBID_BLUE) {
-			tag = Optional.of(f);
-			break;
+	public Optional<RawFiducial> getFiducialByID(int tagID) {
+		for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
+			if (f.id == tagID) return Optional.of(f);
 		}
+		return Optional.empty();
 	}
 
-	return tag;
-}
+	public boolean seesTargetTag(int tagId) {
+		return getFiducialByID(tagId).isPresent();
+	}
+
+	public boolean seesHubTag() {
+		return getHubTag().isPresent();
+	}
+
+	public double getBotRadius() {
+		return getHubTag()
+			.map(f -> f.distToRobot)
+			.orElse(-1.0);
+	}
+
+	public Optional<RawFiducial> getHubTag() {
+		Optional<RawFiducial> tag = Optional.empty();
+		for (RawFiducial f : fiducials) {  // use cached field, not a fresh NT call
+			for (int ht : FieldConstants.HUBTAGS)
+			if (f.id == ht) {
+				tag = Optional.of(f);
+				break;
+			}
+		}
+
+		return tag;
+	}
+
 
 	public Optional<Double> getDistFromTag( int tagID ) {
 		Optional<RawFiducial> tag = this.getFiducialByID(tagID);
@@ -94,6 +95,15 @@ public Optional<RawFiducial> getHubTag() {
 			return Optional.empty();
 		}
 	}
+
+	// public static Optional<Boolean> isBlueAllianceTag(Optional<RawFiducial> tag) {
+	// 	if (tag.isEmpty()) return Optional.empty();
+	// 	return Optional.of(tag.get().id == FieldConstants.HUBID_RED);
+	// }
+
+	// public static Optional<Boolean> isBlueAllianceTag(int tagID) {
+	// 	return Optional.of(tagID == FieldConstants.HUBID_RED);
+	// }
 
 	private PoseEstimate getBotPoseEstimate( ) {
 		if (LimelightConstants.USE_MEGATAG2) {
