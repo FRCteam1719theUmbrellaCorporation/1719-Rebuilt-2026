@@ -49,7 +49,7 @@ public class ShootWithDistance extends Command {
       hasntSeenShooter.reset();
       System.out.println(power);
     } 
-    m_SHOOTER.setShooterSpeed(power*1.05);
+    m_SHOOTER.setShooterSpeed(power*1.0);
       
     //else if (hasntSeenShooter.hasElapsed(OutakeConstants.ShooterScailTimeout)) {
       //m_SHOOTER.stop();

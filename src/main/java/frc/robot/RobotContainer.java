@@ -126,7 +126,7 @@ public class RobotContainer
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
 
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(15);
+  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(7);
   
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();

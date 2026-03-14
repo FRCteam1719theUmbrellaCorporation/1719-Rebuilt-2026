@@ -125,7 +125,8 @@ public final class Constants
     public static final float OUTAKE_TIME = 0.4f;
 
     public static final double MinShootDistance = .9;
-    public static final double DistancePowerMult = 0.0850589;
+    //this was lowered from 0.085
+    public static final double DistancePowerMult = 0.0830589;
     public static final double DistancePowerOffset = 0.507221;
     
     // public static final double ShooterScailTimeout = 2.d;
