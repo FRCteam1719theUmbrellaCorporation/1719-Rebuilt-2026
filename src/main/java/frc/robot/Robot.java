@@ -4,9 +4,11 @@
 
 package frc.robot;
 
+import java.util.Optional;
 import java.util.concurrent.ScheduledExecutorService;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -56,6 +58,13 @@ public class Robot extends TimedRobot
     {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+
+    // Optional<Alliance> all = DriverStation.getAlliance();
+    // if (all.isPresent() && all.get() == Alliance.Blue) {
+    // System.out.println("yooo");
+      
+    // }
+
   }
 
   /**
@@ -105,9 +114,12 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    m_robotContainer.drivebase.zeroGyroWithAlliance();
+    
+
     inAuto = true;
     // m_robotContainer.setMotorBrake(true);
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();    
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
@@ -127,6 +139,7 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit()
   {
+    
     inAuto = false;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -140,7 +153,6 @@ public class Robot extends TimedRobot
       CommandScheduler.getInstance().cancelAll();
     }
      m_robotContainer.CenterWheels.schedule();
-     m_robotContainer.drivebase.zeroGyro();
   }
 
   /**

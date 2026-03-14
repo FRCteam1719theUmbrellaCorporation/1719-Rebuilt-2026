@@ -126,7 +126,7 @@ public class RobotContainer
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
 
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(0.5);
+  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(15);
   
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
@@ -147,6 +147,7 @@ public class RobotContainer
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
+    
 
     /// Registering ///
     NamedCommands.registerCommand("center", CenterWheels);
@@ -168,7 +169,6 @@ public class RobotContainer
     
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
-   
   }
 
   /**
@@ -217,12 +217,16 @@ public class RobotContainer
 
     operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
+    // adjusts the slowed speed on the robot
+    operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
+    operatorXbox.povRight().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(.05)));
   
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
     driverXbox.a().onTrue(CenterWheels);
     driverXbox.start().onTrue(new InstantCommand(()-> {
-      drivebase.zeroGyro();}));
+      drivebase.zeroGyroWithAlliance();}));
                                                                                     
      // MOVE TO TAG COMMAND
     driverXbox.b().onTrue(new SequentialCommandGroup(

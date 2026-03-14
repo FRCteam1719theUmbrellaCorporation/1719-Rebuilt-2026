@@ -132,11 +132,16 @@ public final class Constants
   }
 
   public static final class ControllerConstants {
-    public static final double TrimSwitchBounds = .1d;
+    public static final double TrimSwitchBounds = .2d;
+    public static final double TrimSwitchLow = 1-TrimSwitchBounds;
+    public static final double TrimSwitchHigh = 1+TrimSwitchBounds;
+    
   }
 
   public static final class FieldConstants {
     public static final int HUBID_RED = 10;
     public static final int HUBID_BLUE = 25;
+
+    public static final int[] HUBTAGS = {5,10,2,21,26,18};
   }
 }
