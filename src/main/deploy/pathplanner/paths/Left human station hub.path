@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.776465909090909,
-        "y": 5.539795454545454
+        "x": 3.5646332737030413,
+        "y": 6.833881932021467
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.75,
-        "y": 5.5
+        "x": 3.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 3.9887674042594266,
-        "y": 7.269143199210204
+        "x": 4.002719141323792,
+        "y": 7.158389982110911
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -40.0
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Human left paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.09061955080085
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

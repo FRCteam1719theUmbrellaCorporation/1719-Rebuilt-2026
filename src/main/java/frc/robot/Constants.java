@@ -101,7 +101,7 @@ public final class Constants
     public static final double DONT_SEE_TAG_WAIT_TIME = 1;
 	  public static final double POSE_VALIDATION_TIME = 0.3;
 
-    public static final double DesiredRadius = 2.438;
+    public static final double DesiredRadius = 2.65;
     public static final double TargetDeltaZ =  0.61; // 2 feet
 
     public static final double AIM_AT_TAG_TOLERANCE = 3.d;
@@ -126,13 +126,16 @@ public final class Constants
 
     public static final double MinShootDistance = .9;
     public static final double DistancePowerMult = 0.0850589;
-    public static final double DistancePowerOffset = 0.539119;
+    public static final double DistancePowerOffset = 0.507221;
     
     // public static final double ShooterScailTimeout = 2.d;
   }
 
   public static final class ControllerConstants {
-    public static final double TrimSwitchBounds = .1d;
+    public static final double TrimSwitchBounds = .2d;
+    public static final double TrimSwitchLow = 1-TrimSwitchBounds;
+    public static final double TrimSwitchHigh = 1+TrimSwitchBounds;
+    
   }
 
   public static final class FieldConstants {

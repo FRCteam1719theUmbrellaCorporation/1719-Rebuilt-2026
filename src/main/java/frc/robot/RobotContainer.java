@@ -110,6 +110,7 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   // Named Commands //
+  
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
  
   public Command StopIntake = new InstantCommand(() -> {
@@ -126,8 +127,7 @@ public class RobotContainer
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
 
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler
-  ).withTimeout(0.5);
+  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(0.5);
   
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
@@ -218,6 +218,10 @@ public class RobotContainer
 
     operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
+    // adjusts the slowed speed on the robot
+    operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
+    operatorXbox.povRight().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(.05)));
   
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS

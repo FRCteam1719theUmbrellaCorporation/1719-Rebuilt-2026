@@ -13,6 +13,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.networktables.GenericEntry;
@@ -82,8 +83,8 @@ public class OutakeSubsystem extends SubsystemBase {
   }
 
   public void setShooterSpeed(double val) {
+    // this.OutakeMotor.set(val);
     this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
-    // setFunnelPower(OutakeConstants.FUNNEL_SPEED);
   }
 
   public void ConstantShoot(float input) {
@@ -94,6 +95,12 @@ public class OutakeSubsystem extends SubsystemBase {
 
   public void setFunnelPower(double input) {
     funnelPower = input;
+  }
+
+  public void adjustTrim(double input) {
+    ShooterAdjustment.setDouble(MathUtil.clamp(ShooterAdjustment.getDouble(OperatorConstants.SlowDriveFactor) + input, 
+                          ControllerConstants.TrimSwitchLow,
+                          ControllerConstants.TrimSwitchHigh));
   }
 
   /**

@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.900147727272727,
-        "y": 2.571431818181818
+        "x": 3.7755635062611805,
+        "y": 1.1225402504472266
       },
       "isLocked": false,
       "linkedName": null
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 3.0,
-        "y": 2.5
+        "y": 1.8
       },
       "prevControl": {
-        "x": 4.002719141323792,
-        "y": 0.8304830053667263
+        "x": 3.4583728647753142,
+        "y": 1.4153794982253605
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,10 +42,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 45.0
+    "rotation": 59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Human right paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
