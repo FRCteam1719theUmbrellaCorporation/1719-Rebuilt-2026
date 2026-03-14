@@ -110,7 +110,7 @@ public final class Constants
 
   public static final class IntakeConstants {
     public static final int ID = 3;
-    public static final float INTAKE_SPEED = 0.8f;
+    public static final float INTAKE_SPEED = 0.9f;
     //TODO: impl important vars
   }
   
@@ -122,7 +122,7 @@ public final class Constants
     public static final float Slow_OUTAKE_SPEED = 0.3f;
     public static final float Super_OUTAKE_SPEED = 1;
 
-    public static final float OUTAKE_TIME = 0.2f;
+    public static final float OUTAKE_TIME = 0.4f;
 
     public static final double MinShootDistance = .9;
     public static final double DistancePowerMult = 0.0850589;
