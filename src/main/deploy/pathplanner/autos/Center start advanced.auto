@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right human station hub"
+            "pathName": "Center path"
           }
         },
         {
@@ -45,15 +45,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "intake"
+                  "pathName": "Move from human center to center"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Move to center human right"
+                  "name": "intake"
                 }
               }
             ]
@@ -74,7 +74,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Move from center to human right"
+            "pathName": "Move from center to human left"
           }
         },
         {
