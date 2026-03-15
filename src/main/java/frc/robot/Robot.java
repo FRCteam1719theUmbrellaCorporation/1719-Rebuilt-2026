@@ -71,10 +71,10 @@ public class Robot extends TimedRobot
       .getEntry();
 
   ShiftTimer = new Timer();
-  CameraServer.startAutomaticCapture();
-    UsbCamera USBCAM = CameraServer.startAutomaticCapture();
-    USBCAM.setResolution(720, 540);
-    CameraServer.startAutomaticCapture();
+  // CameraServer.startAutomaticCapture(0);
+    UsbCamera USBCAM = CameraServer.startAutomaticCapture(0);
+    // USBCAM.setResolution(720, 540);
+    // CameraServer.startAutomaticCapture(0);
 
   }
 

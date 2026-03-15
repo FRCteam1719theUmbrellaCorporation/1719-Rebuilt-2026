@@ -243,6 +243,8 @@ public class RobotContainer
     // adjusts the slowed speed on the robot
     driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
     driverXbox.povRight().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(.05)));
+
+    driverXbox.x().whileTrue(new InstantCommand(()->drivebase.lock()));
   }
 
     
