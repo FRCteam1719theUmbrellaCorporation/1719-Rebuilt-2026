@@ -105,17 +105,15 @@ public class LimelightHandler extends SubsystemBase {
 	// 	return Optional.of(tagID == FieldConstants.HUBID_RED);
 	// }
 
-	private PoseEstimate getBotPoseEstimate( ) {
-		if (LimelightConstants.USE_MEGATAG2) {
-			return LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.LIMELIGHT_NAME);
-		} else {
-			return LimelightHelpers.getBotPoseEstimate_wpiBlue(LimelightConstants.LIMELIGHT_NAME);
-		}
+	public Optional<PoseEstimate> getBotPoseEstimate() {
+		PoseEstimate est = LimelightConstants.USE_MEGATAG2
+			? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(LimelightConstants.LIMELIGHT_NAME)
+			: LimelightHelpers.getBotPoseEstimate_wpiBlue(LimelightConstants.LIMELIGHT_NAME);
+		return (est == null || est.pose == null) ? Optional.empty() : Optional.of(est);
 	}
 
 	private Pose2d getBotPose( ) {
-		PoseEstimate estimate = this.getBotPoseEstimate();
-		return estimate.pose;
+		return getBotPoseEstimate().map(e -> e.pose).orElse(new Pose2d());
 	}
 
 	private Angle getBotHeading( ) {

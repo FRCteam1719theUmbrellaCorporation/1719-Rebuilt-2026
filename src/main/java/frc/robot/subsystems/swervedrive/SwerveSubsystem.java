@@ -806,6 +806,17 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   /**
+   * Add a vision measurement from the Limelight to the swerve drive's pose estimator.
+   *
+   * @param pose             the robot pose as reported by the vision system
+   * @param timestampSeconds the timestamp of the measurement (latency-compensated)
+   */
+  public void addVisionMeasurement(Pose2d pose, double timestampSeconds)
+  {
+    swerveDrive.addVisionMeasurement(pose, timestampSeconds);
+  }
+
+  /**
    * Gets the swerve drive object.
    *
    * @return {@link SwerveDrive}

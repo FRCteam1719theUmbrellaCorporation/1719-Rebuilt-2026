@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.HapticConstants;
+import frc.robot.Constants.LimelightConstants;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -271,7 +273,7 @@ public void periodic() {
     boolean seesTag = LLHandler.seesHubTag();
     double dist = LLHandler.getBotRadius();
 
-    if (seesTag && dist >= HapticConstants.HUB_VIBRATE_DISTANCE[0] 
+    if (seesTag && dist >= HapticConstants.HUB_VIBRATE_DISTANCE[0]
                && dist <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {
         operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
     } else if (seesTag) {
@@ -279,6 +281,18 @@ public void periodic() {
     } else {
         operatorXbox.setRumble(RumbleType.kBothRumble, 0.0);
     }
+
+    // Feed Limelight pose estimate into the swerve drive's pose estimator.
+    // SetRobotOrientation must be called every loop before the MegaTag2 pose fetch
+    // so the Limelight can use the current gyro yaw in its heading-constrained solve.
+    LimelightHelpers.SetRobotOrientation(
+        LimelightConstants.LIMELIGHT_NAME,
+        drivebase.getHeading().getDegrees(), 0, 0, 0, 0, 0);
+    LLHandler.getBotPoseEstimate().ifPresent(est -> {
+        if (est.tagCount > 0 && est.avgTagDist < LimelightConstants.MAX_TAG_DIST) {
+            drivebase.addVisionMeasurement(est.pose, est.timestampSeconds);
+        }
+    });
 }
 
 }
