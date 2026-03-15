@@ -5,25 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -39,17 +31,11 @@ import frc.robot.subsystems.devices.IntakeSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
 import java.io.File;
-import java.lang.ModuleLayer.Controller;
 
 import swervelib.SwerveInputStream;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a "declarative" paradigm, very
@@ -109,7 +95,9 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   // Named Commands //
-  
+
+  private GenericEntry matchTime = null;
+
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
  
   public Command StopIntake = new InstantCommand(() -> {
@@ -169,6 +157,11 @@ public class RobotContainer
     
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("timer");
+    this.matchTime = ShooterTab
+      .add("shift Time", 0)
+      .getEntry();
   }
 
   /**
@@ -182,6 +175,9 @@ public class RobotContainer
    SwerveInputStream driveDirectAngle = driveAngularVelocity.copy().withControllerHeadingAxis(driverXbox::getRightX,
                                                                                              driverXbox::getRightY)
                                                            .headingWhile(true);
+
+
+
 
   private void configureBindings()
   {
@@ -268,6 +264,7 @@ public class RobotContainer
   }
 
 public void periodic() {
+    matchTime.setDouble(DriverStation.getMatchTime());
     boolean seesTag = LLHandler.seesHubTag();
     double dist = LLHandler.getBotRadius();
 

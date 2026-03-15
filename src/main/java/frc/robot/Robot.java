@@ -4,13 +4,13 @@
 
 package frc.robot;
 
-import java.util.Optional;
-import java.util.concurrent.ScheduledExecutorService;
-
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -29,6 +29,10 @@ public class Robot extends TimedRobot
 
   private Timer disabledTimer;
   public static boolean inAuto;
+  private static Timer ShiftTimer;
+  // private static Timer matchTimer;
+  private GenericEntry timerLol = null;
+
 
   public Robot()
   {
@@ -59,6 +63,13 @@ public class Robot extends TimedRobot
       DriverStation.silenceJoystickConnectionWarning(true);
     }
 
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("timer");
+    this.timerLol = ShooterTab
+      .add("match time", 0)
+      .getEntry();
+
+    
+    ShiftTimer = new Timer();
     // Optional<Alliance> all = DriverStation.getAlliance();
     // if (all.isPresent() && all.get() == Alliance.Blue) {
     // System.out.println("yooo");
@@ -116,7 +127,6 @@ public class Robot extends TimedRobot
   {
     m_robotContainer.drivebase.zeroGyroWithAlliance();
     
-
     inAuto = true;
     // m_robotContainer.setMotorBrake(true);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();    
@@ -153,6 +163,10 @@ public class Robot extends TimedRobot
       CommandScheduler.getInstance().cancelAll();
     }
      m_robotContainer.CenterWheels.schedule();
+
+     ShiftTimer.start();
+     ShiftTimer.reset();
+     timerLol.setDouble(25);
   }
 
   /**
@@ -161,6 +175,16 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
+    if (ShiftTimer.hasElapsed(25)) {
+      ShiftTimer.reset();
+      timerLol.setDouble(25);
+      this.m_robotContainer.driverXbox.setRumble(RumbleType.kBothRumble, .2);
+    } else {
+      if (ShiftTimer.hasElapsed(1)) {
+        this.m_robotContainer.driverXbox.setRumble(RumbleType.kBothRumble, 0);
+      }
+      timerLol.setDouble(25-ShiftTimer.get());
+    }
   }
 
   @Override
