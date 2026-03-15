@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left human station hub"
+            "pathName": "Center path"
           }
         },
         {
@@ -41,19 +41,19 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Move from human center to center"
+                }
+              },
               {
                 "type": "named",
                 "data": {
                   "name": "intake"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Move to center human left"
                 }
               }
             ]

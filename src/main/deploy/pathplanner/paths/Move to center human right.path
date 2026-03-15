@@ -9,23 +9,23 @@
       "prevControl": null,
       "nextControl": {
         "x": 2.837614444590081,
-        "y": 0.8790657518352025
+        "y": 0.8790657518352026
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.156860465116279,
-        "y": 0.5222003577817531
+        "x": 4.1481,
+        "y": 0.585466666666665
       },
       "prevControl": {
-        "x": 3.156860465116279,
-        "y": 0.5222003577817532
+        "x": 3.1481000000000003,
+        "y": 0.5854666666666651
       },
       "nextControl": {
-        "x": 5.156860465116284,
-        "y": 0.5222003577817531
+        "x": 5.148100000000006,
+        "y": 0.585466666666665
       },
       "isLocked": false,
       "linkedName": null
@@ -48,19 +48,24 @@
     },
     {
       "anchor": {
-        "x": 7.8,
-        "y": 2.2
+        "x": 8.0,
+        "y": 2.5
       },
       "prevControl": {
-        "x": 7.8,
-        "y": 1.3486687314871681
+        "x": 8.0,
+        "y": 1.648668731487168
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0879668049792481,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
@@ -91,7 +96,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Human right paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": 59.99999999999999

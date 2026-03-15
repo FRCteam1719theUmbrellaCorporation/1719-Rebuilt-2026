@@ -33,6 +33,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Testing Autos",
+  "folder": null,
   "choreoAuto": false
 }

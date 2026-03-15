@@ -31,7 +31,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.5
+            "waitTime": 0.5
           }
         },
         {
@@ -105,6 +105,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Comp Autos",
+  "folder": null,
   "choreoAuto": false
 }
