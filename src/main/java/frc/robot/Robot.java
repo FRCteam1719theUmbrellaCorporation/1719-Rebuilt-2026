@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -68,13 +70,11 @@ public class Robot extends TimedRobot
       .add("match time", 0)
       .getEntry();
 
-    
-    ShiftTimer = new Timer();
-    // Optional<Alliance> all = DriverStation.getAlliance();
-    // if (all.isPresent() && all.get() == Alliance.Blue) {
-    // System.out.println("yooo");
-      
-    // }
+  ShiftTimer = new Timer();
+  CameraServer.startAutomaticCapture();
+    UsbCamera USBCAM = CameraServer.startAutomaticCapture();
+    USBCAM.setResolution(720, 540);
+    CameraServer.startAutomaticCapture();
 
   }
 
