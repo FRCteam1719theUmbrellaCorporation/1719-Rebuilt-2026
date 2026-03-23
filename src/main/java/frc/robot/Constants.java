@@ -61,6 +61,7 @@ public final class Constants
     public static final double SlowDriverMin = SlowDriveFactor - SlowDriverRadius;
     public static final double SlowDriverMax = SlowDriveFactor + SlowDriverRadius;
     public static final double NormalDriveFactor = 1f; 
+    public static final double SHAKE_POWER_X = 1.d;
   }
 
   public static final class HapticConstants {
@@ -128,7 +129,6 @@ public final class Constants
     //this was lowered from 0.085
     public static final double DistancePowerMult = 0.0830589;
     public static final double DistancePowerOffset = 0.507221;
-    
     // public static final double ShooterScailTimeout = 2.d;
   }
 

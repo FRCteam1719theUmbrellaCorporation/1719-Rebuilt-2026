@@ -25,6 +25,7 @@ import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
+import frc.robot.commands.swervedrive.SwerveShakeRelative;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.IntakeSubsystem;
@@ -239,6 +240,7 @@ public class RobotContainer
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );
+    driverXbox.b().whileTrue(new SwerveShakeRelative(drivebase));
 
     // adjusts the slowed speed on the robot
     driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
