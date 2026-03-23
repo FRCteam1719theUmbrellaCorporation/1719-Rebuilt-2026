@@ -177,13 +177,8 @@ public class Robot extends TimedRobot
   {
     if (ShiftTimer.hasElapsed(25)) {
       ShiftTimer.reset();
-      timerLol.setDouble(25);
-      this.m_robotContainer.driverXbox.setRumble(RumbleType.kBothRumble, .2);
     } else {
-      if (ShiftTimer.hasElapsed(1)) {
-        this.m_robotContainer.driverXbox.setRumble(RumbleType.kBothRumble, 0);
-      }
-      timerLol.setDouble(25-ShiftTimer.get());
+      timerLol.setInteger((int)(25-ShiftTimer.get()));
     }
   }
 
