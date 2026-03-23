@@ -96,7 +96,7 @@ public class RobotContainer
    */
   // Named Commands //
 
-  private GenericEntry matchTime = null;
+  // private GenericEntry matchTime = null;
 
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
  
@@ -158,10 +158,10 @@ public class RobotContainer
     //Put the autoChooser on the SmartDashboard
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("timer");
-    this.matchTime = ShooterTab
-      .add("shift Time", 0)
-      .getEntry();
+    // final ShuffleboardTab ShooterTab = Shuffleboard.getTab("timer");
+    // this.matchTime = ShooterTab
+    //   .add("shift Time", 0)
+    //   .getEntry();
   }
 
   /**
@@ -255,7 +255,6 @@ public class RobotContainer
    */
   public Command getAutonomousCommand()
   {
-    System.out.println("x");
     // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
     return autoChooser.getSelected();
   }
@@ -266,18 +265,18 @@ public class RobotContainer
   }
 
 public void periodic() {
-    matchTime.setDouble(DriverStation.getMatchTime());
-    boolean seesTag = LLHandler.seesHubTag();
-    double dist = LLHandler.getBotRadius();
+    // matchTime.setDouble(DriverStation.getMatchTime());
+    // boolean seesTag = LLHandler.seesHubTag();
+    // double dist = LLHandler.getBotRadius();
 
-    if (seesTag && dist >= HapticConstants.HUB_VIBRATE_DISTANCE[0] 
-               && dist <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {
-        operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
-    } else if (seesTag) {
-        operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_SEE_VIBRATE_STRENGTH);
-    } else {
-        operatorXbox.setRumble(RumbleType.kBothRumble, 0.0);
-    }
+    // if (seesTag && dist >= HapticConstants.HUB_VIBRATE_DISTANCE[0] 
+    //            && dist <= HapticConstants.HUB_VIBRATE_DISTANCE[1]) {
+    //     operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_DIST_VIBRATE_STRENGTH);
+    // } else if (seesTag) {
+    //     operatorXbox.setRumble(RumbleType.kBothRumble, HapticConstants.HUB_SEE_VIBRATE_STRENGTH);
+    // } else {
+    //     operatorXbox.setRumble(RumbleType.kBothRumble, 0.0);
+    // }
 }
 
 }
