@@ -40,7 +40,7 @@ public class SwerveShakeRelative extends Command {
         setSpeed = -setSpeed;
         delayTimer.reset();
       }
-    m_SwerveSubsystem.drive(new Translation2d(setSpeed, 0), 0, false);
+    m_SwerveSubsystem.drive(new Translation2d(), setSpeed, false);
   }
 
   // Called once the command ends or is interrupted.
