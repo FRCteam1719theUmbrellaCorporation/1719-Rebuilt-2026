@@ -37,6 +37,8 @@ public class OutakeSubsystem extends SubsystemBase {
   private Timer funnelTimer;
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
+  SparkMax BlenderMotor;
+
   boolean isShooting;
   double funnelPower;
   final GenericEntry ShooterAdjustment;
@@ -44,6 +46,8 @@ public class OutakeSubsystem extends SubsystemBase {
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
+    BlenderMotor = new SparkMax(OutakeConstants.BLENDER_ID, MotorType.kBrushless);
+
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
@@ -74,12 +78,14 @@ public class OutakeSubsystem extends SubsystemBase {
   public void startShooter() {
     this.isShooting = true;
     funnelTimer.reset();
+    BlenderMotor.set(OutakeConstants.BlenderSpeed);
   }
 
   public void stop() {
     this.isShooting = false;
     OutakeMotor.set(0);
     FunnelMotor.set(0);
+    c
   }
 
   public void setShooterSpeed(double val) {
