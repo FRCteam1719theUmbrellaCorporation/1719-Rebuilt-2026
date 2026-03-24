@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
@@ -31,6 +32,11 @@ public class AimAtTagAuto extends Command {
   Timer TagOOBTimer;
   Timer isAtSetpointTimer;
   PIDController RotController;
+
+  // protected double getHubAngle() {
+  //   double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
+  //   return Math.toDegrees(Math.atan2(postions[0]+2, postions[2]));
+  // }
   
   public AimAtTagAuto(SwerveSubsystem drivebase, LimelightHandler LL, int tagID) {
     // Use addRequirements() here to declare subsystem dependencies.

@@ -96,6 +96,17 @@ public class LimelightHandler extends SubsystemBase {
 		}
 	}
 
+	public Optional<Double> getAngleFromHubAdjust() {
+		Optional<RawFiducial> tag = getHubTag();
+
+		if (tag.isPresent()) {
+			return Optional.of(tag.get().txnc);
+		} else {
+			return Optional.empty();
+		}
+	}
+
+
 	// public static Optional<Boolean> isBlueAllianceTag(Optional<RawFiducial> tag) {
 	// 	if (tag.isEmpty()) return Optional.empty();
 	// 	return Optional.of(tag.get().id == FieldConstants.HUBID_RED);

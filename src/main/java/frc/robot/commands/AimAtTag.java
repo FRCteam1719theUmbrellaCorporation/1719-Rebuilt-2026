@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
@@ -30,6 +31,12 @@ public class AimAtTag extends Command {
   int m_targetTagID;
   Timer TagOOBTimer;
   PIDController RotController;
+
+  protected Optional<Double> getHubAngle() {
+    if (m_LL.seesHubTag()) return Optional.empty();
+    double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
+    return Optional.of(Math.toDegrees(Math.atan2(-postions[0], Math.abs(postions[2]+2))));
+  }
 
   protected Translation2d i_scalar(final double X, final double Y) {
     final double r = Math.sqrt(Math.pow(X, 2) 
@@ -70,7 +77,7 @@ public class AimAtTag extends Command {
   @Override
   public void execute() {
     Optional<Double> outPut = m_targetTagID == -1 
-      ? m_LL.getAngleFromHub() 
+      ? getHubAngle() 
       : m_LL.getAngleFromTag(m_targetTagID);
     double rot = 0;
 
