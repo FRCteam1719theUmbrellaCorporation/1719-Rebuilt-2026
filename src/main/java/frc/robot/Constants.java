@@ -113,6 +113,7 @@ public final class Constants
     public static final int ID = 3;
     public static final float INTAKE_SPEED = 0.9f;
     //TODO: impl important vars
+	public static final double REV_INTAKE_TIME = .4; // measured in seconds babbyyyyy
   }
   
   public static final class OutakeConstants{
@@ -125,7 +126,7 @@ public final class Constants
     public static final float Slow_OUTAKE_SPEED = 0.3f;
     public static final float Super_OUTAKE_SPEED = 1;
 
-    public static final float BlenderSpeed = .3f;
+    public static final float BlenderSpeed = -.5f;
 
     public static final float OUTAKE_TIME = 0.4f;
 
@@ -134,6 +135,7 @@ public final class Constants
     public static final double DistancePowerMult = 0.0830589;
     public static final double DistancePowerOffset = 0.507221;
     // public static final double ShooterScailTimeout = 2.d;
+    public static final double BloaderVel = 30.d;
   }
 
   public static final class ControllerConstants {

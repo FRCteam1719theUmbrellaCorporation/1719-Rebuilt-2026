@@ -8,6 +8,9 @@ import com.revrobotics.spark.SparkMax;
 
 import java.util.Map;
 
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,6 +41,7 @@ public class OutakeSubsystem extends SubsystemBase {
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
   SparkMax BlenderMotor;
+  SparkClosedLoopController BloaderLoop;
 
   boolean isShooting;
   double funnelPower;
@@ -47,6 +51,7 @@ public class OutakeSubsystem extends SubsystemBase {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
     BlenderMotor = new SparkMax(OutakeConstants.BLENDER_ID, MotorType.kBrushless);
+    BloaderLoop = BlenderMotor.getClosedLoopController();
 
     funnelTimer = new Timer();
     funnelTimer.start();
@@ -78,14 +83,14 @@ public class OutakeSubsystem extends SubsystemBase {
   public void startShooter() {
     this.isShooting = true;
     funnelTimer.reset();
-    BlenderMotor.set(OutakeConstants.BlenderSpeed);
+    BloaderLoop.setSetpoint(OutakeConstants.BloaderVel, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   public void stop() {
     this.isShooting = false;
     OutakeMotor.set(0);
     FunnelMotor.set(0);
-    BlenderMotor.set(0);
+    BloaderLoop.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   public void setShooterSpeed(double val) {

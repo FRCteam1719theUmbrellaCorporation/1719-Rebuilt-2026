@@ -24,6 +24,7 @@ import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.DeviceCommands.BriefReverseIntake;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.commands.swervedrive.SwerveShakeRelative;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -193,8 +194,9 @@ public class RobotContainer
     operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
     operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
+    // intake
     operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+    operatorXbox.leftTrigger().onFalse(new BriefReverseIntake(INTAKE));
 
     // Reverse intake
     operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
