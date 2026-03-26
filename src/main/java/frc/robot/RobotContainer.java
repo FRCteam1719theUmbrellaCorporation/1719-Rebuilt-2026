@@ -33,6 +33,7 @@ import frc.robot.subsystems.devices.IntakeSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
 import java.io.File;
+import java.util.Objects;
 
 import swervelib.SwerveInputStream;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -101,7 +102,8 @@ public class RobotContainer
   // private GenericEntry matchTime = null;
 
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
- 
+  public static volatile BriefReverseIntake BRI_Cancel_Ptr;
+
   public Command StopIntake = new InstantCommand(() -> {
     INTAKE.setSpeed(0);
   });
@@ -137,7 +139,7 @@ public class RobotContainer
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    
+    BRI_Cancel_Ptr = null;
 
     /// Registering ///
     NamedCommands.registerCommand("center", CenterWheels);
@@ -195,8 +197,14 @@ public class RobotContainer
     operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
     // intake
-    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.leftTrigger().onFalse(new BriefReverseIntake(INTAKE));
+    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->{
+      if (Objects.nonNull(BRI_Cancel_Ptr) || BRI_Cancel_Ptr.isScheduled()) BRI_Cancel_Ptr.cancel();
+      INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
+    }));
+    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->{
+      BRI_Cancel_Ptr = new BriefReverseIntake(INTAKE);
+      BRI_Cancel_Ptr.schedule();
+    }));
 
     // Reverse intake
     operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
