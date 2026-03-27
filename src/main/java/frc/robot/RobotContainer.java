@@ -243,7 +243,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
+    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     
     //slow down                                                                       
      driverXbox.rightTrigger()
@@ -252,7 +252,7 @@ public class RobotContainer
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );
-    driverXbox.b().whileTrue(new SwerveShakeRelative(drivebase));
+    driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
 
     // adjusts the slowed speed on the robot
     driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
