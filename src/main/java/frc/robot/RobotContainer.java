@@ -114,12 +114,14 @@ public class RobotContainer
   
   public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
+    OUTAKE.setBlenderRPM(0);
   });
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
-
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(7);
-  
+  public Command startBlender = new InstantCommand(()->OUTAKE.setBlenderRPM(OutakeConstants.BloaderVel));
+  public Command ShootRelativeDistance = new SequentialCommandGroup(
+    new InstantCommand(()->OUTAKE.setBlenderRPM(OutakeConstants.BloaderVel)),
+    new ShootWithDistance(OUTAKE, LLHandler).withTimeout(7));
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
     OUTAKE.ConstantShoot(0.4f);
@@ -198,7 +200,7 @@ public class RobotContainer
     
     // intake
     operatorXbox.leftTrigger().onTrue(new InstantCommand(()->{
-      if (Objects.nonNull(BRI_Cancel_Ptr) || BRI_Cancel_Ptr.isScheduled()) BRI_Cancel_Ptr.cancel();
+      if (BRI_Cancel_Ptr!=null&& BRI_Cancel_Ptr.isScheduled()) BRI_Cancel_Ptr.cancel();
       INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
     }));
     operatorXbox.leftTrigger().onFalse(new InstantCommand(()->{
@@ -222,8 +224,8 @@ public class RobotContainer
     operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
-    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.setBlenderRPM(OutakeConstants.BloaderVel)));
+    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.setBlenderRPM(0)));
 
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));

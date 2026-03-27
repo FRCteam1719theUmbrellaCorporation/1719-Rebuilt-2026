@@ -83,14 +83,14 @@ public class OutakeSubsystem extends SubsystemBase {
   public void startShooter() {
     this.isShooting = true;
     funnelTimer.reset();
-    BloaderLoop.setSetpoint(OutakeConstants.BloaderVel, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    // BloaderLoop.setSetpoint(OutakeConstants.BloaderVel, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   public void stop() {
     this.isShooting = false;
     OutakeMotor.set(0);
     FunnelMotor.set(0);
-    BloaderLoop.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    // BloaderLoop.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   public void setShooterSpeed(double val) {
@@ -140,6 +140,10 @@ public class OutakeSubsystem extends SubsystemBase {
   
   public void outake(float input) {
     ConstantShoot(-input);
+  }
+
+  public void setBlenderRPM(double RPM) {
+    BloaderLoop.setSetpoint(RPM, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   @Override
