@@ -24,6 +24,7 @@ import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.DeviceCommands.BlenderPulseCommand;
 import frc.robot.commands.DeviceCommands.BriefReverseIntake;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.commands.swervedrive.SwerveShakeRelative;
@@ -111,7 +112,11 @@ public class RobotContainer
   public Command Intake = new InstantCommand(() -> {
     INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
   });
-  
+
+  public Command ReverseIntake = new InstantCommand(() -> {
+    INTAKE.setSpeed(-IntakeConstants.INTAKE_SPEED);
+  }).withTimeout(0.5);
+
   public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
     OUTAKE.setBlenderRPM(0);
@@ -136,6 +141,8 @@ public class RobotContainer
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
   public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler).withTimeout(2);
 
+  public Command BlenderPulse = new BlenderPulseCommand(OUTAKE).withTimeout(7);
+
   public RobotContainer()
   {
     // // Configure the trigger bindings
@@ -146,6 +153,7 @@ public class RobotContainer
     /// Registering ///
     NamedCommands.registerCommand("center", CenterWheels);
     NamedCommands.registerCommand("intake", Intake);
+    NamedCommands.registerCommand("reverse-intake", ReverseIntake);
     NamedCommands.registerCommand("stop-intake", StopIntake);
     NamedCommands.registerCommand("stop_intake", StopIntake); //somewhere there is a call of stop_intake instead of stop-intake, this is a patchwork fix
     NamedCommands.registerCommand("shoot-relative", ShootRelativeDistance);
@@ -153,6 +161,7 @@ public class RobotContainer
     NamedCommands.registerCommand("AimAtTag", AimAtTag);
     NamedCommands.registerCommand("shoot-slow", Shootslow);
     NamedCommands.registerCommand("shoot-fast", Shootfast);
+    NamedCommands.registerCommand("pulse-blender", BlenderPulse);
     
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
