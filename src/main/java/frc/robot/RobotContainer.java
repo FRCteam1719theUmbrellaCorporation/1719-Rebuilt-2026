@@ -25,6 +25,7 @@ import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.DeviceCommands.BlenderBackPulseCommand;
 import frc.robot.commands.DeviceCommands.BlenderPulseCommand;
 import frc.robot.commands.DeviceCommands.BriefReverseIntake;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
@@ -145,6 +146,8 @@ public class RobotContainer
 
   public Command BlenderPulse = new BlenderPulseCommand(BLENDER).withTimeout(7);
 
+  public Command BlenderBackPulse = new BlenderBackPulseCommand(BLENDER).withTimeout(7);
+
   public Command BlendShoot = new ParallelCommandGroup(
     BlenderPulse,
     ShootRelativeDistance
@@ -169,6 +172,7 @@ public class RobotContainer
     NamedCommands.registerCommand("shoot-slow", Shootslow);
     NamedCommands.registerCommand("shoot-fast", Shootfast);
     NamedCommands.registerCommand("pulse-blender", BlenderPulse);
+    NamedCommands.registerCommand("pulse-back", BlenderBackPulse);
     NamedCommands.registerCommand("blend-shoot", BlendShoot);
     
     // //Set the default auto (do nothing) 

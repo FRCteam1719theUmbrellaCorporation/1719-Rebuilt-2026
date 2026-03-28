@@ -9,13 +9,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.subsystems.devices.BlenderSubsystem;
 
+
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class BlenderPulseCommand extends Command {
+public class BlenderBackPulseCommand extends Command {
   Timer pulseTimer;
   BlenderSubsystem blender;
   boolean on;
   /** Creates a new BlenderPulseCommand. */
-  public BlenderPulseCommand(BlenderSubsystem Blender) {
+  public BlenderBackPulseCommand(BlenderSubsystem Blender) {
     // Use addRequirements() here to declare subsystem dependencies.
     blender = Blender;
     addRequirements(blender);
@@ -35,7 +36,7 @@ public class BlenderPulseCommand extends Command {
   public void execute() {
     if (pulseTimer.hasElapsed(OutakeConstants.PULSE_TIME)){
       on = !on;
-      blender.setBlenderRPM(on? OutakeConstants.BloaderVel: 0);
+      blender.setBlenderRPM(on? OutakeConstants.BloaderVel: -OutakeConstants.BloaderVel);
       pulseTimer.reset();
     }
   }
