@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.HapticConstants;
@@ -127,7 +128,6 @@ public class RobotContainer
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
   public Command startBlender = new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel));
   public Command ShootRelativeDistance = new SequentialCommandGroup(
-    new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel)),
     new ShootWithDistance(OUTAKE, LLHandler)).withTimeout(7);
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
@@ -144,6 +144,11 @@ public class RobotContainer
   public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler).withTimeout(2);
 
   public Command BlenderPulse = new BlenderPulseCommand(BLENDER).withTimeout(7);
+
+  public Command BlendShoot = new ParallelCommandGroup(
+    BlenderPulse,
+    ShootRelativeDistance
+  ).withTimeout(7); //correct maybe?
 
   public RobotContainer()
   {
@@ -164,6 +169,7 @@ public class RobotContainer
     NamedCommands.registerCommand("shoot-slow", Shootslow);
     NamedCommands.registerCommand("shoot-fast", Shootfast);
     NamedCommands.registerCommand("pulse-blender", BlenderPulse);
+    NamedCommands.registerCommand("blend-shoot", BlendShoot);
     
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());

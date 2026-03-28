@@ -23,9 +23,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shoot-relative"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot-relative"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pulse-blender"
+                }
+              }
+            ]
           }
         },
         {
@@ -84,9 +97,22 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "shoot-relative"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "shoot-relative"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "pulse-blender"
+                }
+              }
+            ]
           }
         },
         {
