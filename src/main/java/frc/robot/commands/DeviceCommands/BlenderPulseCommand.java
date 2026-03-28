@@ -7,18 +7,19 @@ package frc.robot.commands.DeviceCommands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.OutakeConstants;
+import frc.robot.subsystems.devices.BlenderSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class BlenderPulseCommand extends Command {
   Timer pulseTimer;
-  OutakeSubsystem outake;
+  BlenderSubsystem blender;
   boolean on;
   /** Creates a new BlenderPulseCommand. */
-  public BlenderPulseCommand(OutakeSubsystem Outake) {
+  public BlenderPulseCommand(BlenderSubsystem Blender) {
     // Use addRequirements() here to declare subsystem dependencies.
-    outake = Outake;
-    addRequirements(outake);
+    blender = Blender;
+    addRequirements(blender);
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +28,7 @@ public class BlenderPulseCommand extends Command {
     pulseTimer = new Timer();
     pulseTimer.start();
     on = true;
-    outake.setBlenderRPM(OutakeConstants.BloaderVel);
+    blender.setBlenderRPM(OutakeConstants.BloaderVel);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,14 +36,14 @@ public class BlenderPulseCommand extends Command {
   public void execute() {
     if (pulseTimer.hasElapsed(OutakeConstants.PULSE_TIME)){
       on = !on;
-      outake.setBlenderRPM(on? OutakeConstants.BloaderVel: 0);
+      blender.setBlenderRPM(on? OutakeConstants.BloaderVel: 0);
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    outake.setBlenderRPM(0);
+    blender.setBlenderRPM(0);
   }
 
   // Returns true when the command should end.

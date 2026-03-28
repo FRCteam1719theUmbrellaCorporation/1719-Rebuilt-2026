@@ -40,8 +40,6 @@ public class OutakeSubsystem extends SubsystemBase {
   private Timer funnelTimer;
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
-  SparkMax BlenderMotor;
-  SparkClosedLoopController BloaderLoop;
 
   boolean isShooting;
   double funnelPower;
@@ -50,8 +48,6 @@ public class OutakeSubsystem extends SubsystemBase {
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
-    BlenderMotor = new SparkMax(OutakeConstants.BLENDER_ID, MotorType.kBrushless);
-    BloaderLoop = BlenderMotor.getClosedLoopController();
 
     funnelTimer = new Timer();
     funnelTimer.start();
@@ -140,10 +136,6 @@ public class OutakeSubsystem extends SubsystemBase {
   
   public void outake(float input) {
     ConstantShoot(-input);
-  }
-
-  public void setBlenderRPM(double RPM) {
-    BloaderLoop.setSetpoint(RPM, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   @Override
