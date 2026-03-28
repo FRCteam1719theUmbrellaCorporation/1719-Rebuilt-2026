@@ -45,8 +45,9 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    if (!hasBall()){
+    System.out.println(ColorSensor.getProximity());
+    // if (!hasBall()){
       
-    }
+    // }
   }
 }
