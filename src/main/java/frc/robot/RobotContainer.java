@@ -121,7 +121,7 @@ public class RobotContainer
   public Command startBlender = new InstantCommand(()->OUTAKE.setBlenderRPM(OutakeConstants.BloaderVel));
   public Command ShootRelativeDistance = new SequentialCommandGroup(
     new InstantCommand(()->OUTAKE.setBlenderRPM(OutakeConstants.BloaderVel)),
-    new ShootWithDistance(OUTAKE, LLHandler).withTimeout(7));
+    new ShootWithDistance(OUTAKE, LLHandler)).withTimeout(7);
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
     OUTAKE.ConstantShoot(0.4f);
