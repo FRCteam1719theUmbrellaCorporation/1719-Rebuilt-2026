@@ -36,7 +36,7 @@ public class BlenderBackPulseCommand extends Command {
   public void execute() {
     if (pulseTimer.hasElapsed(OutakeConstants.PULSE_TIME)){
       on = !on;
-      blender.setBlenderRPM(on? OutakeConstants.BloaderVel: -OutakeConstants.BloaderVel);
+      blender.setBlenderRPM(on? OutakeConstants.BloaderVel: -(OutakeConstants.BloaderVel/4));
       pulseTimer.reset();
     }
   }
