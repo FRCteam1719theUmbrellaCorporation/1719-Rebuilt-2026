@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems.devices;
 
+import com.revrobotics.ColorSensorV3;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
@@ -14,9 +16,11 @@ public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new Intake. */
 
   SparkMax IntakeMotor;
+  ColorSensorV3 ColorSensor;
 
   public IntakeSubsystem() {
     IntakeMotor = new SparkMax(IntakeConstants.ID, MotorType.kBrushless);
+    ColorSensor = new ColorSensorV3(I2C.Port.kOnboard);
   }
 
   public void setSpeed(float input) {
@@ -31,8 +35,18 @@ public class IntakeSubsystem extends SubsystemBase {
     setSpeed(-input);
   }
 
+  public boolean hasBall(){
+    if (ColorSensor.getProximity() >= IntakeConstants.WALL_DIST){
+      return true;
+    }
+    else{return false;}
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    if (!hasBall()){
+      
+    }
   }
 }

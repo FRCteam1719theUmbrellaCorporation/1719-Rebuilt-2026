@@ -114,6 +114,7 @@ public final class Constants
     public static final float INTAKE_SPEED = 0.9f;
     //TODO: impl important vars
 	public static final double REV_INTAKE_TIME = .4; // measured in seconds babbyyyyy
+  public static final double WALL_DIST = 1.0d;
   }
   
   public static final class OutakeConstants{
