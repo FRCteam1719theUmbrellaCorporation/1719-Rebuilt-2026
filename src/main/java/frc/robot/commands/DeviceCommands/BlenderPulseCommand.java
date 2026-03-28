@@ -37,6 +37,7 @@ public class BlenderPulseCommand extends Command {
     if (pulseTimer.hasElapsed(OutakeConstants.PULSE_TIME)){
       on = !on;
       blender.setBlenderRPM(on? OutakeConstants.BloaderVel: 0);
+      pulseTimer.reset();
     }
   }
 
