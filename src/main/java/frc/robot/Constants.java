@@ -133,7 +133,7 @@ public final class Constants
 
     public static final double MinShootDistance = .9;
     //this was lowered from 0.085
-    public static final double DistancePowerMult = 0.0830589;
+    public static final double DistancePowerMult = 0.0840589;
     public static final double DistancePowerOffset = 0.507221;
     public static final double ShooterScailTimeout = 2.d;
     public static final double BloaderVel = 150;           
