@@ -15,6 +15,8 @@ public class BlenderBackPulseCommand extends Command {
   Timer pulseTimer;
   BlenderSubsystem blender;
   boolean on;
+  double blenPow = OutakeConstants.BloaderVel;
+
   /** Creates a new BlenderPulseCommand. */
   public BlenderBackPulseCommand(BlenderSubsystem Blender) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -34,9 +36,10 @@ public class BlenderBackPulseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (pulseTimer.hasElapsed(OutakeConstants.PULSE_TIME)){
+    if (pulseTimer.hasElapsed(OutakeConstants.PULSE_BACK_TIME)){
       on = !on;
-      blender.setBlenderRPM(on? OutakeConstants.BloaderVel: -(OutakeConstants.BloaderVel/4));
+      blenPow = -blenPow;
+      blender.setBlenderRPM(blenPow);
       pulseTimer.reset();
     }
   }

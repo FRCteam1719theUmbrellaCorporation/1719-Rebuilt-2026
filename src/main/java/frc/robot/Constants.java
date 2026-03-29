@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Time;
 import swervelib.math.Matter;
 
 /**
@@ -134,9 +135,10 @@ public final class Constants
     //this was lowered from 0.085
     public static final double DistancePowerMult = 0.0830589;
     public static final double DistancePowerOffset = 0.507221;
-    // public static final double ShooterScailTimeout = 2.d;
-    public static final double BloaderVel = 100.d;           
-    public static final double PULSE_TIME = 1.0d;
+    public static final double ShooterScailTimeout = 2.d;
+    public static final double BloaderVel = 200;           
+    public static final double PULSE_TIME = 2.0d;
+    public static final double PULSE_BACK_TIME = 1.d;
   }
 
   public static final class ControllerConstants {
