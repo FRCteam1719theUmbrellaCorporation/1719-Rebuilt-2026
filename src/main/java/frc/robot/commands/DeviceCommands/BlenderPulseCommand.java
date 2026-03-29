@@ -14,11 +14,17 @@ public class BlenderPulseCommand extends Command {
   Timer pulseTimer;
   BlenderSubsystem blender;
   boolean on;
+  double time;
+
   /** Creates a new BlenderPulseCommand. */
-  public BlenderPulseCommand(BlenderSubsystem Blender) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public BlenderPulseCommand(BlenderSubsystem Blender, double time) {
+    this.time = time;
     blender = Blender;
     addRequirements(blender);
+  }
+
+  public BlenderPulseCommand(BlenderSubsystem Blender) {
+    this(Blender, OutakeConstants.PULSE_TIME_AUTO);
   }
 
   // Called when the command is initially scheduled.
@@ -33,9 +39,9 @@ public class BlenderPulseCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (pulseTimer.hasElapsed(OutakeConstants.PULSE_TIME)){
+    if (pulseTimer.hasElapsed(this.time)){
       on = !on;
-      blender.setBlenderRPM(on? OutakeConstants.BloaderVel: 0);
+      blender.setBlenderRPM(on ? OutakeConstants.BloaderVel: 0);
       pulseTimer.reset();
     }
   }

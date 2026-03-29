@@ -234,9 +234,9 @@ public class RobotContainer
     operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel)));
-    operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderRPM(0)));
-    // operatorXbox.x().whileTrue(new BlenderBackPulseCommand(BLENDER));
+    // operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel)));
+    // operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderRPM(0)));
+    operatorXbox.x().whileTrue(new BlenderPulseCommand(BLENDER, OutakeConstants.PULSE_TIME));
 
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
