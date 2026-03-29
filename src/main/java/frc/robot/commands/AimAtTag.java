@@ -77,7 +77,7 @@ public class AimAtTag extends Command {
     if (outPut.isPresent()) {
       TagOOBTimer.reset();
       rot = RotController.calculate(outPut.get());
-      System.out.println(rot);
+      // System.out.println(rot);
     }
 
     m_drivebase.drive(i_scalar(m_Controller.getLeftY(), m_Controller.getLeftX()), rot, true);

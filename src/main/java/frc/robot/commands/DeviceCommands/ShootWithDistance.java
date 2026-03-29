@@ -46,7 +46,7 @@ public class ShootWithDistance extends Command {
     if (distanceFromTag.isPresent()) {
       power = m_SHOOTER.ScailPower(distanceFromTag.get());
       hasntSeenShooter.reset();
-      System.out.println(power);
+      // System.out.println(power);
     } 
     m_SHOOTER.setShooterSpeed(power*1.0);
       

@@ -104,7 +104,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
     final ShuffleboardTab ShooterTab = Shuffleboard.getTab("DrivingSpeed");
     this.SpeedSlider = ShooterTab
       .add("Slow Drive Speed", OperatorConstants.SlowDriveFactor)
