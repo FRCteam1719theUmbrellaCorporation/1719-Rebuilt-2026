@@ -131,7 +131,7 @@ public final class Constants
     public static final double PULSE_TIME = 2.0d;
     public static final double PULSE_BACK_TIME = 1.d;
   }
-  
+
   public static final class ControllerConstants {
     public static final double TrimSwitchBounds = .2d;
     public static final double TrimSwitchLow = 1-TrimSwitchBounds;
