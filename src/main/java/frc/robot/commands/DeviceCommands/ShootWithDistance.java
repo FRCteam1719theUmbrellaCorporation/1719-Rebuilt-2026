@@ -8,7 +8,6 @@ import java.util.Optional;
 import edu.wpi.first.wpilibj.Timer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.OutakeConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 

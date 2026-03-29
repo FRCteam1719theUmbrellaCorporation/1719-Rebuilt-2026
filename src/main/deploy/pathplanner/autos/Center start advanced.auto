@@ -66,6 +66,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "reverse-intake"
+          }
+        },
+        {
           "type": "wait",
           "data": {
             "waitTime": 0.5

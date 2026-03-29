@@ -28,15 +28,12 @@ public class OutakeSubsystem extends SubsystemBase {
    * This class handles the outake. this includes the shooter and the funnel on our robot
    * This subsystem wont be entirely in charge of setting the shooter and what not, however, it is in charge of funnel
    * Funnel activates after the shooter is warmed up.
-   * 
-   * TODO: There's a command that changes the speed of the shooter based on desires output thats where the limelight micromanages output
-   * BUT VERY TODO :)
-   * 
   */
 
   private Timer funnelTimer;
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
+
   boolean isShooting;
   double funnelPower;
   final GenericEntry ShooterAdjustment;
@@ -44,6 +41,7 @@ public class OutakeSubsystem extends SubsystemBase {
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
+
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
@@ -74,12 +72,14 @@ public class OutakeSubsystem extends SubsystemBase {
   public void startShooter() {
     this.isShooting = true;
     funnelTimer.reset();
+    // BloaderLoop.setSetpoint(OutakeConstants.BloaderVel, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   public void stop() {
     this.isShooting = false;
     OutakeMotor.set(0);
     FunnelMotor.set(0);
+    // BloaderLoop.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
   public void setShooterSpeed(double val) {

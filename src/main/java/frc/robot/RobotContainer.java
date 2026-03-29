@@ -5,29 +5,29 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
+import frc.robot.commands.DeviceCommands.BlenderBackPulseCommand;
+import frc.robot.commands.DeviceCommands.BlenderPulseCommand;
+import frc.robot.commands.DeviceCommands.BriefReverseIntake;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.commands.swervedrive.SwerveShakeRelative;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
+import frc.robot.subsystems.devices.BlenderSubsystem;
 import frc.robot.subsystems.devices.IntakeSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
@@ -60,15 +60,11 @@ public class RobotContainer
   final         CommandXboxController operatorXbox = new CommandXboxController(1);
   final IntakeSubsystem INTAKE = new IntakeSubsystem();
   final OutakeSubsystem OUTAKE = new OutakeSubsystem();
+  final BlenderSubsystem BLENDER = new BlenderSubsystem();
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/Turbo"));
   private final LimelightHandler LLHandler = new LimelightHandler();
-
-  // The robot's subsystems and commands are defined here...
-  // public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-  //                                                                               "swerve/Dutchman"));
-  // private final LimelightHandler LLHandler = new LimelightHandler();
 
   // // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   // private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -100,7 +96,8 @@ public class RobotContainer
   // private GenericEntry matchTime = null;
 
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
- 
+  public static volatile BriefReverseIntake BRI_Cancel_Ptr;
+
   public Command StopIntake = new InstantCommand(() -> {
     INTAKE.setSpeed(0);
   });
@@ -108,15 +105,20 @@ public class RobotContainer
   public Command Intake = new InstantCommand(() -> {
     INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
   });
-  
+
+  public Command ReverseIntake = new InstantCommand(() -> {
+    INTAKE.setSpeed(-IntakeConstants.INTAKE_SPEED);
+  }).withTimeout(0.5);
+
   public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
+    BLENDER.setBlenderRPM(0);
   });
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
-
-  public Command ShootRelativeDistance = new ShootWithDistance(OUTAKE, LLHandler).withTimeout(7);
-  
+  public Command startBlender = new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel));
+  public Command ShootRelativeDistance = new SequentialCommandGroup(
+    new ShootWithDistance(OUTAKE, LLHandler)).withTimeout(7);
   public Command Shootslow = new InstantCommand(() -> {
     OUTAKE.startShooter();
     OUTAKE.ConstantShoot(0.4f);
@@ -131,16 +133,26 @@ public class RobotContainer
   public Command Center_wheels = drivebase.centerModulesCommand().withTimeout(0.5);
   public Command AimAtTagAuto = new frc.robot.commands.AimAtTagAuto(drivebase, LLHandler).withTimeout(2);
 
+  public Command BlenderPulse = new BlenderPulseCommand(BLENDER).withTimeout(7);
+
+  public Command BlenderBackPulse = new BlenderBackPulseCommand(BLENDER).withTimeout(7);
+
+  public Command BlendShoot = new ParallelCommandGroup(
+    BlenderPulse,
+    ShootRelativeDistance
+  ).withTimeout(7); //correct maybe?
+
   public RobotContainer()
   {
     // // Configure the trigger bindings
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
-    
+    BRI_Cancel_Ptr = null;
 
     /// Registering ///
     NamedCommands.registerCommand("center", CenterWheels);
     NamedCommands.registerCommand("intake", Intake);
+    NamedCommands.registerCommand("reverse-intake", ReverseIntake);
     NamedCommands.registerCommand("stop-intake", StopIntake);
     NamedCommands.registerCommand("stop_intake", StopIntake); //somewhere there is a call of stop_intake instead of stop-intake, this is a patchwork fix
     NamedCommands.registerCommand("shoot-relative", ShootRelativeDistance);
@@ -148,6 +160,9 @@ public class RobotContainer
     NamedCommands.registerCommand("AimAtTag", AimAtTag);
     NamedCommands.registerCommand("shoot-slow", Shootslow);
     NamedCommands.registerCommand("shoot-fast", Shootfast);
+    NamedCommands.registerCommand("pulse-blender", BlenderPulse);
+    NamedCommands.registerCommand("pulse-back", BlenderBackPulse);
+    NamedCommands.registerCommand("blend-shoot", BlendShoot);
     
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
@@ -193,8 +208,15 @@ public class RobotContainer
     operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
     operatorXbox.rightBumper().onFalse(new InstantCommand(()->OUTAKE.setFunnelPower(OutakeConstants.FUNNEL_SPEED)));
     
-    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED)));
-    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->INTAKE.setSpeed(0)));
+    // intake
+    operatorXbox.leftTrigger().onTrue(new InstantCommand(()->{
+      if (BRI_Cancel_Ptr!=null&& BRI_Cancel_Ptr.isScheduled()) BRI_Cancel_Ptr.cancel();
+      INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
+    }));
+    operatorXbox.leftTrigger().onFalse(new InstantCommand(()->{
+      BRI_Cancel_Ptr = new BriefReverseIntake(INTAKE);
+      BRI_Cancel_Ptr.schedule();
+    }));
 
     // Reverse intake
     operatorXbox.leftBumper().onTrue(new InstantCommand(()->INTAKE.outake(IntakeConstants.INTAKE_SPEED)));
@@ -212,13 +234,14 @@ public class RobotContainer
     operatorXbox.a().onTrue(new InstantCommand(()->OUTAKE.ConstantShoot(OutakeConstants.Slow_OUTAKE_SPEED)));
     operatorXbox.a().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
-    operatorXbox.x().onTrue(new InstantCommand(()->OUTAKE.reverseOutake(-OutakeConstants.Slow_OUTAKE_SPEED)));
-    operatorXbox.x().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel)));
+    operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderRPM(0)));
+    // operatorXbox.x().whileTrue(new BlenderBackPulseCommand(BLENDER));
 
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
     operatorXbox.povRight().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(.05)));
-  
+    // operatorXbox.povUp().onTrue(new InstantCommand(()->System.out.println(LLHandler.getDistFromTag(11))));
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
     driverXbox.a().onTrue(CenterWheels);
@@ -231,7 +254,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
+    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     
     //slow down                                                                       
      driverXbox.rightTrigger()
@@ -240,7 +263,7 @@ public class RobotContainer
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );
-    driverXbox.b().whileTrue(new SwerveShakeRelative(drivebase));
+    driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
 
     // adjusts the slowed speed on the robot
     driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));

@@ -92,7 +92,7 @@ public class AimAtTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !m_Controller.leftTrigger().getAsBoolean();
+    return !m_Controller.y().getAsBoolean();
     // return this.TagOOBTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME);
   }
 }
