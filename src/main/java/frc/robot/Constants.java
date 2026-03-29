@@ -135,7 +135,7 @@ public final class Constants
     public static final double DistancePowerMult = 0.0830589;
     public static final double DistancePowerOffset = 0.507221;
     // public static final double ShooterScailTimeout = 2.d;
-    public static final double BloaderVel = 100.d;           
+    public static final double BloaderVel = 300.d;           
     public static final double PULSE_TIME = 1.0d;
   }
 
