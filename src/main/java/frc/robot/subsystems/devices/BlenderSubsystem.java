@@ -5,9 +5,6 @@
 package frc.robot.subsystems.devices;
 
 import com.revrobotics.spark.SparkMax;
-
-import java.util.Map;
-
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
@@ -20,7 +17,6 @@ public class BlenderSubsystem extends SubsystemBase {
   /** 
    * This handles the blender in the storage
    * very simple
-   * 
   */
   SparkMax BlenderMotor;
   SparkClosedLoopController BloaderLoop;

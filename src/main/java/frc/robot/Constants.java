@@ -5,9 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.units.measure.Time;
 import swervelib.math.Matter;
 
 /**
@@ -30,13 +28,6 @@ public final class Constants
   public static final double Motor_Min = -1;
   public static final double Motor_Max = 1;
   // Maximum speed of the robot in meters per second, used to limit acceleration.
-
-//  public static final class AutonConstants
-//  {
-//
-//    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-//    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
-//  }
 
   public static final class DrivebaseConstants
   {
@@ -113,11 +104,11 @@ public final class Constants
   public static final class IntakeConstants {
     public static final int ID = 3;
     public static final float INTAKE_SPEED = 0.9f;
-    //TODO: impl important vars
-	public static final double REV_INTAKE_TIME = .4; // measured in seconds babbyyyyy
+    public static final double REV_INTAKE_TIME = .4; // measured in seconds babbyyyyy
   }
   
-  public static final class OutakeConstants{
+  public static final class OutakeConstants {
+    // CAN IDS
     public static final int FUNNEL_ID = 4;
     public static final int SHOOTER_ID = 6;
     public static final int BLENDER_ID = 7;
@@ -132,15 +123,15 @@ public final class Constants
     public static final float OUTAKE_TIME = 0.4f;
 
     public static final double MinShootDistance = .9;
-    //this was lowered from 0.085
-    public static final double DistancePowerMult = 0.0840589;
+
+    public static final double DistancePowerMult = 0.0845589;
     public static final double DistancePowerOffset = 0.507221;
     public static final double ShooterScailTimeout = 2.d;
     public static final double BloaderVel = 150;           
     public static final double PULSE_TIME = 2.0d;
     public static final double PULSE_BACK_TIME = 1.d;
   }
-
+  
   public static final class ControllerConstants {
     public static final double TrimSwitchBounds = .2d;
     public static final double TrimSwitchLow = 1-TrimSwitchBounds;

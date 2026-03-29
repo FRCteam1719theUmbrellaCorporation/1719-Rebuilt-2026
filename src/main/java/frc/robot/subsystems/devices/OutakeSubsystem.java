@@ -28,10 +28,6 @@ public class OutakeSubsystem extends SubsystemBase {
    * This class handles the outake. this includes the shooter and the funnel on our robot
    * This subsystem wont be entirely in charge of setting the shooter and what not, however, it is in charge of funnel
    * Funnel activates after the shooter is warmed up.
-   * 
-   * TODO: There's a command that changes the speed of the shooter based on desires output thats where the limelight micromanages output
-   * BUT VERY TODO :)
-   * 
   */
 
   private Timer funnelTimer;

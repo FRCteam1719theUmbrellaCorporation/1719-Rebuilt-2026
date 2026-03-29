@@ -181,19 +181,11 @@ public class SwerveSubsystem extends SubsystemBase
                           OperatorConstants.SlowDriverMax));
   }
 
-//  /**
-//   * Setup the photon vision class.
-//   */
-//  public void setupPhotonVision()
-//  {
-//    vision = new Vision(swerveDrive::getPose, swerveDrive.field);
-//  }
-
   @Override
   public void periodic()
   {
     // When vision is enabled we must manually update odometry in SwerveDrive
-    swerveDrive.updateOdometry(); // TODO: UNCOMMENT AFTER TESTING. MUST BE UPDATED FOR POSE ESTIMATION
+    swerveDrive.updateOdometry();
     // try {
     //   updatePoseEstimation();
     // } catch (Exception e) {

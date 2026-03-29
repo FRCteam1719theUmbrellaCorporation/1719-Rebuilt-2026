@@ -5,12 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -37,7 +32,6 @@ import frc.robot.subsystems.devices.IntakeSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
 import java.io.File;
-import java.util.Objects;
 
 import swervelib.SwerveInputStream;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -71,11 +65,6 @@ public class RobotContainer
   public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/Turbo"));
   private final LimelightHandler LLHandler = new LimelightHandler();
-
-  // The robot's subsystems and commands are defined here...
-  // public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
-  //                                                                               "swerve/Dutchman"));
-  // private final LimelightHandler LLHandler = new LimelightHandler();
 
   // // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   // private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -252,7 +241,7 @@ public class RobotContainer
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
     operatorXbox.povRight().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(.05)));
-  
+    // operatorXbox.povUp().onTrue(new InstantCommand(()->System.out.println(LLHandler.getDistFromTag(11))));
     //-------------------------------------------------------------------------------------------------------------------
     //DRIVER COMMANDS
     driverXbox.a().onTrue(CenterWheels);
