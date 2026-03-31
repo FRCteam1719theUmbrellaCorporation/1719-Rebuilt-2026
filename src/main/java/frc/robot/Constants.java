@@ -54,6 +54,7 @@ public final class Constants
     public static final double SlowDriverMax = SlowDriveFactor + SlowDriverRadius;
     public static final double NormalDriveFactor = 1f; 
     public static final double SHAKE_POWER_X = 1.d;
+    public static final double SHAKE_END_TIMEOUT = 1.5d; // aiming time after shaking
   }
 
   public static final class HapticConstants {
