@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems.devices;
 
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
 
 import java.util.Map;
@@ -33,7 +35,8 @@ public class OutakeSubsystem extends SubsystemBase {
   private Timer funnelTimer;
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
-
+  TalonFX KrakenOutake;
+  final VelocityVoltage velVol;
   boolean isShooting;
   double funnelPower;
   final GenericEntry ShooterAdjustment;
@@ -42,9 +45,13 @@ public class OutakeSubsystem extends SubsystemBase {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
 
+    KrakenOutake = new TalonFX(OutakeConstants.SHOOTER_ID, "drivetrain");
+    velVol = new VelocityVoltage(0).withSlot(0);
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
+
+    // Trim Switch
     funnelPower = OutakeConstants.FUNNEL_SPEED;
     SmartDashboard.setDefaultNumber("Shooter-Power", OutakeConstants.OUTAKE_SPEED);
 
@@ -84,7 +91,8 @@ public class OutakeSubsystem extends SubsystemBase {
 
   public void setShooterSpeed(double val) {
     // this.OutakeMotor.set(val);
-    this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
+    // this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
+    KrakenOutake.setControl(velVol.withVelocity(val));
   }
 
   public void ConstantShoot(float input) {
