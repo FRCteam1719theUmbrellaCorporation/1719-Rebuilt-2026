@@ -37,6 +37,7 @@ while x2 represents our angling motor, x1 is the drive motor, and x0 is the enco
 | Funnel Motor    | Middle of the robot | Rev Neo + Sparkmax | 4     |
 | Shooter Motor 1    | Left side of shooter from front | Rev Neo + Sparkmax | 5     |
 | Shooter Motor 2     | Right side of shooter from front | Rev Neo + Sparkmax | 6      |
+| Blender Motor     | under fuel storage area | Rev Neo + Sparkmax | 7      |
 
 ## Credits:
 
