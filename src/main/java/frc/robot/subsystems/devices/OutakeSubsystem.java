@@ -86,7 +86,7 @@ public class OutakeSubsystem extends SubsystemBase {
   public void stop() {
     this.isShooting = false;
     //OutakeMotor.set(0);
-    setShooterSpeed(0):
+    setShooterSpeed(0);
     FunnelMotor.set(0);
   }
 
