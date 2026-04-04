@@ -20,8 +20,8 @@
         "y": 4.0
       },
       "prevControl": {
-        "x": 3.3810113636363632,
-        "y": 3.983465909090909
+        "x": 3.3811103368865782,
+        "y": 4.0
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Basic paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0
