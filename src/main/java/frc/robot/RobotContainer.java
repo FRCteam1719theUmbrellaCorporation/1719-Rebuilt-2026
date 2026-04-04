@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
-import frc.robot.commands.AimAtTag;
+import frc.robot.commands.AimAtHub;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
 import frc.robot.commands.DeviceCommands.BlenderBackPulseCommand;
@@ -254,7 +254,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.y().whileTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
+    driverXbox.y().whileTrue(new AimAtHub(drivebase, LLHandler, driverXbox));
     
     //slow down                                                                       
      driverXbox.rightTrigger()
@@ -267,7 +267,7 @@ public class RobotContainer
     // Shake Command
     driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
     driverXbox.leftTrigger().onFalse(
-      new AimAtTag(drivebase, LLHandler, driverXbox)
+      new AimAtHub(drivebase, LLHandler, driverXbox)
           .withTimeout(OperatorConstants.SHAKE_END_TIMEOUT)
     );
 

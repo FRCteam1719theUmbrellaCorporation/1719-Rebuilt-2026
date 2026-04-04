@@ -132,6 +132,8 @@ public final class Constants
     public static final double PULSE_TIME = 1.d;
     public static final double PULSE_TIME_AUTO = 2.d;
     public static final double PULSE_BACK_TIME = 1.d;
+
+    public static final double twoFeet = 0.61;
   }
 
   public static final class ControllerConstants {

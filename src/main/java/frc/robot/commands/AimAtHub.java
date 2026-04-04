@@ -13,11 +13,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.Constants.OutakeConstants;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class AimAtTag extends Command {
+public class AimAtHub extends Command {
 
   /** 
    * Creates a new AimAtTag. 
@@ -31,6 +33,12 @@ public class AimAtTag extends Command {
   Timer TagOOBTimer;
   PIDController RotController;
 
+  protected Optional<Double> getHubAngle() {
+    if (m_LL.seesHubTag()) return Optional.empty();
+    double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
+    return Optional.of(Math.toDegrees(Math.atan2(-postions[0], Math.abs(postions[2]+OutakeConstants.twoFeet))));
+  }
+
   protected Translation2d i_scalar(final double X, final double Y) {
     final double r = Math.sqrt(Math.pow(X, 2) 
                              + Math.pow(Y, 2));
@@ -40,7 +48,7 @@ public class AimAtTag extends Command {
     return new Translation2d((X*scale_factor)/(r+Constants.OperatorConstants.EPISLON)* -1,(Y*scale_factor)/(r+Constants.OperatorConstants.EPISLON)* -1);
   }
   
-  public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller, int tagID) {
+  public AimAtHub(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller, int tagID) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_drivebase = drivebase;
     m_LL = LL;
@@ -51,7 +59,7 @@ public class AimAtTag extends Command {
     addRequirements(drivebase, LL);
   }
 
-  public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
+  public AimAtHub(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     this(drivebase, LL, Controller, -1);
   }
@@ -70,7 +78,7 @@ public class AimAtTag extends Command {
   @Override
   public void execute() {
     Optional<Double> outPut = m_targetTagID == -1 
-      ? m_LL.getAngleFromHub() 
+      ? getHubAngle()
       : m_LL.getAngleFromTag(m_targetTagID);
     double rot = 0;
 
