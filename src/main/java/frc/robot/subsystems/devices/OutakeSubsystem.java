@@ -33,7 +33,7 @@ public class OutakeSubsystem extends SubsystemBase {
   */
 
   private Timer funnelTimer;
-  SparkMax OutakeMotor;
+  //SparkMax OutakeMotor;
   SparkMax FunnelMotor;
   TalonFX KrakenOutake;
   final VelocityVoltage velVol;
@@ -42,7 +42,7 @@ public class OutakeSubsystem extends SubsystemBase {
   final GenericEntry ShooterAdjustment;
 
   public OutakeSubsystem() {
-    OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
+    //OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
 
     KrakenOutake = new TalonFX(OutakeConstants.SHOOTER_ID, "drivetrain");
@@ -63,6 +63,7 @@ public class OutakeSubsystem extends SubsystemBase {
         "min", 1-ControllerConstants.TrimSwitchBounds, 
         "max", 1+ControllerConstants.TrimSwitchBounds))
       .getEntry();
+    SmartDashboard.setNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
   }
 
   public double ScailPower(double distance) {
@@ -84,12 +85,12 @@ public class OutakeSubsystem extends SubsystemBase {
 
   public void stop() {
     this.isShooting = false;
-    OutakeMotor.set(0);
+    //OutakeMotor.set(0);
+    setShooterSpeed(0):
     FunnelMotor.set(0);
-    // BloaderLoop.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
-  public void setShooterSpeed(double val) {
+  public void setShooterSpeed(double RPM) {
     // this.OutakeMotor.set(val);
     // this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
     KrakenOutake.setControl(velVol.withVelocity(val));
@@ -105,6 +106,7 @@ public class OutakeSubsystem extends SubsystemBase {
     funnelPower = input;
   }
 
+  // Changes the network table value
   public void adjustTrim(double input) {
     ShooterAdjustment.setDouble(MathUtil.clamp(ShooterAdjustment.getDouble(OperatorConstants.SlowDriveFactor) + input, 
                           ControllerConstants.TrimSwitchLow,
@@ -142,8 +144,8 @@ public class OutakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     if (this.isShooting) {
-      // double smdb = SmartDashboard.getNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
-      // OutakeMotor.set(smdb);
+      double smdb = SmartDashboard.getNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
+      OutakeMotor.set(smdb);
       if (funnelTimer.hasElapsed(OutakeConstants.OUTAKE_TIME)) {
         FunnelMotor.set(funnelPower);
       }
