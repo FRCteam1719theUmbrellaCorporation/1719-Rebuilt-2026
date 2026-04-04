@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right human station hub"
+            "pathName": "Center path"
           }
         },
         {
@@ -23,22 +23,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "shoot-relative"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pulse-blender"
-                }
-              }
-            ]
+            "name": "shoot-relative"
           }
         },
         {
@@ -58,15 +45,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "intake"
+                  "pathName": "Move from human center to center"
                 }
               },
               {
-                "type": "path",
+                "type": "named",
                 "data": {
-                  "pathName": "Move to center human right"
+                  "name": "intake"
                 }
               }
             ]
@@ -93,7 +80,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Move from center to human right"
+            "pathName": "Move from center to human left"
           }
         },
         {
@@ -103,22 +90,9 @@
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "shoot-relative"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "pulse-blender"
-                }
-              }
-            ]
+            "name": "shoot-relative"
           }
         },
         {

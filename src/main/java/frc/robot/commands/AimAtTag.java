@@ -51,7 +51,7 @@ public class AimAtTag extends Command {
     addRequirements(drivebase, LL);
   }
 
-    public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
+  public AimAtTag(SwerveSubsystem drivebase, LimelightHandler LL, CommandXboxController Controller) {
     // Use addRequirements() here to declare subsystem dependencies.
     this(drivebase, LL, Controller, -1);
   }
@@ -77,7 +77,7 @@ public class AimAtTag extends Command {
     if (outPut.isPresent()) {
       TagOOBTimer.reset();
       rot = RotController.calculate(outPut.get());
-      System.out.println(rot);
+      // System.out.println(rot);
     }
 
     m_drivebase.drive(i_scalar(m_Controller.getLeftY(), m_Controller.getLeftX()), rot, true);
@@ -92,7 +92,7 @@ public class AimAtTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return !m_Controller.leftTrigger().getAsBoolean();
+    return false;
     // return this.TagOOBTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME);
   }
 }

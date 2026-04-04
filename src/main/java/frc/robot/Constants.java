@@ -5,7 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.trajectory.constraint.MaxVelocityConstraint;
 import edu.wpi.first.math.util.Units;
 import swervelib.math.Matter;
 
@@ -23,19 +22,12 @@ public final class Constants
   public static final double ROBOT_MASS = (100) * 0.453592; // 105lbs * kg per pound
   public static final Matter CHASSIS    = new Matter(new Translation3d(0, 0, Units.inchesToMeters(8)), ROBOT_MASS);
   public static final double LOOP_TIME  = 0.13; //s, 20ms + 110ms sprk max velocity lag
-  public static final double MAX_SPEED_MULTIPLIER = 0.67;
+  public static final double MAX_SPEED_MULTIPLIER = 0.80;
   public static final double MAX_SPEED  = MAX_SPEED_MULTIPLIER*Units.feetToMeters(14.5);
 
   public static final double Motor_Min = -1;
   public static final double Motor_Max = 1;
   // Maximum speed of the robot in meters per second, used to limit acceleration.
-
-//  public static final class AutonConstants
-//  {
-//
-//    public static final PIDConstants TRANSLATION_PID = new PIDConstants(0.7, 0, 0);
-//    public static final PIDConstants ANGLE_PID       = new PIDConstants(0.4, 0, 0.01);
-//  }
 
   public static final class DrivebaseConstants
   {
@@ -61,6 +53,8 @@ public final class Constants
     public static final double SlowDriverMin = SlowDriveFactor - SlowDriverRadius;
     public static final double SlowDriverMax = SlowDriveFactor + SlowDriverRadius;
     public static final double NormalDriveFactor = 1f; 
+    public static final double SHAKE_POWER_X = 1.d;
+    public static final double SHAKE_END_TIMEOUT = 1.5d; // aiming time after shaking
   }
 
   public static final class HapticConstants {
@@ -110,25 +104,34 @@ public final class Constants
 
   public static final class IntakeConstants {
     public static final int ID = 3;
-    public static final float INTAKE_SPEED = 0.8f;
-    //TODO: impl important vars
+    public static final float INTAKE_SPEED = 0.9f;
+    public static final double REV_INTAKE_TIME = .4; // measured in seconds babbyyyyy
   }
   
-  public static final class OutakeConstants{
+  public static final class OutakeConstants {
+    // CAN IDS
     public static final int FUNNEL_ID = 4;
     public static final int SHOOTER_ID = 6;
+    public static final int BLENDER_ID = 7;
+
     public static final float OUTAKE_SPEED = 0.7f;
     public static final float FUNNEL_SPEED = 0.4f;
     public static final float Slow_OUTAKE_SPEED = 0.3f;
     public static final float Super_OUTAKE_SPEED = 1;
 
-    public static final float OUTAKE_TIME = 0.2f;
+    public static final float BlenderSpeed = -.5f;
+
+    public static final float OUTAKE_TIME = 0.4f;
 
     public static final double MinShootDistance = .9;
-    public static final double DistancePowerMult = 0.0850589;
+
+    public static final double DistancePowerMult = 0.0845589;
     public static final double DistancePowerOffset = 0.507221;
-    
-    // public static final double ShooterScailTimeout = 2.d;
+    public static final double ShooterScailTimeout = 2.d;
+    public static final double BloaderVel = 175;           
+    public static final double PULSE_TIME = 1.d;
+    public static final double PULSE_TIME_AUTO = 2.d;
+    public static final double PULSE_BACK_TIME = 1.d;
   }
 
   public static final class ControllerConstants {

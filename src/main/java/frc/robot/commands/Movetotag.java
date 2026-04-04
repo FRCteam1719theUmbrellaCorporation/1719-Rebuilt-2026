@@ -87,7 +87,7 @@ public class Movetotag extends Command {
     yController.setTolerance(LimelightConstants.Y_TOLERANCE_REEF_ALIGNMENT);
 
     tagID = LimelightHelpers.getFiducialID(LimelightConstants.LIMELIGHT_NAME);
-    System.out.println(tagID);
+    // System.out.println(tagID);
   }
 
   @Override
