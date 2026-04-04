@@ -63,7 +63,7 @@ public class OutakeSubsystem extends SubsystemBase {
         "min", 1-ControllerConstants.TrimSwitchBounds, 
         "max", 1+ControllerConstants.TrimSwitchBounds))
       .getEntry();
-    SmartDashboard.setNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
+    SmartDashboard.setDefaultNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
   }
 
   public double ScailPower(double distance) {
@@ -93,7 +93,7 @@ public class OutakeSubsystem extends SubsystemBase {
   public void setShooterSpeed(double RPM) {
     // this.OutakeMotor.set(val);
     // this.OutakeMotor.set(val * ShooterAdjustment.getDouble(1));
-    KrakenOutake.setControl(velVol.withVelocity(val));
+    KrakenOutake.setControl(velVol.withVelocity(RPM));
   }
 
   public void ConstantShoot(float input) {
