@@ -145,7 +145,7 @@ public class OutakeSubsystem extends SubsystemBase {
   public void periodic() {
     if (this.isShooting) {
       double smdb = SmartDashboard.getNumber("Shooteer-Power", OutakeConstants.OUTAKE_SPEED);
-      OutakeMotor.set(smdb);
+      KrakenOutake.set(smdb);
       if (funnelTimer.hasElapsed(OutakeConstants.OUTAKE_TIME)) {
         FunnelMotor.set(funnelPower);
       }
