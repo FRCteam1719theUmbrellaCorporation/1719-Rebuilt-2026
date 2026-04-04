@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.BlenderConstant;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -116,7 +117,7 @@ public class RobotContainer
   });
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
-  public Command startBlender = new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel));
+  public Command startBlender = new InstantCommand(()->BLENDER.setBlenderRPM(BlenderConstant.BloaderVel));
   public Command ShootRelativeDistance = new SequentialCommandGroup(
     new ShootWithDistance(OUTAKE, LLHandler)).withTimeout(7);
   public Command Shootslow = new InstantCommand(() -> {
@@ -236,7 +237,7 @@ public class RobotContainer
 
     // operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel)));
     // operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderRPM(0)));
-    operatorXbox.x().whileTrue(new BlenderPulseCommand(BLENDER, OutakeConstants.PULSE_TIME));
+    operatorXbox.x().whileTrue(new BlenderPulseCommand(BLENDER, BlenderConstant.PULSE_TIME));
 
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
