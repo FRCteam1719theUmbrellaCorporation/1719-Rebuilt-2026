@@ -21,7 +21,7 @@ import frc.robot.Constants.HapticConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
-import frc.robot.commands.AimAtTag;
+import frc.robot.commands.AimAtHub;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
@@ -231,7 +231,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.leftTrigger().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
+    driverXbox.leftTrigger().onTrue(new AimAtHub(drivebase, LLHandler, driverXbox));
     
     //slow down                                                                       
      driverXbox.rightTrigger()
