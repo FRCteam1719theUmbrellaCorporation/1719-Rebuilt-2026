@@ -74,7 +74,7 @@ public class TurnToHub extends Command {
         double desiredYaw = Math.atan2(dx, dz);
 
         // Current robot yaw relative to tag
-        double currentYaw = Math.toRadians(pose[5]); // yaw in degrees # radians
+        double currentYaw = Math.toRadians(pose[4]); // yaw in degrees -> radians
 
         // PID output
         double rotOutput = rotPID.calculate(currentYaw, desiredYaw);
