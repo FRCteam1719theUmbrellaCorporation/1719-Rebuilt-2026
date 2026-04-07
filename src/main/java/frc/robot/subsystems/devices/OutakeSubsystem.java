@@ -45,7 +45,7 @@ public class OutakeSubsystem extends SubsystemBase {
     //OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
 
-    KrakenOutake = new TalonFX(OutakeConstants.SHOOTER_ID, "drivetrain");
+    KrakenOutake = new TalonFX(OutakeConstants.SHOOTER_ID, "Drivetrain");
     velVol = new VelocityVoltage(0).withSlot(0);
     funnelTimer = new Timer();
     funnelTimer.start();
