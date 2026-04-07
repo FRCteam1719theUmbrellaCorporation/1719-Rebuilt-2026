@@ -112,11 +112,11 @@ public class RobotContainer
 
   public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
-    BLENDER.setBlenderRPM(0);
+    BLENDER.setBlenderSpeed(0);
   });
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
-  public Command startBlender = new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel));
+  public Command startBlender = new InstantCommand(()->BLENDER.setBlenderSpeed(OutakeConstants.BlenderSpeed));
   public Command ShootRelativeDistance = new SequentialCommandGroup(
     new ShootWithDistance(OUTAKE, LLHandler)).withTimeout(7);
   public Command Shootslow = new InstantCommand(() -> {

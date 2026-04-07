@@ -23,11 +23,12 @@ public class BlenderSubsystem extends SubsystemBase {
 
   public BlenderSubsystem() {
     BlenderMotor = new SparkMax(OutakeConstants.BLENDER_ID, MotorType.kBrushless);
-    BloaderLoop = BlenderMotor.getClosedLoopController();
+    //BloaderLoop = BlenderMotor.getClosedLoopController();
   }
 
-  public void setBlenderRPM(double RPM) {
-    BloaderLoop.setSetpoint(RPM, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+  public void setBlenderSpeed(double vel) {
+    //BloaderLoop.setSetpoint(vel, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+    BlenderMotor.set(vel);
   }
 }
 
