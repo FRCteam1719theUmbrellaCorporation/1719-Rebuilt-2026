@@ -23,7 +23,8 @@ public class AimAtHub extends Command {
 
   /** 
    * Creates a new AimAtTag. 
-   * Aims the robot at the april tag so the user can move and keep track of the desired object
+   * Aims the robot at the april tag\
+   *  so the user can move and keep track of the desired object
    */
 
   SwerveSubsystem m_drivebase;
@@ -34,9 +35,10 @@ public class AimAtHub extends Command {
   PIDController RotController;
 
   protected Optional<Double> getHubAngle() {
-    if (m_LL.seesHubTag()) return Optional.empty();
+    if (!m_LL.seesHubTag()) return Optional.empty();
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
-    return Optional.of(Math.toDegrees(Math.atan2(-postions[0], Math.abs(postions[2]+OutakeConstants.twoFeet))));
+    return Optional.of(
+      Math.toDegrees(Math.atan2(-postions[0], Math.abs(postions[2])+OutakeConstants.twoFeet)));
   }
 
   protected Translation2d i_scalar(final double X, final double Y) {
@@ -85,7 +87,7 @@ public class AimAtHub extends Command {
     if (outPut.isPresent()) {
       TagOOBTimer.reset();
       rot = RotController.calculate(outPut.get());
-      // System.out.println(rot);
+      System.out.println(rot);
     }
 
     m_drivebase.drive(i_scalar(m_Controller.getLeftY(), m_Controller.getLeftX()), rot, true);
