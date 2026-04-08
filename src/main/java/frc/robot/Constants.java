@@ -119,7 +119,6 @@ public final class Constants
     public static final float Slow_OUTAKE_SPEED = 0.3f;
     public static final float Super_OUTAKE_SPEED = 1;
 
-    public static final float BlenderSpeed = -.8f;
 
     public static final float OUTAKE_TIME = 0.4f;
 
@@ -129,8 +128,8 @@ public final class Constants
     public static final double DistancePowerOffset = 0.507221;
     public static final double ShooterScailTimeout = 2.d;  
   }
-  public static final class BlenderConstant{
-    public static final float BlenderSpeed = -.5f;
+  public static final class BlenderConstants{
+    public static final float BlenderSpeed = -.8f;
     public static final double BloaderVel = -1000;           
     public static final double PULSE_TIME = 1.d;
     public static final double PULSE_TIME_AUTO = 2.d;

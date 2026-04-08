@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.BlenderConstant;
+import frc.robot.Constants.BlenderConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -240,7 +240,7 @@ public class RobotContainer
     // operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderRPM(0)));
     
     //VERY IMPORTANT TO CHANGE WHERE THE CONSTANTS ARE FROM, CHANGE FROM OUTAKE TO BLENDER CONSTANTS
-    operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderSpeed(OutakeConstants.BlenderSpeed)));
+    operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderSpeed(BlenderConstants.BlenderSpeed)));
     operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderSpeed(0)));
 
     // adjusts the slowed speed on the robot

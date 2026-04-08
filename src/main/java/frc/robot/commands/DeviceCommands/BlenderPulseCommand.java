@@ -6,7 +6,7 @@ package frc.robot.commands.DeviceCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.BlenderConstant;
+import frc.robot.Constants.BlenderConstants;
 import frc.robot.subsystems.devices.BlenderSubsystem;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -24,7 +24,7 @@ public class BlenderPulseCommand extends Command {
   }
 
   public BlenderPulseCommand(BlenderSubsystem Blender) {
-    this(Blender, BlenderConstant.PULSE_TIME_AUTO);
+    this(Blender, BlenderConstants.PULSE_TIME_AUTO);
   }
 
   // Called when the command is initially scheduled.
@@ -34,7 +34,7 @@ public class BlenderPulseCommand extends Command {
     pulseTimer.start();
     on = true;
     //CHANGE LOCATION OF CONSTANT
-    blender.setBlenderSpeed(OutakeConstants.BlenderSpeed);
+    blender.setBlenderSpeed(BlenderConstants.BlenderSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,7 +43,7 @@ public class BlenderPulseCommand extends Command {
     if (pulseTimer.hasElapsed(this.time)){
       on = !on;
       //CHANGE LOCATION OF CONSTANT
-      blender.setBlenderSpeed(on ? OutakeConstants.BlenderSpeed:0);
+      blender.setBlenderSpeed(on ? BlenderConstants.BlenderSpeed:0);
       pulseTimer.reset();
     }
   }

@@ -6,7 +6,7 @@ package frc.robot.commands.DeviceCommands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.BlenderConstant;
+import frc.robot.Constants.BlenderConstants;
 import frc.robot.subsystems.devices.BlenderSubsystem;
 
 
@@ -17,7 +17,7 @@ public class BlenderBackPulseCommand extends Command {
   boolean on;
   
   //CHANGE LOCATION OF CONSTANT
-  double blenPow = OutakeConstants.BlenderSpeed;
+  double blenPow = BlenderConstants.BlenderSpeed;
 
   /** Creates a new BlenderPulseCommand. */
   public BlenderBackPulseCommand(BlenderSubsystem Blender) {
@@ -33,13 +33,13 @@ public class BlenderBackPulseCommand extends Command {
     pulseTimer.start();
     on = true;
     //CHANGE LOCATION OF CONSTANT
-    blender.setBlenderSpeed(OutakeConstants.BlenderSpeed);
+    blender.setBlenderSpeed(BlenderConstants.BlenderSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (pulseTimer.hasElapsed(BlenderConstant.PULSE_BACK_TIME)){
+    if (pulseTimer.hasElapsed(BlenderConstants.PULSE_BACK_TIME)){
       on = !on;
       blenPow = -blenPow;
       blender.setBlenderSpeed(blenPow);
