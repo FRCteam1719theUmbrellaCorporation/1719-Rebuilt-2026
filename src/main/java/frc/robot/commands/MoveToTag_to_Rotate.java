@@ -56,7 +56,7 @@ public class Movetotag extends Command {
 
       // ✅ Target point: behind tag
       double targetX = 0.0;
-      double targetZ = -Constants.LimelightConstants.TargetDeltaZ;
+      double targetZ = Constants.LimelightConstants.TargetDeltaZ;
 
       double dx = targetX - robotX;
       double dz = targetZ - robotZ;
@@ -65,7 +65,7 @@ public class Movetotag extends Command {
       double desiredYaw = Math.atan2(dx, dz);
 
       // ✅ FIXED: yaw is index 5 (degrees → radians)
-      double currentYaw = Math.toRadians(pose[5]);
+      double currentYaw = Math.toRadians(pose[4]);
 
       double rotOutput = rotController.calculate(currentYaw, desiredYaw);
 
