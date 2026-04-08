@@ -20,7 +20,7 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AimAtTagAuto;
-import frc.robot.commands.Movetotag;
+import frc.robot.commands.AimAtHub;
 import frc.robot.commands.DeviceCommands.BlenderBackPulseCommand;
 import frc.robot.commands.DeviceCommands.BlenderPulseCommand;
 import frc.robot.commands.DeviceCommands.BriefReverseIntake;
@@ -250,12 +250,12 @@ public class RobotContainer
       drivebase.zeroGyroWithAlliance();}));
                                                                                     
      // MOVE TO TAG COMMAND
-    driverXbox.b().onTrue(new SequentialCommandGroup(
-      new InstantCommand(()-> {drivebase.centerModulesCommand();}),
-      new Movetotag(true, drivebase).withTimeout(3)));
+    // driverXbox.b().onTrue(new SequentialCommandGroup(
+    //   new InstantCommand(()-> {drivebase.centerModulesCommand();}),
+    //   new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
+    driverXbox.y().whileTrue(new AimAtHub(drivebase));
     
     //slow down                                                                       
      driverXbox.rightTrigger()

@@ -5,13 +5,14 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 
-public class Movetotag extends Command {
+public class AimAtHub extends Command {
 
   private PIDController rotController;
   private Timer dontSeeTagTimer;
@@ -19,7 +20,7 @@ public class Movetotag extends Command {
 
   private double tagID = 26;
 
-  public Movetotag(SwerveSubsystem drivebase) {
+  public AimAtHub(SwerveSubsystem drivebase) {
     this.drivebase = drivebase;
 
     rotController = new PIDController(
@@ -60,33 +61,40 @@ public class Movetotag extends Command {
 
       double dx = targetX - robotX;
       double dz = targetZ - robotZ;
-
+   
       // ✅ Correct yaw calculation for Limelight target space
-      double desiredYaw = Math.atan2(dx, dz);
-
+      double desiredYaw = -Math.toDegrees(Math.atan2(-dx, dz));
+      System.out.println(dx);
+      System.out.println(dz);
+      System.out.println(desiredYaw);
+      System.out.println(pose[4]);
+      System.out.println("______");
       // ✅ FIXED: yaw is index 5 (degrees → radians)
-      double currentYaw = Math.toRadians(pose[4]);
-
+      double currentYaw = (pose[4]);
       double rotOutput = rotController.calculate(currentYaw, desiredYaw);
-
+      ///System.out.println(rotOutput);
       // Optional deadband
-      if (Math.abs(rotOutput) < 0.05) {
-        rotOutput = 0;
-      }
+      // if (Math.abs(rotOutput) < 0.05) {
+      //   rotOutput = 0;
+      // }
 
       // 🚫 NO TRANSLATION
-      drivebase.drive(new edu.wpi.first.math.geometry.Translation2d(0, 0),
-          -rotOutput,  // may flip sign depending on your drivetrain
+      if (rotOutput!=0){
+          System.out.println("there");
+          drivebase.drive(new Translation2d(0,0),
+          rotOutput,  // may flip sign depending on your drivetrain
           false);
-
+          System.out.println("here");
+      }
+      
     } else {
-      drivebase.drive(new edu.wpi.first.math.geometry.Translation2d(), 0, false);
+      drivebase.drive(new Translation2d(0,0), 0, false);
     }
   }
 
   @Override
   public void end(boolean interrupted) {
-    drivebase.drive(new edu.wpi.first.math.geometry.Translation2d(), 0, false);
+    drivebase.drive(new Translation2d(), 0, false);
   }
 
   @Override
