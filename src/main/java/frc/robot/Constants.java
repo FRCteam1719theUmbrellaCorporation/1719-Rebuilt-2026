@@ -119,7 +119,7 @@ public final class Constants
     public static final float Slow_OUTAKE_SPEED = 0.3f;
     public static final float Super_OUTAKE_SPEED = 1;
 
-    public static final float BlenderSpeed = -.6f;
+    public static final float BlenderSpeed = -.8f;
 
     public static final float OUTAKE_TIME = 0.4f;
 
