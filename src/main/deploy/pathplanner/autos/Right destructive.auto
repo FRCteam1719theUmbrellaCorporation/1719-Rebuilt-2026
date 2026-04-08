@@ -5,39 +5,33 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "center"
+            "pathName": "Human right straight to center"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Center path"
+            "pathName": "Human right destructive"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "AimAtTag"
+            "pathName": "Human right destructive"
           }
         },
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "blend-shoot"
+            "pathName": "Human right destructive"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.5
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "stop-shooting"
+            "pathName": "Human right destructive"
           }
         }
       ]

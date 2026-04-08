@@ -127,11 +127,15 @@ public final class Constants
 
     public static final double DistancePowerMult = 0.0845589;
     public static final double DistancePowerOffset = 0.507221;
-    public static final double ShooterScailTimeout = 2.d;
+    public static final double ShooterScailTimeout = 2.d;  
+  }
+  public static final class BlenderConstant{
+    public static final float BlenderSpeed = -.5f;
     public static final double BloaderVel = -1000;           
     public static final double PULSE_TIME = 1.d;
     public static final double PULSE_TIME_AUTO = 2.d;
     public static final double PULSE_BACK_TIME = 1.d;
+
   }
 
   public static final class ControllerConstants {

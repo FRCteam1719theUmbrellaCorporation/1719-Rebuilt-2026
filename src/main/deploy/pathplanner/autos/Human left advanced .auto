@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left human station hub"
+            "pathName": "Left human hub"
           }
         },
         {
@@ -66,7 +66,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Move to center human left"
+                  "pathName": "Human left to center"
                 }
               }
             ]
@@ -93,7 +93,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Move from center to human left"
+            "pathName": "Center to human left"
           }
         },
         {
