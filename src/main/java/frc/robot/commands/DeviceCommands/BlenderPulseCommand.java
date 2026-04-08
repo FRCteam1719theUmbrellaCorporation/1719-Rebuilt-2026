@@ -41,7 +41,7 @@ public class BlenderPulseCommand extends Command {
   public void execute() {
     if (pulseTimer.hasElapsed(this.time)){
       on = !on;
-      blender.setBlenderSpeed(on ? OutakeConstants.BlenderSpeed: 0);
+      blender.setBlenderSpeed(on ? OutakeConstants.BlenderSpeed:0);
       pulseTimer.reset();
     }
   }

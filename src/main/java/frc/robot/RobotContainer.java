@@ -239,7 +239,6 @@ public class RobotContainer
     operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderSpeed(OutakeConstants.BlenderSpeed)));
     operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderSpeed(0)));
 
-
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
     operatorXbox.povRight().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(.05)));
