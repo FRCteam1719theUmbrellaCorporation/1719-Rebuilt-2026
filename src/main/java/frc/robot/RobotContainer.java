@@ -113,11 +113,12 @@ public class RobotContainer
 
   public Command StopShoot = new InstantCommand(() -> {
     OUTAKE.stop();
-    BLENDER.setBlenderRPM(0);
+    BLENDER.setBlenderSpeed(0);
   });
 
   public Command AimAtTag = new AimAtTagAuto(drivebase, LLHandler).withTimeout(0.5);
-  public Command startBlender = new InstantCommand(()->BLENDER.setBlenderRPM(BlenderConstant.BloaderVel));
+  public Command startBlender = new InstantCommand(()->BLENDER.setBlenderSpeed(BlenderConstants.BlenderSpeed));
+
   public Command ShootRelativeDistance = new SequentialCommandGroup(
     new ShootWithDistance(OUTAKE, LLHandler)).withTimeout(7);
   public Command Shootslow = new InstantCommand(() -> {
@@ -237,7 +238,10 @@ public class RobotContainer
 
     // operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderRPM(OutakeConstants.BloaderVel)));
     // operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderRPM(0)));
-    operatorXbox.x().whileTrue(new BlenderPulseCommand(BLENDER, BlenderConstant.PULSE_TIME));
+    
+    //VERY IMPORTANT TO CHANGE WHERE THE CONSTANTS ARE FROM, CHANGE FROM OUTAKE TO BLENDER CONSTANTS
+    operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderSpeed(OutakeConstants.BlenderSpeed)));
+    operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderSpeed(0)));
 
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
@@ -255,7 +259,7 @@ public class RobotContainer
       new Movetotag(true, drivebase).withTimeout(3)));
                                                                                     
     //aim at tag                                                                                
-    driverXbox.y().onTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
+    driverXbox.y().whileTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     
     //slow down                                                                       
      driverXbox.rightTrigger()
@@ -264,7 +268,13 @@ public class RobotContainer
       ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
     );
+
+    // Shake Command
     driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
+    driverXbox.leftTrigger().onFalse(
+      new AimAtTag(drivebase, LLHandler, driverXbox)
+          .withTimeout(OperatorConstants.SHAKE_END_TIMEOUT)
+    );
 
     // adjusts the slowed speed on the robot
     driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));

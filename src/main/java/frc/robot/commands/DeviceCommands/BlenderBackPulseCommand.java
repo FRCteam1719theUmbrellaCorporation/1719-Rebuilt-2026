@@ -15,7 +15,9 @@ public class BlenderBackPulseCommand extends Command {
   Timer pulseTimer;
   BlenderSubsystem blender;
   boolean on;
-  double blenPow = BlenderConstant.BloaderVel;
+  
+  //CHANGE LOCATION OF CONSTANT
+  double blenPow = OutakeConstants.BlenderSpeed;
 
   /** Creates a new BlenderPulseCommand. */
   public BlenderBackPulseCommand(BlenderSubsystem Blender) {
@@ -30,7 +32,8 @@ public class BlenderBackPulseCommand extends Command {
     pulseTimer = new Timer();
     pulseTimer.start();
     on = true;
-    blender.setBlenderRPM(BlenderConstant.BloaderVel);
+    //CHANGE LOCATION OF CONSTANT
+    blender.setBlenderSpeed(OutakeConstants.BlenderSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,7 +42,7 @@ public class BlenderBackPulseCommand extends Command {
     if (pulseTimer.hasElapsed(BlenderConstant.PULSE_BACK_TIME)){
       on = !on;
       blenPow = -blenPow;
-      blender.setBlenderRPM(blenPow);
+      blender.setBlenderSpeed(blenPow);
       pulseTimer.reset();
     }
   }
@@ -47,7 +50,7 @@ public class BlenderBackPulseCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    blender.setBlenderRPM(0);
+    blender.setBlenderSpeed(0);
   }
 
   // Returns true when the command should end.

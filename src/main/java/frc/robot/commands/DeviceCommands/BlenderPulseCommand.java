@@ -33,7 +33,8 @@ public class BlenderPulseCommand extends Command {
     pulseTimer = new Timer();
     pulseTimer.start();
     on = true;
-    blender.setBlenderRPM(BlenderConstant.BloaderVel);
+    //CHANGE LOCATION OF CONSTANT
+    blender.setBlenderSpeed(OutakeConstants.BlenderSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,7 +42,8 @@ public class BlenderPulseCommand extends Command {
   public void execute() {
     if (pulseTimer.hasElapsed(this.time)){
       on = !on;
-      blender.setBlenderRPM(on ? BlenderConstant.BloaderVel: 0);
+      //CHANGE LOCATION OF CONSTANT
+      blender.setBlenderSpeed(on ? OutakeConstants.BlenderSpeed:0);
       pulseTimer.reset();
     }
   }
@@ -49,7 +51,7 @@ public class BlenderPulseCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    blender.setBlenderRPM(0);
+    blender.setBlenderSpeed(0);
   }
 
   // Returns true when the command should end.
