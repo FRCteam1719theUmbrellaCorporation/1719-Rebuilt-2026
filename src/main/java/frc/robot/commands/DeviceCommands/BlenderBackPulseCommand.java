@@ -16,7 +16,6 @@ public class BlenderBackPulseCommand extends Command {
   BlenderSubsystem blender;
   boolean on;
   
-  //CHANGE LOCATION OF CONSTANT
   double blenPow = BlenderConstants.BlenderSpeed;
 
   /** Creates a new BlenderPulseCommand. */
@@ -32,7 +31,6 @@ public class BlenderBackPulseCommand extends Command {
     pulseTimer = new Timer();
     pulseTimer.start();
     on = true;
-    //CHANGE LOCATION OF CONSTANT
     blender.setBlenderSpeed(BlenderConstants.BlenderSpeed);
   }
 

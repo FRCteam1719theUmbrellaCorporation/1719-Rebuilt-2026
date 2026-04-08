@@ -134,7 +134,8 @@ public final class Constants
     public static final double PULSE_TIME = 1.d;
     public static final double PULSE_TIME_AUTO = 2.d;
     public static final double PULSE_BACK_TIME = 1.d;
-
+    //THIS NUMBER WAS ASSIGNED WITHOUT ANY KNOWLEDGE OF THE SCALING
+    public static final double PULSE_LONG_SPIN_TIME = 10.d;
   }
 
   public static final class ControllerConstants {

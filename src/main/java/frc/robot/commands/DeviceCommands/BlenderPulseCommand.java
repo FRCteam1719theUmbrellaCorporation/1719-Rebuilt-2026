@@ -26,14 +26,13 @@ public class BlenderPulseCommand extends Command {
   public BlenderPulseCommand(BlenderSubsystem Blender) {
     this(Blender, BlenderConstants.PULSE_TIME_AUTO);
   }
-
+  
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     pulseTimer = new Timer();
     pulseTimer.start();
     on = true;
-    //CHANGE LOCATION OF CONSTANT
     blender.setBlenderSpeed(BlenderConstants.BlenderSpeed);
   }
 
@@ -42,7 +41,6 @@ public class BlenderPulseCommand extends Command {
   public void execute() {
     if (pulseTimer.hasElapsed(this.time)){
       on = !on;
-      //CHANGE LOCATION OF CONSTANT
       blender.setBlenderSpeed(on ? BlenderConstants.BlenderSpeed:0);
       pulseTimer.reset();
     }

@@ -144,6 +144,11 @@ public class RobotContainer
     ShootRelativeDistance
   ).withTimeout(7); //correct maybe?
 
+  //This was the new command 
+  //this may cause issues given the long time to blend
+  // this could most likely not work
+  public Command ContinualBlend = new BlenderPulseCommand(BLENDER, Constants.BlenderConstants.PULSE_LONG_SPIN_TIME);
+
   public RobotContainer()
   {
     // // Configure the trigger bindings
@@ -165,6 +170,7 @@ public class RobotContainer
     NamedCommands.registerCommand("pulse-blender", BlenderPulse);
     NamedCommands.registerCommand("pulse-back", BlenderBackPulse);
     NamedCommands.registerCommand("blend-shoot", BlendShoot);
+    NamedCommands.registerCommand("continual-blend", ContinualBlend);
     
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
