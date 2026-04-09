@@ -139,15 +139,12 @@ public class RobotContainer
 
   public Command BlenderBackPulse = new BlenderBackPulseCommand(BLENDER).withTimeout(7);
 
-  public Command BlendShoot = new ParallelCommandGroup(
-    BlenderPulse,
-    ShootRelativeDistance
-  ).withTimeout(7); //correct maybe?
+  public Command BlendDistanceShoot = new SequentialCommandGroup(new InstantCommand(()->BLENDER.setBlenderSpeed(BlenderConstants.BlenderSpeed)), new ShootWithDistance(OUTAKE, LLHandler)).withTimeout(7);
 
-  //This was the new command 
-  //this may cause issues given the long time to blend
-  // this could most likely not work
-  public Command ContinualBlend = new BlenderPulseCommand(BLENDER, Constants.BlenderConstants.PULSE_LONG_SPIN_TIME);
+  // public Command BlendShoot = new ParallelCommandGroup(
+  //   BlenderPulse,
+  //   ShootRelativeDistance
+  // ).withTimeout(7); //correct maybe?
 
   public RobotContainer()
   {
@@ -162,15 +159,14 @@ public class RobotContainer
     NamedCommands.registerCommand("reverse-intake", ReverseIntake);
     NamedCommands.registerCommand("stop-intake", StopIntake);
     NamedCommands.registerCommand("stop_intake", StopIntake); //somewhere there is a call of stop_intake instead of stop-intake, this is a patchwork fix
-    NamedCommands.registerCommand("shoot-relative", ShootRelativeDistance);
+    //NamedCommands.registerCommand("shoot-relative", ShootRelativeDistance);
     NamedCommands.registerCommand("stop-shooting", StopShoot);
     NamedCommands.registerCommand("AimAtTag", AimAtTag);
     NamedCommands.registerCommand("shoot-slow", Shootslow);
     NamedCommands.registerCommand("shoot-fast", Shootfast);
     NamedCommands.registerCommand("pulse-blender", BlenderPulse);
     NamedCommands.registerCommand("pulse-back", BlenderBackPulse);
-    NamedCommands.registerCommand("blend-shoot", BlendShoot);
-    NamedCommands.registerCommand("continual-blend", ContinualBlend);
+    NamedCommands.registerCommand("BlendDistanceShoot", BlendDistanceShoot);
     
     // //Set the default auto (do nothing) 
     // autoChooser.setDefaultOption("Do Nothing", Commands.none());
@@ -209,8 +205,8 @@ public class RobotContainer
     drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
 
     //OPERATOR COMMANDS
-    operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler));
-    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+    // operatorXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler));
+    // operatorXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
 
     // reverse funnel;
     operatorXbox.rightBumper().onTrue(new InstantCommand(()->OUTAKE.setFunnelPower(-OutakeConstants.FUNNEL_SPEED)));
@@ -249,6 +245,12 @@ public class RobotContainer
     operatorXbox.x().onTrue(new InstantCommand(()->BLENDER.setBlenderSpeed(BlenderConstants.BlenderSpeed)));
     operatorXbox.x().onFalse(new InstantCommand(()->BLENDER.setBlenderSpeed(0)));
 
+    operatorXbox.rightTrigger().whileTrue(BlendDistanceShoot);
+    operatorXbox.rightTrigger().onFalse(new InstantCommand(()->{
+      BLENDER.setBlenderSpeed(0);
+      OUTAKE.stop();
+    }));
+
     // adjusts the slowed speed on the robot
     operatorXbox.povLeft().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(-.05)));
     operatorXbox.povRight().onTrue(new InstantCommand(()->OUTAKE.adjustTrim(.05)));
@@ -276,11 +278,11 @@ public class RobotContainer
     );
 
     // Shake Command
-    driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
-    driverXbox.leftTrigger().onFalse(
-      new AimAtTag(drivebase, LLHandler, driverXbox)
-          .withTimeout(OperatorConstants.SHAKE_END_TIMEOUT)
-    );
+    // driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
+    // driverXbox.leftTrigger().onFalse(
+    //   new AimAtTag(drivebase, LLHandler, driverXbox)
+    //       .withTimeout(OperatorConstants.SHAKE_END_TIMEOUT)
+    // );
 
     // adjusts the slowed speed on the robot
     driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
