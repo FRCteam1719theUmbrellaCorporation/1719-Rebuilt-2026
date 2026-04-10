@@ -2,11 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
+/*
+ * !!!!!!!!!!!!!!!! IMPORTANT:
+ * As of district champs we have moved this command back to OutakeSubsystem
+ * 
+ * Do NOT impl this it will fuck up everything due to overlapping motors
+ * 
+ * 
+ */
 package frc.robot.subsystems.devices;
 
 import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.ClosedLoopSlot;
-import com.revrobotics.spark.SparkBase.ControlType;
+// import com.revrobotics.spark.ClosedLoopSlot;
+// import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 

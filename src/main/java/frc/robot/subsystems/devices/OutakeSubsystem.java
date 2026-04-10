@@ -12,6 +12,7 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.BlenderConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -33,6 +34,7 @@ public class OutakeSubsystem extends SubsystemBase {
   private Timer funnelTimer;
   SparkMax OutakeMotor;
   SparkMax FunnelMotor;
+  SparkMax bloader;
 
   boolean isShooting;
   double funnelPower;
@@ -41,7 +43,7 @@ public class OutakeSubsystem extends SubsystemBase {
   public OutakeSubsystem() {
     OutakeMotor = new SparkMax(OutakeConstants.SHOOTER_ID, MotorType.kBrushless);
     FunnelMotor = new SparkMax(OutakeConstants.FUNNEL_ID, MotorType.kBrushless);
-
+    bloader = new SparkMax(OutakeConstants.BLENDER_ID, MotorType.kBrushless);
     funnelTimer = new Timer();
     funnelTimer.start();
     this.isShooting = false;
@@ -72,6 +74,7 @@ public class OutakeSubsystem extends SubsystemBase {
   public void startShooter() {
     this.isShooting = true;
     funnelTimer.reset();
+    bloader.set(BlenderConstants.BlenderSpeed);
     // BloaderLoop.setSetpoint(OutakeConstants.BloaderVel, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 
@@ -79,6 +82,7 @@ public class OutakeSubsystem extends SubsystemBase {
     this.isShooting = false;
     OutakeMotor.set(0);
     FunnelMotor.set(0);
+    bloader.set(0);
     // BloaderLoop.setSetpoint(0, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
   }
 

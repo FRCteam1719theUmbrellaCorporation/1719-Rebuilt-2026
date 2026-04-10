@@ -55,6 +55,7 @@ public final class Constants
     public static final double NormalDriveFactor = 1f; 
     public static final double SHAKE_POWER_X = 1.d;
     public static final double SHAKE_END_TIMEOUT = 1.5d; // aiming time after shaking
+    public static final double OutakeAdjustmentFact = 0.02;
   }
 
   public static final class HapticConstants {
@@ -129,7 +130,7 @@ public final class Constants
     public static final double ShooterScailTimeout = 2.d;  
   }
   public static final class BlenderConstants{
-    public static final float BlenderSpeed = -.8f;
+    public static final float BlenderSpeed = -.7f;
     public static final double BloaderVel = -1000;           
     public static final double PULSE_TIME = 1.d;
     public static final double PULSE_TIME_AUTO = 2.d;
