@@ -11,9 +11,16 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "Left human hub"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left human hub"
+                }
+              }
+            ]
           }
         },
         {
