@@ -78,6 +78,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "stop-intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Center to human right"
@@ -98,7 +104,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.5
+            "waitTime": 0.5
           }
         },
         {

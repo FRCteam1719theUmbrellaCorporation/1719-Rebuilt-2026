@@ -60,15 +60,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "stop-intake"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Copy of Center to human left"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop-intake"
           }
         },
         {

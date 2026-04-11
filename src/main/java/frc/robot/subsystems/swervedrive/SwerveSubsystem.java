@@ -36,6 +36,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,6 +47,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.LimelightHelpers;
 // import frc.robot.subsystems.LimeLightExtra;
+import frc.robot.Robot;
 
 //import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
@@ -89,6 +92,8 @@ public class SwerveSubsystem extends SubsystemBase
   private final boolean visionDriveTest     = false;
   private final Pigeon2 m_gyro;
   private final GenericEntry SpeedSlider;
+  private Field2d ChudFieldThatIHateAddingMyself; // billions must be able to see where they are on the field
+   
   // public static boolean slowSpeed = true;
   /**
    * PhotonVision class to keep an accurate odometry.
@@ -140,6 +145,7 @@ public class SwerveSubsystem extends SubsystemBase
     }
     setupPathPlanner();
     m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
+    this.ChudFieldThatIHateAddingMyself = new Field2d();
   }
 
   /**
@@ -166,6 +172,8 @@ public class SwerveSubsystem extends SubsystemBase
         "min", 1-ControllerConstants.TrimSwitchBounds, 
         "max", 1+ControllerConstants.TrimSwitchBounds))
       .getEntry();
+
+      this.ChudFieldThatIHateAddingMyself = new Field2d();
   }
   public void setMaxSpeedDashBoard() {
     setMaxSpeed(SpeedSlider.getDouble(OperatorConstants.SlowDriveFactor));
@@ -186,11 +194,27 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // When vision is enabled we must manually update odometry in SwerveDrive
     swerveDrive.updateOdometry();
+    if (Robot.inAuto) {
+      this.ChudFieldThatIHateAddingMyself.setRobotPose(swerveDrive.swerveDrivePoseEstimator.getEstimatedPosition());
+    } else {
+      this.ChudFieldThatIHateAddingMyself.setRobotPose(swerveDrive.swerveDrivePoseEstimator.getEstimatedPosition());
+    }
+    
+    // SmartDashboard.putData("myfield", ChudFieldThatIHateAddingMyself);
     // try {
     //   updatePoseEstimation();
     // } catch (Exception e) {
     // }
   }
+
+  // public void updatePoseEstimation() {
+  //   boolean doReject = false;
+    
+  //   if (m_gyro.getAngularVelocityZWorld().getValueAsDouble() > 360 || 
+  //       Robot.inAuto ||
+
+  //   ) return;
+  // }
 
   @Override
   public void simulationPeriodic()
