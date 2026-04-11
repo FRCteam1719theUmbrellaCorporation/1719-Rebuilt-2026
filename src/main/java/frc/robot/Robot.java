@@ -34,6 +34,7 @@ public class Robot extends TimedRobot
   // private static Timer matchTimer;
   private GenericEntry timerLol = null;
 
+  public static int LLCounts = 0;
 
   public Robot()
   {

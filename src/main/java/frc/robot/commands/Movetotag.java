@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.Robot;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.Constants.LimelightConstants;
 
@@ -67,6 +68,8 @@ public class Movetotag extends Command {
 
     tagID = LimelightHelpers.getFiducialID(LimelightConstants.LIMELIGHT_NAME);
     // System.out.println(tagID);
+
+    Robot.LLCounts ++;
   }
 
   @Override
@@ -102,6 +105,10 @@ public class Movetotag extends Command {
 
   @Override
   public boolean isFinished() {
+    if (Robot.LLCounts > 0){
+      Robot.LLCounts --;
+    }
+
     // Requires the robot to stay in the correct position for 0.3 seconds, as long as it gets a tag in the camera
     return this.dontSeeTagTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME) ||
         stopTimer.hasElapsed(LimelightConstants.POSE_VALIDATION_TIME);

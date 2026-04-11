@@ -12,6 +12,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.Robot;
+import frc.robot.Robot.*;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -64,6 +66,8 @@ public class AimAtTag extends Command {
 
     RotController.setSetpoint(0);
     RotController.setTolerance(LimelightConstants.AIM_AT_TAG_TOLERANCE);
+
+    Robot.LLCounts ++;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -92,6 +96,9 @@ public class AimAtTag extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Robot.LLCounts > 0){
+      Robot.LLCounts --;
+    }
     return false;
     // return this.TagOOBTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME);
   }

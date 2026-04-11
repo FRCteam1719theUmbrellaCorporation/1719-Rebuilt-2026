@@ -31,19 +31,18 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.LimelightConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.LimelightHelpers;
 // import frc.robot.subsystems.LimeLightExtra;
@@ -201,20 +200,39 @@ public class SwerveSubsystem extends SubsystemBase
     }
     
     // SmartDashboard.putData("myfield", ChudFieldThatIHateAddingMyself);
-    // try {
-    //   updatePoseEstimation();
-    // } catch (Exception e) {
-    // }
+    try {
+      updatePoseEstimation();
+    } catch (Exception e) {
+    }
   }
 
-  // public void updatePoseEstimation() {
-  //   boolean doReject = false;
-    
-  //   if (m_gyro.getAngularVelocityZWorld().getValueAsDouble() > 360 || 
-  //       Robot.inAuto ||
-
-  //   ) return;
-  // }
+  protected void updatePoseEstimation() {
+    boolean doRejectUpdate = false;
+        LimelightHelpers.SetRobotOrientation(LimelightConstants.LIMELIGHT_NAME, getHeading().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
+        {
+          doRejectUpdate = true;
+        } else if(mt.tagCount == 0)
+        {
+          doRejectUpdate = true;
+        } else if (mt.pose.getX() == 0. && mt.pose.getY() == 0.) {
+            doRejectUpdate = true;
+        } else if (Robot.inAuto) {
+            doRejectUpdate = true;
+        }
+        else if (Robot.LLCounts > 0){
+          doRejectUpdate = true;
+        }
+        if(!doRejectUpdate)
+        {
+            Pose2d newPose = mt.pose;
+            newPose.rotateBy(swerveDrive.getYaw().minus(newPose.getRotation()));
+            swerveDrive.addVisionMeasurement(
+              mt.pose,
+              mt.timestampSeconds);
+        }
+  }
 
   @Override
   public void simulationPeriodic()

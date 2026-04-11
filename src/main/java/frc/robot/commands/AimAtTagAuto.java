@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Robot;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
@@ -57,6 +58,8 @@ public class AimAtTagAuto extends Command {
 
     RotController.setSetpoint(0);
     RotController.setTolerance(LimelightConstants.AIM_AT_TAG_TOLERANCE);
+
+    Robot.LLCounts ++;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -90,6 +93,10 @@ public class AimAtTagAuto extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (Robot.LLCounts > 0){
+      Robot.LLCounts --;
+    }
+
     return TagOOBTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME)
           || isAtSetpointTimer.hasElapsed(LimelightConstants.POSE_VALIDATION_TIME);
   }
