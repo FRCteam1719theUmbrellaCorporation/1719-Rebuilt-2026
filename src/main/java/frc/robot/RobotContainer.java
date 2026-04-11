@@ -156,6 +156,7 @@ public class RobotContainer
     configureBindings();
     DriverStation.silenceJoystickConnectionWarning(true);
     BRI_Cancel_Ptr = null;
+    drivebase.setMaxSpeed(.85);
 
     /// Registering ///
     NamedCommands.registerCommand("center", CenterWheels);
@@ -268,12 +269,12 @@ public class RobotContainer
     //aim at tag                                                                                
     driverXbox.y().whileTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     
-    //slow down                                                                       
+    // slow down                                                                       
      driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeedDashBoard())
-      ).onFalse(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
+      ).onFalse(new InstantCommand(()->
+        drivebase.setMaxSpeed(.85))
     );
 
     // Shake Command
@@ -283,9 +284,9 @@ public class RobotContainer
           .withTimeout(OperatorConstants.SHAKE_END_TIMEOUT)
     );
 
-    // adjusts the slowed speed on the robot
-    driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
-    driverXbox.povRight().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(.05)));
+    // // adjusts the slowed speed on the robot
+    // driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
+    // driverXbox.povRight().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(.05)));
 
     driverXbox.x().whileTrue(new InstantCommand(()->drivebase.lock()));
   }

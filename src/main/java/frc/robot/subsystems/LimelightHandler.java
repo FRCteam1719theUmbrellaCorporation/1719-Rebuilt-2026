@@ -9,8 +9,8 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.LimelightConstants;
 import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
-import misc.Table;
-import misc.Table.Borders;
+// import misc.Table;
+// import misc.Table.Borders;
 import misc.Angle;
 import frc.robot.LimelightHelpers;
 
@@ -158,16 +158,16 @@ public class LimelightHandler extends SubsystemBase {
 	// 	});
 	// }
 
-	public InstantCommand printAngles( ) {
-		return new InstantCommand(() -> {
-			Table T = new Table("ID", "Distance", "Angle of Tag", "Bot Heading (degrees)")
-				.borders(Borders.ALL);
-			for (RawFiducial raw : getFiducials()) {
-				T.addRow(raw.id, raw.distToCamera, getAngleFromTag(raw.id), getBotHeading().degrees);
-			}
-			T.print();
-		});
-	}
+	// public InstantCommand printAngles( ) {
+	// 	return new InstantCommand(() -> {
+	// 		Table T = new Table("ID", "Distance", "Angle of Tag", "Bot Heading (degrees)")
+	// 			.borders(Borders.ALL);
+	// 		for (RawFiducial raw : getFiducials()) {
+	// 			T.addRow(raw.id, raw.distToCamera, getAngleFromTag(raw.id), getBotHeading().degrees);
+	// 		}
+	// 		T.print();
+	// 	});
+	// }
 
 @Override
 public void periodic() {

@@ -102,9 +102,8 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(File directory)
   {
-
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.POSE;
     final ShuffleboardTab ShooterTab = Shuffleboard.getTab("DrivingSpeed");
     this.SpeedSlider = ShooterTab
       .add("Slow Drive Speed", OperatorConstants.SlowDriveFactor)
@@ -171,6 +170,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void setMaxSpeedDashBoard() {
     setMaxSpeed(SpeedSlider.getDouble(OperatorConstants.SlowDriveFactor));
   }
+
   public void setMaxSpeed(double multiplier) {
     swerveDrive.setMaximumAttainableSpeeds(Constants.MAX_SPEED * multiplier, Math.PI * 2 * multiplier);
   }
