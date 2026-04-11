@@ -32,6 +32,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -92,6 +93,7 @@ public class SwerveSubsystem extends SubsystemBase
   private final Pigeon2 m_gyro;
   private final GenericEntry SpeedSlider;
   private Field2d ChudFieldThatIHateAddingMyself; // billions must be able to see where they are on the field
+  private static Optional<Alliance> ourAlliance = Optional.empty();
    
   // public static boolean slowSpeed = true;
   /**
@@ -200,16 +202,30 @@ public class SwerveSubsystem extends SubsystemBase
     }
     
     // SmartDashboard.putData("myfield", ChudFieldThatIHateAddingMyself);
-    try {
-      updatePoseEstimation();
-    } catch (Exception e) {
-    }
+    // try {
+    //   updatePoseEstimation();
+    // } catch (Exception e) {
+    // }
   }
+
+  // public void cacheAlliance() {
+  
+  // }
 
   protected void updatePoseEstimation() {
     boolean doRejectUpdate = false;
         LimelightHelpers.SetRobotOrientation(LimelightConstants.LIMELIGHT_NAME, getHeading().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate mt = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+        LimelightHelpers.PoseEstimate mt = null;
+        if (ourAlliance.isPresent()) {
+          if (ourAlliance.get() == Alliance.Red) {
+            mt = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight");
+          } else {
+            mt = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+          }
+        } else {
+          return;
+        }
+
         if(Math.abs(m_gyro.getAngularVelocityZDevice().getValueAsDouble()) > 180) // if our angular velocity is greater than 90 degrees per second, ignore vision updates
         {
           doRejectUpdate = true;
@@ -237,6 +253,10 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void simulationPeriodic()
   {
+  }
+
+  public static void cacheAlliance() {
+    SwerveSubsystem.ourAlliance = DriverStation.getAlliance();
   }
 
 
@@ -310,30 +330,6 @@ public class SwerveSubsystem extends SubsystemBase
     // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
     PathfindingCommand.warmupCommand().schedule();
   }
-
-//  /**
-//   * Aim the robot at the target returned by PhotonVision.
-//   *
-//   * @return A {@link Command} which will run the alignment.
-//   */
-//  public Command aimAtTarget(Cameras camera)
-//  {
-//
-//    return run(() -> {
-//      Optional<PhotonPipelineResult> resultO = camera.getBestResult();
-//      if (resultO.isPresent())
-//      {
-//        var result = resultO.get();
-//        if (result.hasTargets())
-//        {
-//          drive(getTargetSpeeds(0,
-//                                0,
-//                                Rotation2d.fromDegrees(result.getBestTarget()
-//                                                             .getYaw()))); // Not sure if this will work, more math may be required.
-//        }
-//      }
-//    });
-//  }
 
   /**
    * Get the path follower with events.
