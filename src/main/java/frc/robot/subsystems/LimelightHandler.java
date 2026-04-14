@@ -118,13 +118,13 @@ public class LimelightHandler extends SubsystemBase {
 		return estimate.pose;
 	}
 
-	private Angle getBotHeading( ) {
-		return Angle.rotations(
-			getBotPose()
-			.getRotation()
-			.getRotations()
-		);
-	}
+	// private Angle getBotHeading( ) {
+	// 	return Angle.rotations(
+	// 		getBotPose()
+	// 		.getRotation()
+	// 		.getRotations()
+	// 	);
+	// }
 	
 	public double[] getBotPosition( ) {
 		Pose2d pose = this.getBotPose();

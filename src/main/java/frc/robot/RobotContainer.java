@@ -11,24 +11,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-// import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.BlenderConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
 import frc.robot.commands.AimAtTag;
 import frc.robot.commands.AimAtTagAuto;
 import frc.robot.commands.Movetotag;
-// import frc.robot.commands.DeviceCommands.BlenderBackPulseCommand;
-// import frc.robot.commands.DeviceCommands.BlenderPulseCommand;
 import frc.robot.commands.DeviceCommands.BriefReverseIntake;
 import frc.robot.commands.DeviceCommands.ShootWithDistance;
 import frc.robot.commands.swervedrive.SwerveShakeRelative;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import frc.robot.subsystems.LimelightHandler;
-import frc.robot.subsystems.devices.BlenderSubsystem;
 import frc.robot.subsystems.devices.IntakeSubsystem;
 import frc.robot.subsystems.devices.OutakeSubsystem;
 
@@ -70,6 +65,7 @@ public class RobotContainer
   // // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   // private final SendableChooser<Command> autoChooser = new SendableChooser<>();
   private final SendableChooser<Command> autoChooser;
+
   // /**
   //  * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
   //  */
@@ -93,8 +89,6 @@ public class RobotContainer
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   // Named Commands //
-
-  // private GenericEntry matchTime = null;
 
   public Command CenterWheels = drivebase.centerModulesCommand().withTimeout(0.5);
   public static volatile BriefReverseIntake BRI_Cancel_Ptr;
