@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "center"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right human hub"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AimAtTag"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "BlendDistanceShoot"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "stop-shooting"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

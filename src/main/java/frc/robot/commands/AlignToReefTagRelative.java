@@ -1,91 +1,96 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+//MOVE TO TAG AT A CONSTANT RADIUS
 
-package frc.robot.commands;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.*;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
-import frc.robot.LimelightHelpers;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import frc.robot.Constants.LimelightConstants;
 
-public class AlignToReefTagRelative extends Command {
-  private PIDController xController, yController, rotController;
-  private boolean isRightScore;
-  private Timer dontSeeTagTimer, stopTimer;
-  private SwerveSubsystem drivebase;
-  private double tagID = 15;
 
-  public AlignToReefTagRelative(boolean isRightScore, SwerveSubsystem drivebase) {
-    xController = new PIDController(LimelightConstants.X_REEF_ALIGNMENT_P, 0.0, 0);  // Vertical movement
-    yController = new PIDController(LimelightConstants.Y_REEF_ALIGNMENT_P, 0.0, 0);  // Horitontal movement
-    rotController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0, 0);  // Rotation
-    this.isRightScore = isRightScore;
-    this.drivebase = drivebase;
-    addRequirements(drivebase);
-  }
+// // Copyright (c) FIRST and other WPILib contributors.
+// // Open Source Software; you can modify and/or share it under the terms of
+// // the WPILib BSD license file in the root directory of this project.
 
-  @Override
-  public void initialize() {
-    this.stopTimer = new Timer();
-    this.stopTimer.start();
-    this.dontSeeTagTimer = new Timer();
-    this.dontSeeTagTimer.start();
+// package frc.robot.commands;
 
-    rotController.setSetpoint(LimelightConstants.ROT_SETPOINT_REEF_ALIGNMENT);
-    rotController.setTolerance(LimelightConstants.ROT_TOLERANCE_REEF_ALIGNMENT);
+// import edu.wpi.first.math.controller.PIDController;
+// import edu.wpi.first.math.*;
+// import edu.wpi.first.math.geometry.Translation2d;
+// import edu.wpi.first.wpilibj.Timer;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj2.command.Command;
+// import frc.robot.Constants;
+// import frc.robot.LimelightHelpers;
+// import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+// import frc.robot.Constants.LimelightConstants;
 
-    xController.setSetpoint(LimelightConstants.X_SETPOINT_REEF_ALIGNMENT);
-    xController.setTolerance(LimelightConstants.X_TOLERANCE_REEF_ALIGNMENT);
+// public class AlignToReefTagRelative extends Command {
+//   private PIDController xController, yController, rotController;
+//   private boolean isRightScore;
+//   private Timer dontSeeTagTimer, stopTimer;
+//   private SwerveSubsystem drivebase;
+//   private double tagID = 15;
 
-    yController.setSetpoint(isRightScore ? LimelightConstants.Y_SETPOINT_REEF_ALIGNMENT : -LimelightConstants.Y_SETPOINT_REEF_ALIGNMENT);
-    yController.setTolerance(LimelightConstants.Y_TOLERANCE_REEF_ALIGNMENT);
+//   public AlignToReefTagRelative(boolean isRightScore, SwerveSubsystem drivebase) {
+//     xController = new PIDController(LimelightConstants.X_REEF_ALIGNMENT_P, 0.0, 0);  // Vertical movement
+//     yController = new PIDController(LimelightConstants.Y_REEF_ALIGNMENT_P, 0.0, 0);  // Horitontal movement
+//     rotController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0, 0);  // Rotation
+//     this.isRightScore = isRightScore;
+//     this.drivebase = drivebase;
+//     addRequirements(drivebase);
+//   }
 
-    tagID = LimelightHelpers.getFiducialID("");
-  }
+//   @Override
+//   public void initialize() {
+//     this.stopTimer = new Timer();
+//     this.stopTimer.start();
+//     this.dontSeeTagTimer = new Timer();
+//     this.dontSeeTagTimer.start();
 
-  @Override
-  public void execute() {
-    if (LimelightHelpers.getTV("") && LimelightHelpers.getFiducialID("") == tagID) {
-      this.dontSeeTagTimer.reset();
+//     rotController.setSetpoint(LimelightConstants.ROT_SETPOINT_REEF_ALIGNMENT);
+//     rotController.setTolerance(LimelightConstants.ROT_TOLERANCE_REEF_ALIGNMENT);
 
-      double[] postions = LimelightHelpers.getBotPose_TargetSpace("");
-      SmartDashboard.putNumber("x", postions[2]);
+//     xController.setSetpoint(LimelightConstants.X_SETPOINT_REEF_ALIGNMENT);
+//     xController.setTolerance(LimelightConstants.X_TOLERANCE_REEF_ALIGNMENT);
 
-      double xSpeed = xController.calculate(postions[2]);
-      SmartDashboard.putNumber("xspee", xSpeed);
-      double ySpeed = -yController.calculate(postions[0]);
-      double rotValue = -rotController.calculate(postions[4]);
+//     yController.setSetpoint(isRightScore ? LimelightConstants.Y_SETPOINT_REEF_ALIGNMENT : -LimelightConstants.Y_SETPOINT_REEF_ALIGNMENT);
+//     yController.setTolerance(LimelightConstants.Y_TOLERANCE_REEF_ALIGNMENT);
 
-      drivebase.drive(new Translation2d(xSpeed, ySpeed), rotValue, false);
+//     tagID = LimelightHelpers.getFiducialID("");
+//   }
 
-      if (!rotController.atSetpoint() ||
-          !yController.atSetpoint() ||
-          !xController.atSetpoint()) {
-        stopTimer.reset();
-      }
-    } else {
-      drivebase.drive(new Translation2d(), 0, false);
-    }
+//   @Override
+//   public void execute() {
+//     if (LimelightHelpers.getTV("") && LimelightHelpers.getFiducialID("") == tagID) {
+//       this.dontSeeTagTimer.reset();
 
-    SmartDashboard.putNumber("poseValidTimer", stopTimer.get());
-  }
+//       double[] postions = LimelightHelpers.getBotPose_TargetSpace("");
+//       SmartDashboard.putNumber("x", postions[2]);
 
-  @Override
-  public void end(boolean interrupted) {
-    drivebase.drive(new Translation2d(), 0, false);
-  }
+//       double xSpeed = xController.calculate(postions[2]);
+//       SmartDashboard.putNumber("xspee", xSpeed);
+//       double ySpeed = -yController.calculate(postions[0]);
+//       double rotValue = -rotController.calculate(postions[4]);
 
-  @Override
-  public boolean isFinished() {
-    // Requires the robot to stay in the correct position for 0.3 seconds, as long as it gets a tag in the camera
-    return this.dontSeeTagTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME) ||
-        stopTimer.hasElapsed(LimelightConstants.POSE_VALIDATION_TIME);
-  }
-}
+//       drivebase.drive(new Translation2d(xSpeed, ySpeed), rotValue, false);
+
+//       if (!rotController.atSetpoint() ||
+//           !yController.atSetpoint() ||
+//           !xController.atSetpoint()) {
+//         stopTimer.reset();
+//       }
+//     } else {
+//       drivebase.drive(new Translation2d(), 0, false);
+//     }
+
+//     SmartDashboard.putNumber("poseValidTimer", stopTimer.get());
+//   }
+
+//   @Override
+//   public void end(boolean interrupted) {
+//     drivebase.drive(new Translation2d(), 0, false);
+//   }
+
+//   @Override
+//   public boolean isFinished() {
+//     // Requires the robot to stay in the correct position for 0.3 seconds, as long as it gets a tag in the camera
+//     return this.dontSeeTagTimer.hasElapsed(LimelightConstants.DONT_SEE_TAG_WAIT_TIME) ||
+//         stopTimer.hasElapsed(LimelightConstants.POSE_VALIDATION_TIME);
+//   }
+// }

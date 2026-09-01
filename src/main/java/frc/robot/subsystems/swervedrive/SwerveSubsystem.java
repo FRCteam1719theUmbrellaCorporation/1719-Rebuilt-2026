@@ -20,38 +20,37 @@ import com.pathplanner.lib.util.swerve.SwerveSetpoint;
 import com.pathplanner.lib.util.swerve.SwerveSetpointGenerator;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.hal.simulation.RoboRioDataJNI;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.OperatorConstants;
 import frc.robot.LimelightHelpers;
-// import frc.robot.LimelightHelpers;
-import frc.robot.Robot;
-import frc.robot.RobotContainer;
 // import frc.robot.subsystems.LimeLightExtra;
 
 //import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
@@ -89,6 +88,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   private final boolean visionDriveTest     = false;
   private final Pigeon2 m_gyro;
+  private final GenericEntry SpeedSlider;
   // public static boolean slowSpeed = true;
   /**
    * PhotonVision class to keep an accurate odometry.
@@ -104,7 +104,15 @@ public class SwerveSubsystem extends SubsystemBase
   {
 
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.LOW;
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("DrivingSpeed");
+    this.SpeedSlider = ShooterTab
+      .add("Slow Drive Speed", OperatorConstants.SlowDriveFactor)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of(
+        "min", 1-ControllerConstants.TrimSwitchBounds, 
+        "max", 1+ControllerConstants.TrimSwitchBounds))
+      .getEntry();
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED,
@@ -149,25 +157,35 @@ public class SwerveSubsystem extends SubsystemBase
                                   new Pose2d(new Translation2d(Meter.of(1), Meter.of(1)),
                                              Rotation2d.fromDegrees(0)));
     m_gyro = (Pigeon2) this.getSwerveDrive().getGyro().getIMU();
-  }
 
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("DrivingSpeed");
+
+    this.SpeedSlider = ShooterTab
+      .add("Slow Drive Speed", OperatorConstants.SlowDriveFactor)
+      .withWidget(BuiltInWidgets.kNumberSlider)
+      .withProperties(Map.of(
+        "min", 1-ControllerConstants.TrimSwitchBounds, 
+        "max", 1+ControllerConstants.TrimSwitchBounds))
+      .getEntry();
+  }
+  public void setMaxSpeedDashBoard() {
+    setMaxSpeed(SpeedSlider.getDouble(OperatorConstants.SlowDriveFactor));
+  }
   public void setMaxSpeed(double multiplier) {
     swerveDrive.setMaximumAttainableSpeeds(Constants.MAX_SPEED * multiplier, Math.PI * 2 * multiplier);
   }
 
-//  /**
-//   * Setup the photon vision class.
-//   */
-//  public void setupPhotonVision()
-//  {
-//    vision = new Vision(swerveDrive::getPose, swerveDrive.field);
-//  }
+  public void adjustSlowSpeed(double val) {
+    SpeedSlider.setDouble(MathUtil.clamp(SpeedSlider.getDouble(OperatorConstants.SlowDriveFactor) + val, 
+                          OperatorConstants.SlowDriverMin,
+                          OperatorConstants.SlowDriverMax));
+  }
 
   @Override
   public void periodic()
   {
     // When vision is enabled we must manually update odometry in SwerveDrive
-    swerveDrive.updateOdometry(); // TODO: UNCOMMENT AFTER TESTING. MUST BE UPDATED FOR POSE ESTIMATION
+    swerveDrive.updateOdometry();
     // try {
     //   updatePoseEstimation();
     // } catch (Exception e) {

@@ -14,6 +14,16 @@
 					"label": "toString function"
 				}
 			]
+		},
+		{
+			"path": "src/main/java/frc/robot/RobotContainer.java",
+			"bookmarks": [
+				{
+					"line": 105,
+					"column": 0,
+					"label": "Named Commands"
+				}
+			]
 		}
 	]
 }

@@ -4,11 +4,14 @@
 
 package frc.robot;
 
-import java.util.concurrent.ScheduledExecutorService;
-
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -27,6 +30,10 @@ public class Robot extends TimedRobot
 
   private Timer disabledTimer;
   public static boolean inAuto;
+  private static Timer ShiftTimer;
+  // private static Timer matchTimer;
+  private GenericEntry timerLol = null;
+
 
   public Robot()
   {
@@ -56,6 +63,18 @@ public class Robot extends TimedRobot
     {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
+
+    final ShuffleboardTab ShooterTab = Shuffleboard.getTab("timer");
+    this.timerLol = ShooterTab
+      .add("match time", 0)
+      .getEntry();
+
+  ShiftTimer = new Timer();
+  // CameraServer.startAutomaticCapture(0);
+    // UsbCamera USBCAM = CameraServer.startAutomaticCapture(0);
+  //   USBCAM.setResolution(720, 540);
+  //   CameraServer.startAutomaticCapture(0);
+
   }
 
   /**
@@ -73,6 +92,8 @@ public class Robot extends TimedRobot
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    this.m_robotContainer
+        .periodic();
   }
 
   /**
@@ -103,9 +124,11 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit()
   {
+    m_robotContainer.drivebase.zeroGyroWithAlliance();
+    
     inAuto = true;
     // m_robotContainer.setMotorBrake(true);
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();    
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null)
@@ -125,6 +148,7 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit()
   {
+    
     inAuto = false;
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -137,8 +161,11 @@ public class Robot extends TimedRobot
     {
       CommandScheduler.getInstance().cancelAll();
     }
-     m_robotContainer.Center_wheels.schedule();
-     m_robotContainer.drivebase.zeroGyro();
+     m_robotContainer.CenterWheels.schedule();
+
+     ShiftTimer.start();
+     ShiftTimer.reset();
+     timerLol.setDouble(25);
   }
 
   /**
@@ -147,6 +174,11 @@ public class Robot extends TimedRobot
   @Override
   public void teleopPeriodic()
   {
+    if (ShiftTimer.hasElapsed(25)) {
+      ShiftTimer.reset();
+    } else {
+      timerLol.setInteger((int)(25-ShiftTimer.get()));
+    }
   }
 
   @Override
