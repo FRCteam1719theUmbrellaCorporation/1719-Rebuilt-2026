@@ -260,20 +260,36 @@ public class RobotContainer
     //aim at tag                                                                                
     driverXbox.y().whileTrue(new AimAtTag(drivebase, LLHandler, driverXbox));
     
-    // slow down                                                                       
-     driverXbox.rightTrigger()
-      .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeed(1))
-      ).onFalse(new InstantCommand(()->
-        drivebase.setMaxSpeed(.85))
-    );
+    
+    //drivershoot for demonstration ONLY
+    driverXbox.rightTrigger().whileTrue(new ShootWithDistance(OUTAKE, LLHandler));
+    driverXbox.rightTrigger().onFalse(new InstantCommand(()->OUTAKE.stop()));
+
+    //driverintake for demonstration ONLY
+    driverXbox.leftTrigger().onTrue(new InstantCommand(()->{
+      if (BRI_Cancel_Ptr!=null&& BRI_Cancel_Ptr.isScheduled()) BRI_Cancel_Ptr.cancel();
+      INTAKE.setSpeed(IntakeConstants.INTAKE_SPEED);
+    }));
+    driverXbox.leftTrigger().onFalse(new InstantCommand(()->{
+      BRI_Cancel_Ptr = new BriefReverseIntake(INTAKE);
+      BRI_Cancel_Ptr.schedule();
+    }));
+
+    // slow down         
+                                                  
+    //  driverXbox.rightTrigger()
+    //   .onTrue(new InstantCommand(()->
+    //     drivebase.setMaxSpeed(1))
+    //   ).onFalse(new InstantCommand(()->
+    //     drivebase.setMaxSpeed(.85))
+    // );
 
     // Shake Command
-    driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
-    driverXbox.leftTrigger().onFalse(
-      new AimAtTag(drivebase, LLHandler, driverXbox)
-          .withTimeout(OperatorConstants.SHAKE_END_TIMEOUT)
-    );
+    // driverXbox.leftTrigger().whileTrue(new SwerveShakeRelative(drivebase));
+    // driverXbox.leftTrigger().onFalse(
+    //   new AimAtTag(drivebase, LLHandler, driverXbox)
+    //       .withTimeout(OperatorConstants.SHAKE_END_TIMEOUT)
+    // );
 
     // // adjusts the slowed speed on the robot
     // driverXbox.povLeft().onTrue(new InstantCommand(()->drivebase.adjustSlowSpeed(-.05)));
