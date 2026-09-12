@@ -2,37 +2,47 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 
+import java.util.Optional;
+
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.LimelightHandler;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.LimelightConstants;
+import frc.robot.LimelightHelpers.RawFiducial;
 
 
 public class Movetotag extends Command {
   public PIDController xController, yController, rotController;
-  private boolean isRightScore;
   private Timer dontSeeTagTimer, stopTimer;
   private SwerveSubsystem drivebase;
-  //private double[] tagID = {2,5,10,18,21,26};
   private double tagID = 15;
-  public double initialXPos,initialYPos, initalRotPose;
+  private boolean isHubMode;
+  private LimelightHandler LLH = null;
+  public double initialXPos, initialYPos, initalRotPose;
 
   /**
    * @param isRightScore
    * @param drivebase
    */
-  public Movetotag(boolean isRightScore, SwerveSubsystem drivebase) {
+  public Movetotag(SwerveSubsystem drivebase, boolean isHubMode, LimelightHandler LLH) {
+    this.LLH = LLH;
     xController = new PIDController(LimelightConstants.X_REEF_ALIGNMENT_P, 0.0, 0);  // Vertical movement
     yController = new PIDController(LimelightConstants.Y_REEF_ALIGNMENT_P, 0.0, 0);  // Horitontal movement
     rotController = new PIDController(LimelightConstants.ROT_REEF_ALIGNMENT_P, 0, 0);  // Rotation
-    this.isRightScore = isRightScore;
     this.drivebase = drivebase;
-    addRequirements(drivebase);
+    this.isHubMode = isHubMode;
+    addRequirements(drivebase, LLH);
   }
+
   public double[] Computefinalstaticpose(){
     double[] postions = LimelightHelpers.getBotPose_TargetSpace(LimelightConstants.LIMELIGHT_NAME);
     double initialXPos = postions[0]; // positive means to right
@@ -43,13 +53,24 @@ public class Movetotag extends Command {
     double phi = (Math.atan2(-initialXPos, Zdist));
     double newX = -R0*Math.sin(phi);
     double newZ = -(R0*Math.cos(phi) - Deltaz);
-    double phi_deg = phi*180/Math.PI;
+    double phi_deg = Math.toDegrees(phi);
     double[] data = {newZ,newX,phi_deg};
     return data;
   }
 
   @Override
   public void initialize() {
+
+    if (isHubMode) {
+      Optional<RawFiducial> m = this.LLH.getHubTag();
+      if (m.isPresent()) {
+        tagID = m.get().id;
+        LimelightHelpers.setPriorityTagID(LimelightConstants.LIMELIGHT_NAME, (int)tagID);
+      }
+    } else {
+      tagID = LimelightHelpers.getFiducialID(LimelightConstants.LIMELIGHT_NAME);
+    }
+
     double[] data = Computefinalstaticpose();
     this.stopTimer = new Timer();
     this.stopTimer.start();
@@ -62,7 +83,7 @@ public class Movetotag extends Command {
     xController.setSetpoint(data[0]);
     xController.setTolerance(LimelightConstants.X_TOLERANCE_REEF_ALIGNMENT);
 
-    yController.setSetpoint(isRightScore ? data[1] : -data[1]);
+    yController.setSetpoint(data[1]);
     yController.setTolerance(LimelightConstants.Y_TOLERANCE_REEF_ALIGNMENT);
 
     tagID = LimelightHelpers.getFiducialID(LimelightConstants.LIMELIGHT_NAME);
@@ -98,6 +119,7 @@ public class Movetotag extends Command {
   @Override
   public void end(boolean interrupted) {
     drivebase.drive(new Translation2d(), 0, false);
+    LimelightHelpers.setPriorityTagID(LimelightConstants.LIMELIGHT_NAME, -1);
   }
 
   @Override
