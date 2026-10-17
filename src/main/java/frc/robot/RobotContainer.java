@@ -265,7 +265,7 @@ public class RobotContainer
       .onTrue(new InstantCommand(()->
         drivebase.setMaxSpeed(1))
       ).onFalse(new InstantCommand(()->
-        drivebase.setMaxSpeed(.95))
+        drivebase.setMaxSpeed(.99))
     );
 
     // Shake Command
