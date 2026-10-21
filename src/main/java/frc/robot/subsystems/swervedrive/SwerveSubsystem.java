@@ -669,19 +669,14 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   /**
-   * This will zero (calibrate) the robot to assume the current position is facing forward
-   * <p>
-   * If red alliance rotate the robot 180 after the drviebase zero command
+   * Zero the gyro and set field-relative yaw for the blue-origin coordinate system:
+   * blue faces +X at 0 degrees, while red faces -X at 180 degrees.
    */
   public void zeroGyroWithAlliance()
   {
+    zeroGyro();
     if (isRedAlliance())
     {
-      zeroGyro();
-      //Set the pose 180 degrees
-    } else
-    {
-      zeroGyro();
       resetOdometry(new Pose2d(getPose().getTranslation(), Rotation2d.fromDegrees(180)));
     }
   }
@@ -807,16 +802,7 @@ public class SwerveSubsystem extends SubsystemBase
   }
 
   public void newzeroGyro() {
-    //
-    if (isRedAlliance()) {
-    //m_robotContainer.drivebase.getSwerveDrive().resetOdometry(new Pose2d(m_robotContainer.drivebase.getSwerveDrive().getPose().getTranslation(), Rotation2d.fromDegrees(0)));
-      getSwerveDrive().resetOdometry(new Pose2d(getSwerveDrive().getPose().getTranslation(), Rotation2d.fromDegrees(0)));
-      //swerveDrive.setGyroOffset(swerveDrive.getGyro().getRawRotation3d());
-    // gyrogyro.setOffset(new Rotation3d(0,0,Math.PI));
-  } else {
-      getSwerveDrive().resetOdometry(new Pose2d(getSwerveDrive().getPose().getTranslation(), Rotation2d.fromDegrees(180)));
-      //swerveDrive.setGyroOffset(swerveDrive.getGyro().getRawRotation3d());
-    }
+    zeroGyroWithAlliance();
   }
 
   /**
