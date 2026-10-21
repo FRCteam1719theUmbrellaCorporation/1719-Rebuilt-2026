@@ -1,8 +1,14 @@
 package frc.robot.subsystems;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.BooleanPublisher;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 //import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.FieldConstants;
@@ -11,13 +17,31 @@ import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.LimelightHelpers.RawFiducial;
 // import misc.Table;
 // import misc.Table.Borders;
-import misc.Angle;
 import frc.robot.LimelightHelpers;
 
 public class LimelightHandler extends SubsystemBase {
 	public RawFiducial[] fiducials;
+	private final Supplier<Rotation2d> robotHeading;
+	private final StructPublisher<Pose2d> posePublisher;
+	private final BooleanPublisher poseValidPublisher;
+	private final DoublePublisher tagCountPublisher;
+	private final DoublePublisher latencyPublisher;
+	private final DoublePublisher averageTagDistancePublisher;
+	private Pose2d lastValidPose = new Pose2d();
 
-	public LimelightHandler() {
+	public LimelightHandler(Supplier<Rotation2d> robotHeading) {
+		this.robotHeading = robotHeading;
+		var nt = NetworkTableInstance.getDefault();
+		posePublisher = nt.getStructTopic("Vision/LimelightPose", Pose2d.struct).publish();
+		poseValidPublisher = nt.getBooleanTopic("Vision/LimelightPoseValid").publish();
+		tagCountPublisher = nt.getDoubleTopic("Vision/LimelightTagCount").publish();
+		latencyPublisher = nt.getDoubleTopic("Vision/LimelightLatencyMs").publish();
+		averageTagDistancePublisher = nt.getDoubleTopic("Vision/LimelightAverageTagDistanceMeters").publish();
+		posePublisher.set(lastValidPose);
+		poseValidPublisher.set(false);
+		tagCountPublisher.set(0);
+		latencyPublisher.set(0);
+		averageTagDistancePublisher.set(0);
 	}
 
 	public RawFiducial[] getFiducials( ) {
@@ -171,6 +195,27 @@ public class LimelightHandler extends SubsystemBase {
 
 @Override
 public void periodic() {
+		// MegaTag2 needs the robot's field-relative yaw. Send the current odometry
+		// heading before reading the MT2 estimate.
+		LimelightHelpers.SetRobotOrientation_NoFlush(
+			LimelightConstants.LIMELIGHT_NAME,
+			robotHeading.get().getDegrees(),
+			0, 0, 0, 0, 0);
+
+		PoseEstimate estimate = getBotPoseEstimate();
+		boolean poseValid = estimate != null && estimate.tagCount > 0;
+		poseValidPublisher.set(poseValid);
+		tagCountPublisher.set(poseValid ? estimate.tagCount : 0);
+		latencyPublisher.set(poseValid ? estimate.latency : 0);
+		averageTagDistancePublisher.set(poseValid ? estimate.avgTagDist : 0);
+
+		// Keep the last valid pose on the field while marking the current sample
+		// invalid separately. This avoids plotting Limelight's zero pose on tag loss.
+		if (poseValid) {
+			lastValidPose = estimate.pose;
+		}
+		posePublisher.set(lastValidPose);
+
     fiducials = LimelightHelpers.getRawFiducials(LimelightConstants.LIMELIGHT_NAME);
 }
 }

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.Constants.OutakeConstants;
@@ -60,7 +61,7 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   public final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/Turbo"));
-  private final LimelightHandler LLHandler = new LimelightHandler();
+  private final LimelightHandler LLHandler = new LimelightHandler(drivebase::getHeading);
 
   // // Establish a Sendable Chooser that will be able to be sent to the SmartDashboard, allowing selection of desired auto
   // private final SendableChooser<Command> autoChooser = new SendableChooser<>();
@@ -263,9 +264,9 @@ public class RobotContainer
     // slow down                                                                       
      driverXbox.rightTrigger()
       .onTrue(new InstantCommand(()->
-        drivebase.setMaxSpeed(1))
+        drivebase.setMaxSpeed(DrivebaseConstants.NORMAL_SPEED))
       ).onFalse(new InstantCommand(()->
-        drivebase.setMaxSpeed(.99))
+        drivebase.setMaxSpeed(DrivebaseConstants.FAST_SPEED))
     );
 
     // Shake Command

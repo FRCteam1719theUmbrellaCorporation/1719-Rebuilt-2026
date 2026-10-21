@@ -30,6 +30,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructPublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -87,6 +89,9 @@ public class SwerveSubsystem extends SubsystemBase
   private final boolean visionDriveTest     = false;
   private final Pigeon2 m_gyro;
   private final GenericEntry SpeedSlider;
+  private final StructPublisher<Pose2d> odometryPosePublisher = NetworkTableInstance.getDefault()
+      .getStructTopic("Drive/OdometryPose", Pose2d.struct)
+      .publish();
   private Field2d ChudFieldThatIHateAddingMyself; // billions must be able to see where they are on the field
   private static Optional<Alliance> ourAlliance = Optional.empty();
    
@@ -190,6 +195,7 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // When vision is enabled we must manually update odometry in SwerveDrive
     swerveDrive.updateOdometry();
+    odometryPosePublisher.set(swerveDrive.swerveDrivePoseEstimator.getEstimatedPosition());
     if (Robot.inAuto) {
       this.ChudFieldThatIHateAddingMyself.setRobotPose(swerveDrive.swerveDrivePoseEstimator.getEstimatedPosition());
     } else {
